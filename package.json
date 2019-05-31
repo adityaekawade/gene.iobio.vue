@@ -15,6 +15,7 @@
     "express": "^4.15.3",
     "jquery": ">=3.4.0",
     "lodash": "^4.17.10",
+    "pedigree-component": "^0.0.0",
     "serve-favicon": "^2.4.3",
     "uiv": "^0.16.0",
     "v-tooltip": "^2.0.0-rc.31",
