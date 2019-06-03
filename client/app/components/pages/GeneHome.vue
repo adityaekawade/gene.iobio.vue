@@ -8,13 +8,14 @@
 
 
 
-  main.content
-    margin-top: 52px
+main.content, main.v-content
+  margin-top: 52px
 
-    #gene-card-container
-      margin-top: 10px
-      margin-bottom: 10px
-      padding-bottom: 10px
+  #gene-card-container
+    margin-top: 10px
+    margin-bottom: 10px
+    padding-bottom: 10px
+
 
   main.content.clin
     margin-top: 0px
@@ -467,64 +468,122 @@
       SplitPane,
       AppTour,
       pileup: VuePileup
-    },
-    props: {
-      paramGene:             null,
-      paramGeneName:         null,
-      paramGenes:            null,
-      paramSpecies:          null,
-      paramBuild:            null,
-      paramBatchSize:        null,
-      paramGeneSource:       null,
-      paramMyGene2:          null,
-      paramMode:             null,
-      paramLaunchedFromClin: null,
-      paramTour:             null,
-      paramProjectId:        null,
-      paramSampleId:         null,
-      paramSampleUuid:       null,
-      paramIsPedigree:       null,
-      paramSource:           null,
-      paramIobioSource:      null,
 
-      paramFileId:           null,
+  },
+  props: {
+    paramGene:             null,
+    paramGeneName:         null,
+    paramGenes:            null,
+    paramSpecies:          null,
+    paramBuild:            null,
+    paramBatchSize:        null,
+    paramGeneSource:       null,
+    paramMyGene2:          null,
+    paramMode:             null,
+    paramLaunchedFromClin: null,
+    paramTour:             null,
+    paramProjectId:        null,
+    paramSampleId:         null,
+    paramSampleUuid:       null,
+    paramIsPedigree:       null,
+    paramSource:           null,
+    paramIobioSource:      null,
 
-      paramAffectedSibs:     null,
-      paramUnaffectedSibs:   null,
+    paramFileId:           null,
 
-      paramRelationships:    null,
-      paramSamples:          null,
-      paramNames:            null,
-      paramBams:             null,
-      paramBais:             null,
-      paramVcfs:             null,
-      paramTbis:             null,
-      paramAffectedStatuses: null
-    },
-    data() {
-      let self = this;
-      return {
-        greeting: 'gene.iobio',
+    paramAffectedSibs:     null,
+    paramUnaffectedSibs:   null,
 
-        launchedFromClin:   false,
-        isFullAnalysis:     false,
-        isClinFrameVisible: false,
+    paramRelationships:    null,
+    paramSamples:          null,
+    paramNames:            null,
+    paramBams:             null,
+    paramBais:             null,
+    paramVcfs:             null,
+    paramTbis:             null,
+    paramAffectedStatuses: null
+  },
+  data() {
+    let self = this;
+    return {
+      greeting: 'gene.iobio',
 
-        launchedFromHub: false,
-        isHubDeprecated: false,
-        sampleId: null,
-        projectId: null,
-        launchedWithUrlParms: false,
-        clinSetData: null,
-        clinPersistCache: true,
+      launchedFromClin:   false,
+      isFullAnalysis:     false,
+      isClinFrameVisible: false,
 
-        hubToIobioSources: {
-          "https://mosaic.chpc.utah.edu":          {iobio: "mosaic.chpc.utah.edu", batchSize: 10},
-          "https://mosaic-dev.genetics.utah.edu":  {iobio: "mosaic.chpc.utah.edu", batchSize: 10},
-          "http://mosaic-dev.genetics.utah.edu":   {iobio: "mosaic.chpc.utah.edu", batchSize: 10},
-          "https://staging.frameshift.io":         {iobio: "nv-prod.iobio.io",     batchSize: 10}
-        },
+      launchedFromHub: false,
+      isHubDeprecated: false,
+      sampleId: null,
+      projectId: null,
+      launchedWithUrlParms: false,
+      clinSetData: null,
+      clinPersistCache: true,
 
+      hubToIobioSources: {
+        "https://mosaic.chpc.utah.edu":          {iobio: "mosaic.chpc.utah.edu", batchSize: 10},
+        "https://mosaic-dev.genetics.utah.edu":  {iobio: "mosaic.chpc.utah.edu", batchSize: 10},
+        "http://mosaic-dev.genetics.utah.edu":   {iobio: "mosaic.chpc.utah.edu", batchSize: 10},
+        "https://staging.frameshift.io":         {iobio: "nv-prod.iobio.io",     batchSize: 10}
+      },
+
+
+      interpretationMap: {
+        'sig': 'Significant',
+        'unknown-sig': 'Unknown significance',
+        'not-sig': 'Not significant',
+        'poor-qual': 'Poor quality',
+        'not-reviewed': 'Not reviewed'
+      },
+
+
+      allGenes: allGenesData,
+      acmgBlacklist: acmgBlacklist,
+      blacklistedGeneSelected: false,
+
+      selectedGene: {},
+      selectedTranscript: {},
+      analyzedTranscript: {},
+      geneRegionStart: null,
+      geneRegionEnd: null,
+
+      genesInProgress: {},
+
+      activeFilterName: null,
+      filteredGeneNames: null,
+
+      modelInfos: null,
+      rawPedigree: null,
+
+      cohortModel: null,
+      models: [],
+      featureMatrixModel: null,
+      geneModel: null,
+      filterModel: null,
+      cacheHelper: null,
+      genomeBuildHelper: null,
+
+      variantTooltip: null,
+      appTour: null,
+
+      selectedVariant: null,
+      selectedVariantNotes: null,
+      selectedVariantInterpretation: null,
+      selectedVariantRelationship: null,
+
+      showKnownVariantsCard: false,
+      showSfariVariantsCard: false,
+
+      inProgress: {},
+
+      PROBAND: 'proband',
+      activeGeneVariantTab: null,
+      isLeftDrawerOpen: null,
+      showWelcome: false,
+
+      cardWidth: 0,
+      mainContentWidth: null,
+      featureMatrixWidthPercent: 0,
 
         interpretationMap: {
           'sig': 'Significant',
@@ -724,6 +783,19 @@
 
         self.genomeBuildHelper = new GenomeBuildHelper(self.globalApp);
         self.genomeBuildHelper.promiseInit({DEFAULT_BUILD: 'GRCh37'})
+
+            if (self.launchedFromHub) {
+              self.onShowSnackbar( {message: 'Loading data...', timeout: 5000});
+              self.hubSession = self.isHubDeprecated ? new HubSessionDeprecated() : new HubSession();
+              let isPedigree = self.paramIsPedigree && self.paramIsPedigree == 'true' ? true : false;
+              self.cohortModel.setHubSession(self.hubSession);
+              self.hubSession.promiseInit(self.sampleId, self.paramSource, isPedigree, self.projectId)
+              .then(data => {
+                self.modelInfos = data.modelInfos;
+                self.rawPedigree = data.rawPedigree;
+
+                self.cohortModel.promiseInit(self.modelInfos, self.projectId)
+
                 .then(function() {
                   return self.promiseInitCache();
                 })

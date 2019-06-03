@@ -10,45 +10,71 @@
         <span class="rel-header">{{ selectedVariantRelationship | showRelationship }}</span>
       </span>
 
-            <variant-links-menu
-                    :selectedGene="selectedGene"
-                    :selectedVariant="selectedVariant"
-                    :geneModel="cohortModel.geneModel"
-                    :info="info">
-            </variant-links-menu>
+      <span  >
+        <span>{{ selectedVariant.type ? selectedVariant.type.toUpperCase() : "" }}</span>
+        <span class="pl-1">{{ info.coord }}</span>
+        <span class="pl-1 refalt">{{ refAlt  }}</span>
+        <span class="pl-2">{{ info.HGVSpAbbrev }}</span>
+      </span>
 
-            <gene-menu
-                    :selectedGene="selectedGene"
-                    :selectedTranscript="selectedTranscript"
-                    :geneModel="cohortModel.geneModel"
-                    @transcript-selected="onTranscriptSelected"
-                    @gene-source-selected="onGeneSourceSelected"
-                    @gene-region-buffer-change="onGeneRegionBufferChange">
-            </gene-menu>
 
-        </div>
+    </div>
 
-        <div class="variant-inspect-body">
-            <div class="variant-inspect-column">
-                <div class="variant-column-header">
-                    Pathogenicity
-                </div>
-                <div class="variant-row">
-                    <v-icon class="high">check_circle</v-icon>
-                    <span>ClinVar Likely Pathogenic</span>
-                </div>
-                <div class="variant-row">
-                    <v-icon class="moderate">check_circle</v-icon>
-                    <span>High impact</span>
-                </div>
-                <div class="variant-row">
-                    <v-icon >check_circle</v-icon>
-                    <span>Stop gain</span>
-                </div>
-                <div class="variant-row">
-                    <v-icon class="high">check_circle</v-icon>
-                    <span>.83 REVEL</span>
-                </div>
+    <div class="variant-inspect-body">
+      <div class="variant-inspect-column">
+          <div class="variant-column-header">
+            Pathogenicity
+          </div>
+          <variant-inspect-row  v-for="clinvar,clinvarIdx in info.clinvarLinks" :key="clinvarIdx"
+            :clazz="getClinvarClass(clinvar.significance)" :value="clinvar.clinsig" :label="`ClinVar`" :link="clinvar.url" >
+          </variant-inspect-row>
+
+          <variant-inspect-row
+            :clazz="getImpactClass(info.vepImpact)" :value="info.vepImpact" :label="`Impact VEP`"  >
+          </variant-inspect-row>
+
+          <variant-inspect-row
+            :clazz="getImpactClass(info.vepImpact)" :value="info.vepConsequence"   >
+          </variant-inspect-row>
+
+          <variant-inspect-row v-if="info.revel != '' && info.revel"
+            :clazz="getRevelClass(info)" :value="info.revel"   :label="`REVEL`" >
+          </variant-inspect-row>
+      </div>
+      <div class="variant-inspect-column">
+          <div class="variant-column-header">
+            Frequency
+          </div>
+          <variant-inspect-row :clazz="afGnomAD.class" :value="afGnomAD.percent" :label="`gnomAD`" :link="afGnomAD.link" >
+          </variant-inspect-row>
+          <div v-if="afGnomAD.totalCount > 0" class="variant-row no-icon">
+            <span>{{ afGnomAD.altCount }} out of {{ afGnomAD.totalCount }}</span>
+          </div>
+          <div v-if="afGnomAD.totalCount > 0"  class="variant-row no-icon">
+            <span>{{ afGnomAD.homCount }} hom</span>
+          </div>
+      </div>
+      <div class="variant-inspect-column">
+          <div class="variant-column-header">
+            Inheritance
+          </div>
+          <div class="variant-row ">
+            <app-icon :icon="selectedVariant.inheritance" style="margin-right:4px" width="16" height="16"></app-icon>
+            <span>{{ selectedVariant.inheritance == 'denovo' ? 'de novo' : selectedVariant.inheritance }}</span>
+          </div>
+      </div>
+      <div class="variant-inspect-column" v-if="showGenePhenotypes" >
+          <div class="variant-column-header">
+            Gene Phenotypes
+          </div>
+          <div v-if="geneHits" v-for="geneHit in genePhenotypeHits" :key="geneHit.key" class="variant-row" style="flex-flow:column">
+            <div v-for="geneRank in geneHit.geneRanks" :key="geneRank.rank">
+              <div>
+                <v-chip class="high">#{{ geneRank.rank }}</v-chip>
+                <span v-if="geneRank.source" class="pheno-source">{{ geneRank.source }}</span>
+                <span v-if="geneHit.searchTerm" class="pheno-search-term">{{ geneHit.searchTerm }}</span>
+              </div>
+
             </div>
             <div class="variant-inspect-column">
                 <div class="variant-column-header">
