@@ -1,15 +1,12 @@
-/*
-* GeneHome.vue
-*
-*/
+
 <style lang="sass">
 
   @import ../../../assets/sass/variables
 
 
 
-main.content, main.v-content
-  margin-top: 52px
+  main.content, main.v-content
+    margin-top: 52px
 
   #gene-card-container
     margin-top: 10px
@@ -271,6 +268,7 @@ main.content, main.v-content
                 :cohortModel="cohortModel"
                 :info="selectedVariantInfo"
                 :cohortModelReady="isCohortReady"
+                :rawPedigree="rawPedigree"
                 @show-pileup-for-variant="onShowPileupForVariant"
         >
         </variant-inspect-card>
@@ -751,20 +749,15 @@ main.content, main.v-content
         }, 1000)
       }
     },
-
     methods: {
-
       init: function(callback) {
         let self = this;
-
         self.cardWidth = self.$el.offsetWidth;
         self.cardWidth = window.innerWidth;
-
         self.mainContentWidth = $('main.content .container').outerWidth();
         $(window).resize(function() {
           self.onResize();
         });
-
         document.addEventListener("visibilitychange", function() {
           if (!document.hidden) {
             setTimeout(function() {
@@ -772,30 +765,14 @@ main.content, main.v-content
             },1000)
           }
         }, false);
-
         // Safari can't use IndexedDB in iframes, so in this situation, use
         // local storage instead.
         if (window != top && self.utility.detectSafari()) {
           self.forceLocalStorage = true;
         }
-
         self.setAppMode();
-
         self.genomeBuildHelper = new GenomeBuildHelper(self.globalApp);
         self.genomeBuildHelper.promiseInit({DEFAULT_BUILD: 'GRCh37'})
-
-            if (self.launchedFromHub) {
-              self.onShowSnackbar( {message: 'Loading data...', timeout: 5000});
-              self.hubSession = self.isHubDeprecated ? new HubSessionDeprecated() : new HubSession();
-              let isPedigree = self.paramIsPedigree && self.paramIsPedigree == 'true' ? true : false;
-              self.cohortModel.setHubSession(self.hubSession);
-              self.hubSession.promiseInit(self.sampleId, self.paramSource, isPedigree, self.projectId)
-              .then(data => {
-                self.modelInfos = data.modelInfos;
-                self.rawPedigree = data.rawPedigree;
-
-                self.cohortModel.promiseInit(self.modelInfos, self.projectId)
-
                 .then(function() {
                   return self.promiseInitCache();
                 })
@@ -809,22 +786,17 @@ main.content, main.v-content
                           let glyph = new Glyph();
                           let translator = new Translator(self.globalApp, glyph);
                           let genericAnnotation = new GenericAnnotation(glyph);
-
                           self.geneModel = new GeneModel(self.globalApp, self.forceLocalStorage);
                           self.geneModel.geneSource = self.forMyGene2 ? "refseq" : "gencode";
                           self.geneModel.genomeBuildHelper = self.genomeBuildHelper;
                           self.geneModel.setAllKnownGenes(self.allGenes);
                           self.geneModel.translator = translator;
-
-
                           // Instantiate helper class than encapsulates IOBIO commands
                           let endpoint = new EndpointCmd(self.globalApp,
                                   self.cacheHelper.launchTimestamp,
                                   self.genomeBuildHelper,
                                   self.globalApp.utility.getHumanRefNames);
-
                           self.variantExporter = new VariantExporter(self.globalApp);
-
                           self.cohortModel = new CohortModel(
                                   self.globalApp,
                                   self.isEduMode,
@@ -839,20 +811,13 @@ main.content, main.v-content
                                   new FreebayesSettings());
                           self.geneModel.on("geneDangerSummarized", function(dangerSummary) {
                             self.cohortModel.captureFlaggedVariants(dangerSummary)
-                          });
-                          self.isCohortReady = true;
-
+                          })
                           self.cacheHelper.cohort = self.cohortModel;
-
                           self.variantExporter.cohort = self.cohortModel;
-
                           self.inProgress = self.cohortModel.inProgress;
-
-
                           self.featureMatrixModel = new FeatureMatrixModel(self.globalApp, self.cohortModel, self.isEduMode, self.isBasicMode, self.tourNumber);
                           self.featureMatrixModel.init();
                           self.cohortModel.featureMatrixModel = self.featureMatrixModel;
-
                           self.variantTooltip = new VariantTooltip(
                                   self.globalApp,
                                   self.isEduMode,
@@ -863,25 +828,22 @@ main.content, main.v-content
                                   translator,
                                   self.cohortModel.annotationScheme,
                                   self.genomeBuildHelper);
-
                           self.filterModel = new FilterModel(self.globalApp, self.cohortModel.affectedInfo, self.isBasicMode, self.isFullAnalysis);
                           self.cohortModel.filterModel = self.filterModel;
-
-
                           self.promiseInitFromUrl()
                                   .then(function() {
                                     if (self.isEduMode && self.tourNumber) {
                                       self.$refs.appTourRef.startTour(self.tourNumber);
                                     }
-
                                     if (self.launchedFromHub) {
                                       self.onShowSnackbar( {message: 'Loading data...', timeout: 5000});
                                       self.hubSession = self.isHubDeprecated ? new HubSessionDeprecated() : new HubSession();
                                       let isPedigree = self.paramIsPedigree && self.paramIsPedigree == 'true' ? true : false;
                                       self.cohortModel.setHubSession(self.hubSession);
                                       self.hubSession.promiseInit(self.sampleId, self.paramSource, isPedigree, self.projectId)
-                                              .then(modelInfos => {
-                                                self.modelInfos = modelInfos;
+                                              .then(data => {
+                                                self.modelInfos = data.modelInfos;
+                                                self.rawPedigree = data.rawPedigree;
                                                 self.cohortModel.promiseInit(self.modelInfos, self.projectId)
                                                         .then(function() {
                                                           self.models = self.cohortModel.sampleModels;
@@ -908,7 +870,6 @@ main.content, main.v-content
                                           self.onShowSnackbar( {message: 'Enter a gene name or enter a phenotype term.', timeout: 5000});
                                           self.bringAttention = 'gene';
                                         }
-
                                         if (!self.isEduMode && !self.isBasicMode && !self.launchedFromHub && !self.launchedFromClin && !self.launchedWithUrlParms && self.geneModel.sortedGeneNames.length == 0 ) {
                                           self.showWelcome = true;
                                         }
@@ -917,27 +878,20 @@ main.content, main.v-content
                                     if (callback) {
                                       callback();
                                     }
-
                                   })
-
                         },
                         function(error) {
                           if (callback) {
                             callback();
                           }
-
                         })
-
       },
-
       promiseInitCache: function() {
         let self = this;
         return new Promise(function(resolve, reject) {
           self.cacheHelper = new CacheHelper(self.globalApp, self.forceLocalStorage);
           window.cacheHelper = self.cacheHelper;
           self.cacheHelper.on("geneAnalyzed", function(theGene, transcript) {
-
-
             if (self.launchedFromClin) {
               let flaggedVariantsForGene = self.cohortModel.getFlaggedVariantsForGene(theGene.gene_name);
               if (flaggedVariantsForGene.length > 0) {
@@ -947,15 +901,12 @@ main.content, main.v-content
               }
               self.sendCacheToClin(theGene.gene_name);
             }
-
             if (self.selectedGene && self.selectedGene.hasOwnProperty("gene_name")
                     && theGene.gene_name == self.selectedGene.gene_name) {
               self.promiseLoadData();
             }
-
           });
           self.cacheHelper.on("analyzeAllCompleted", function() {
-
             if (!self.isEduMode) {
               if (self.activeFilterName && self.activeFilterName == 'coverage' && self.launchedFromClin) {
                 if (self.$refs.genesCardRef && self.$refs.genesCardRef.$refs.filterBadgesRef) {
@@ -968,12 +919,9 @@ main.content, main.v-content
                 self.$refs.navRef.onShowVariantsTab();
               }
             }
-
           });
-
           self.globalApp.cacheHelper = self.cacheHelper;
           window.globalCacheHelper = self.cacheHelper;
-
           self.cacheHelper.promiseInit()
                   .then(function() {
                     self.cacheHelper.isolateSession(self.isEduMode);
@@ -986,13 +934,10 @@ main.content, main.v-content
                   })
         })
       },
-
       promiseClearCache: function() {
         let self = this;
-
         this.clearFilter();
         self.cohortModel.clearFlaggedVariants();
-
         return new Promise(function(resolve, reject) {
           if (self.isEduMode) {
             resolve();
@@ -1007,18 +952,13 @@ main.content, main.v-content
                     .catch(function(error) {
                       resolve(error);
                     })
-
           }
-
         })
       },
-
       promiseLoadSiteConfig: function() {
         let self = this;
         var target = window.document.URL.indexOf("dev.gene.iobio") > 0 || window.document.URL.indexOf("localhost") > 0 ? 'dev' : 'prod';
-
         return new Promise(function(resolve, reject) {
-
           $.ajax({
             url: self.globalApp.siteConfigUrl[target],
             type: "GET",
@@ -1035,11 +975,8 @@ main.content, main.v-content
               reject("Error " + errorThrown + " occurred in promiseLoadSiteConfig() when attempting get siteConfig.json ");
             }
           });
-
         });
-
       },
-
       onLoadDemoData: function() {
         let self = this;
         self.promiseClearCache()
@@ -1060,27 +997,19 @@ main.content, main.v-content
                   }
                 })
       },
-
-
       promiseLoadData: function() {
         let self = this;
-
         return new Promise(function(resolve, reject) {
-
           if (self.models && self.models.length > 0) {
-
             self.cardWidth = $('#genes-card').innerWidth();
             var options = {'getKnownVariants': self.showKnownVariantsCard, 'getSfariVariants': (self.showSfariVariantsCard && !self.blacklistedGeneSelected)};
-
             self.cohortModel.promiseLoadData(self.selectedGene,
                     self.selectedTranscript,
                     options)
                     .then(function(resultMap) {
                       self.calcFeatureMatrixWidthPercent();
-
                       self.filterModel.populateEffectFilters(resultMap);
                       self.filterModel.populateRecFilters(resultMap);
-
                       self.cohortModel.promiseMarkCodingRegions(self.selectedGene, self.selectedTranscript)
                               .then(function(data) {
                                 self.analyzedTranscript = data.transcript;
@@ -1093,11 +1022,8 @@ main.content, main.v-content
           } else {
             Promise.resolve();
           }
-
         })
       },
-
-
       callVariants: function(theGene) {
         let self = this;
         if (theGene == null) {
@@ -1111,17 +1037,13 @@ main.content, main.v-content
                             self.cohortModel.getCurrentTrioVcfData(),
                             {checkCache: false, isBackground: false})
                   })
-
         }
       },
-
       onFilesLoaded: function(analyzeAll, callback) {
         let self = this;
-
         self.showWelcome = false;
         self.setUrlParameters();
         self.showLeftPanelForGenes();
-
         self.promiseClearCache()
                 .then(function() {
                   self.featureMatrixModel.init();
@@ -1135,7 +1057,6 @@ main.content, main.v-content
                                 callback();
                               }
                             })
-
                     if (analyzeAll) {
                       if (self.cohortModel && self.cohortModel.isLoaded) {
                         self.cacheHelper.analyzeAll(self.cohortModel, false);
@@ -1155,10 +1076,8 @@ main.content, main.v-content
                   }
                 })
       },
-
       setUrlParameters: function() {
         let self = this;
-
         let geneName = "";
         let geneNames = "";
         if (self.selectedGene && self.selectedGene.gene_name) {
@@ -1169,15 +1088,12 @@ main.content, main.v-content
         if (self.geneModel.sortedGeneNames && self.geneModel.sortedGeneNames.length > 0)  {
           geneNames = self.geneModel.sortedGeneNames.join(",");
         }
-
         var affectedSibIds = self.cohortModel.sampleMapSibs.affected.map(function(model) {
           return model.sampleName;
         }).join(",");
         var unaffectedSibIds = self.cohortModel.sampleMapSibs.unaffected.map(function(model) {
           return model.sampleName;
         }).join(",");
-
-
         var queryObject = {
           gene: geneName,
           genes: geneNames,
@@ -1186,7 +1102,6 @@ main.content, main.v-content
           affectedSibs: affectedSibIds,
           unaffectedSibs: unaffectedSibIds
         };
-
         var i = 0;
         self.cohortModel.getCanonicalModels().forEach(function(model) {
           queryObject['rel'+i]    = model.relationship;
@@ -1198,21 +1113,12 @@ main.content, main.v-content
           queryObject['affectedStatus'+i] = model.affectedStatus;
           i++;
         })
-
-
         self.$router.replace({ query: queryObject });
-
-
-
       },
-
       setUrlGeneParameters() {
-
         let self = this;
-
         var queryObjectExisting = this.$route.query;
         var queryObject = $().extend({}, queryObjectExisting);
-
         let geneName = "";
         let geneNames = "";
         if (self.selectedGene && self.selectedGene.gene_name) {
@@ -1225,12 +1131,8 @@ main.content, main.v-content
         }
         queryObject.gene = geneName;
         queryObject.geneNames = geneNames;
-
         self.$router.replace({ query: queryObject });
-
-
       },
-
       onGeneNameEntered: function(geneName) {
         let self = this;
         self.clearFilter();
@@ -1242,30 +1144,23 @@ main.content, main.v-content
                   self.showLeftPanelForGenes();
                   self.onSendGenesToClin();
                   self.setUrlGeneParameters();
-
                 })
       },
-
       onGeneClicked: function(geneName) {
         var self = this;
-
         self.deselectVariant();
-
         self.promiseLoadGene(geneName)
                 .then(function() {
                   self.setUrlGeneParameters();
                 })
         self.activeGeneVariantTab = "0";
-
       },
-
       onGeneSelected: function(geneName) {
         var self = this;
         self.deselectVariant();
         self.promiseLoadGene(geneName);
         self.activeGeneVariantTab = "0";
       },
-
       showLeftPanelWhenFlaggedVariantsForGene: function() {
         let self = this;
         if (self.cohortModel.flaggedVariants && self.cohortModel.flaggedVariants.length > 0) {
@@ -1283,7 +1178,6 @@ main.content, main.v-content
           }
         }
       },
-
       showLeftPanelWhenFlaggedVariants: function() {
         let self = this;
         if (!self.isEduMode && self.cohortModel.flaggedVariants && self.cohortModel.flaggedVariants.length > 0 && !self.isLeftDrawerOpen) {
@@ -1298,7 +1192,6 @@ main.content, main.v-content
           })
         }
       },
-
       showLeftPanelForGenes: function() {
         let self = this;
         if (self.geneModel && self.geneModel.sortedGeneNames.length > 0) {
@@ -1314,22 +1207,16 @@ main.content, main.v-content
             }
           }
         }
-
       },
-
       promiseLoadGene: function(geneName, theTranscript) {
         let self = this;
-
         this.showWelcome = false;
-
         if (self.acmgBlacklist[geneName] != null) {
           self.blacklistedGeneSelected = true;
         } else {
           self.blacklistedGeneSelected = false;
         }
-
         return new Promise(function(resolve, reject) {
-
           if (self.forMyGene2) {
             if (!self.closeIntro) {
               setTimeout(function() {
@@ -1337,16 +1224,13 @@ main.content, main.v-content
               }, 2000);
             }
           }
-
           self.clearZoom = true;
-
           if (self.cohortModel) {
             self.cohortModel.clearLoadedData();
           }
           if (self.featureMatrixModel) {
             self.featureMatrixModel.clearRankedVariants();
           }
-
           self.geneModel.promiseAddGeneName(geneName)
                   .then(function() {
                     return self.geneModel.promiseGetGeneObject(geneName)
@@ -1359,7 +1243,6 @@ main.content, main.v-content
                     self.geneRegionStart = theGeneObject.start;
                     self.geneRegionEnd   = theGeneObject.end;
                     self.selectedGene = theGeneObject;
-
                     if (theTranscript) {
                       // If we have selected a flagged variant, we want to use the flagged
                       // variant's transcript
@@ -1375,9 +1258,7 @@ main.content, main.v-content
                       } else {
                         self.selectedTranscript = latestTranscript;
                       }
-
                     }
-
                     if (self.$refs.scrollButtonRefGene) {
                       self.$refs.scrollButtonRefGene.showScrollButtons();
                     }
@@ -1437,25 +1318,19 @@ main.content, main.v-content
       onGeneRegionZoom: function(theStart, theEnd) {
         this.geneRegionStart = theStart;
         this.geneRegionEnd = theEnd;
-
         this.featureMatrixModel.setRankedVariants(this.geneRegionStart, this.geneRegionEnd);
-
         this.filterModel.regionStart = this.geneRegionStart;
         this.filterModel.regionEnd = this.geneRegionEnd;
         this.cohortModel.setLoadedVariants(this.selectedGene);
-
         this.cohortModel.setCoverage(this.geneRegionStart, this.geneRegionEnd);
       },
       onGeneRegionZoomReset: function() {
         this.geneRegionStart = this.selectedGene.start;
         this.geneRegionEnd = this.selectedGene.end;
-
         this.featureMatrixModel.setRankedVariants();
-
         this.filterModel.regionStart = null;
         this.filterModel.regionEnd = null;
         this.cohortModel.setLoadedVariants(this.selectedGene);
-
         this.cohortModel.setCoverage();
       },
       onCircleVariant: function(idx) {
@@ -1466,6 +1341,11 @@ main.content, main.v-content
       onCohortVariantClick: function(variant, sourceComponent, sourceRelationship) {
         let self = this;
         if (variant) {
+          if (variant.gene) {
+            self.geneModel.adjustGeneRegion(variant.gene);
+            self.geneRegionStart = variant.gene.start;
+            self.geneRegionEnd   = variant.gene.end;
+          }
           self.calcFeatureMatrixWidthPercent();
           self.selectedVariant = variant;
           self.selectedVariantRelationship = sourceRelationship;
@@ -1473,7 +1353,6 @@ main.content, main.v-content
           self.selectedVariantInterpretation = variant.interpretation;
           self.activeGeneVariantTab = self.isBasicMode ? "0" : "1";
           self.showVariantExtraAnnots(sourceComponent.relationship, variant);
-
           self.$refs.variantCardRef.forEach(function(variantCard) {
             if (sourceComponent == null || variantCard != sourceComponent) {
               variantCard.hideVariantCircle(true);
@@ -1492,7 +1371,6 @@ main.content, main.v-content
           if (self.$refs.scrollButtonRefVariant) {
             self.$refs.scrollButtonRefVariant.showScrollButtons();
           }
-
         } else {
           self.deselectVariant();
         }
@@ -1521,7 +1399,6 @@ main.content, main.v-content
           if (!self.isBasicMode && self.$refs.featureMatrixCardRef) {
             self.$refs.featureMatrixCardRef.selectVariant(null, 'highlight');
           }
-
         }
       },
       deselectVariant: function() {
@@ -1542,7 +1419,6 @@ main.content, main.v-content
           self.$refs.featureMatrixCardRef.selectVariant(null);
         }
       },
-
       showVariantExtraAnnots: function(relationship, variant) {
         let self = this;
         if (!self.isEduMode && !self.cohortModel.getModel(relationship).isAlignmentsOnly() )  {
@@ -1575,7 +1451,6 @@ main.content, main.v-content
           }
         }
       },
-
       refreshVariantExtraAnnots: function(variant, annotatedVariants, callbackNotFoundOrAnnotated) {
         let self = this;
         var targetVariants = annotatedVariants.filter(function(v) {
@@ -1590,7 +1465,6 @@ main.content, main.v-content
           annotatedVariant.screenY = variant.screenY;
           annotatedVariant.screenXMatrix = variant.screenXMatrix;
           annotatedVariant.screenYMatrix = variant.screenYMatrix;
-
           if (annotatedVariant.extraAnnot) {
             variant.extraAnnot      = true;
             var extraAnnotFields = [
@@ -1619,14 +1493,11 @@ main.content, main.v-content
               callbackNotFoundOrAnnotated();
             }
           }
-
-
         } else {
           if (callbackNotFoundOrAnnotated) {
             callbackNotFoundOrAnnotated();
           }
         }
-
       },
       onKnownVariantsVizChange: function(viz) {
         let self = this;
@@ -1680,15 +1551,11 @@ main.content, main.v-content
                 function() {
                   // cancel
                 }
-
         ).set('labels', {ok:'OK', cancel:'Cancel'});
-
       },
-
       removeGeneImpl: function(geneName) {
         let self = this;
         let flaggedVariantsToDelete = self.cohortModel.getFlaggedVariantsForGene(geneName);
-
         self.geneModel.removeGene(geneName);
         self.cohortModel.removeFlaggedVariantsForGene(geneName);
         self.clearFilter();
@@ -1711,16 +1578,12 @@ main.content, main.v-content
         } else {
           self.setUrlGeneParameters();
         }
-
       },
-
       onGenesReplaced: function(oldGeneNames, newGeneNames) {
         let self = this;
-
         var removedGeneNames = oldGeneNames.filter(function(geneName) {
           return newGeneNames.indexOf(geneName) == -1;
         })
-
         removedGeneNames.forEach(function(geneName) {
           self.cohortModel.removeFlaggedVariantsForGene(geneName);
           self.clearFilter();
@@ -1728,7 +1591,6 @@ main.content, main.v-content
         })
         self.onSendGenesToClin();
       },
-
       onAnalyzeAll: function() {
         this.showLeftPanelForGenes();
         this.cacheHelper.analyzeAll(this.cohortModel);
@@ -1738,7 +1600,6 @@ main.content, main.v-content
         this.selectedGene = {};
         this.geneModel.clearAllGenes();
         this.cohortModel.flaggedVariants = [];
-
       },
       onStartSearchGenes: function() {
         this.bringAttention = null;
@@ -1758,12 +1619,9 @@ main.content, main.v-content
             self.selectedVariantNotes = null;
             self.selectedVariantInterpretation = null;
             self.activeGeneVariantTab = "0";
-
             let genesToReapply = $.extend([], self.geneModel.sortedGeneNames);
-
             self.geneModel.clearAllGenes();
             self.cohortModel.flaggedVariants = [];
-
             self.applyGenesImpl(genesToReapply.join(","), {replace: true, warnOnDup: false, isFromClin: false},
                     function() {
                       self.selectedGene = geneToSelect;
@@ -1779,20 +1637,16 @@ main.content, main.v-content
       },
       onApplyGenes: function(genesString, options, callback) {
         let self = this;
-
         if (options == null) {
           options = {isFromClin: false};
         } else if (!options.hasOwnProperty("isFromClin")) {
           options.isFromClin = false;
         }
-
         if (!options.isFromClin) {
           self.clearFilter();
         }
-
         let existingGeneCount = self.geneModel.sortedGeneNames.length;
         let existingPhenotypeTerm = self.phenotypeTerm;
-
         self.phenotypeTerm = options ? options.phenotypes : null;
         var theOptions = $.extend(
                 {
@@ -1801,10 +1655,7 @@ main.content, main.v-content
                   warnOnDup: false
                 },
                 options);
-
-
         let genesToApplyCount = self.geneModel.getCopyPasteGeneCount(genesString);
-
         let doIt = function() {
           self.showLeftPanelForGenes();
           let oldGeneNames = $.extend([], self.geneModel.sortedGeneNames);
@@ -1820,7 +1671,6 @@ main.content, main.v-content
             }
           })
         }
-
         if (self.phenotypeTerm && !options.isFromClin && existingGeneCount > 0 && existingPhenotypeTerm != self.phenotypeTerm) {
           let msg = "Replace existing genes with the " + genesToApplyCount + " genes associated with <br>'" + self.phenotypeTerm + "'?";
           alertify.confirm("",
@@ -1835,14 +1685,10 @@ main.content, main.v-content
                     options.replace = false;
                     doIt();
                   }
-
           ).set('labels', {ok:'Replace gene list', cancel:'Combine genes with current list'});
-
         } else {
           doIt();
         }
-
-
       },
       applyGenesImpl: function(genesString, options, callback) {
         let self = this;
@@ -1853,7 +1699,6 @@ main.content, main.v-content
                     self.setUrlGeneParameters();
                   }
                   let geneNameToSelect = null;
-
                   if (self.launchedFromClin) {
                     if (self.geneModel.geneNames && self.geneModel.geneNames.length > 0) {
                       let applicableGenes = self.geneModel.geneNames.filter(function(geneName) {
@@ -1867,19 +1712,16 @@ main.content, main.v-content
                         geneNameToSelect = applicableGenes[0];
                       }
                     }
-
                   } else {
                     if (self.geneModel.sortedGeneNames && self.geneModel.sortedGeneNames.length > 0) {
                       geneNameToSelect = self.geneModel.sortedGeneNames[0];
                     }
                   }
-
                   if (geneNameToSelect) {
                     return self.promiseLoadGene(geneNameToSelect);
                   } else {
                     return Promise.resolve();
                   }
-
                 })
                 .then(function() {
                   if (!self.launchedFromClin) {
@@ -1898,7 +1740,6 @@ main.content, main.v-content
                     }
                   }
                 })
-
       },
       onSortGenes: function(sortBy) {
         this.geneModel.sortGenes(sortBy);
@@ -1932,24 +1773,20 @@ main.content, main.v-content
             self.globalApp.IOBIO_SOURCE = self.hubToIobioSources[self.paramSource].iobio;
             self.globalApp.DEFAULT_BATCH_SIZE = self.hubToIobioSources[self.paramSource].batchSize;
           }
-
           if (self.projectId) {
             self.isHubDeprecated = false;
           } else {
             self.isHubDeprecated = true;
           }
         }
-
         if (self.paramTour) {
           self.tourNumber = self.paramTour;
         }
-
         self.globalApp.initServices();
         self.phenotypeLookupUrl = self.globalApp.hpoLookupUrl;
       },
       promiseInitFromUrl: function() {
         let self = this;
-
         return new Promise(function(resolve, reject) {
           if (self.paramGeneSource) {
             self.geneModel.geneSource = self.paramGeneSource;
@@ -1966,7 +1803,6 @@ main.content, main.v-content
             self.geneModel.promiseAddGeneName(self.paramGeneName);
             self.onGeneSelected(self.paramGeneName);
           }
-
           if (self.paramSpecies) {
             self.genomeBuildHelper.setCurrentSpecies(self.paramSpecies);
           }
@@ -1976,7 +1812,6 @@ main.content, main.v-content
           if (self.paramBatchSize) {
             self.globalApp.DEFAULT_BATCH_SIZE = self.paramBatchSize;
           }
-
           var modelInfos = [];
           for (var i = 0; i < self.paramRelationships.length; i++) {
             var rel  = self.paramRelationships[i];
@@ -1991,10 +1826,8 @@ main.content, main.v-content
               modelInfo.affectedStatus = self.paramAffectedStatuses[i];
               modelInfos.push(modelInfo);
               self.launchedWithUrlParms = true;
-
             }
           }
-
           if (self.paramUnaffectedSibs && self.paramUnaffectedSibs.length > 0 && modelInfos.length > 0) {
             self.paramUnaffectedSibs.split(",").forEach(function(sibId) {
               var sibModelInfo = $.extend({}, modelInfos[0]);
@@ -2042,36 +1875,27 @@ main.content, main.v-content
             resolve();
           }
         })
-
       },
       onFlagVariant: function(variant) {
         let self = this;
-
         variant.gene = this.selectedGene;
         variant.transcript = this.selectedTranscript;
         self.cohortModel.addUserFlaggedVariant(self.selectedGene, self.selectedTranscript, variant);
-
-
         // Refresh the loaded variants so that the ranked variants table
         // reflects the flagged variants
         self.promiseLoadGene(self.selectedGene.gene_name)
                 .then(function() {
                   self.onCohortVariantClick(variant, self.$refs.variantCardRef[0], 'proband');
                 })
-
         if (self.launchedFromClin) {
           self.sendFlaggedVariantToClin(variant);
         }
-
       },
       onRemoveUserFlaggedVariant: function(variant) {
         let self = this;
-
         variant.isFlagged = false;
         variant.featureClass = "";
         self.cohortModel.removeUserFlaggedVariant(self.selectedGene, self.selectedTranscript, variant);
-
-
         if (!self.isEduMode) {
           self.$refs.navRef.onShowVariantsTab();
         }
@@ -2081,20 +1905,14 @@ main.content, main.v-content
                 .then(function() {
                   self.onCohortVariantClick(variant, self.$refs.variantCardRef[0], 'proband');
                 })
-
         if (self.launchedFromClin) {
           self.sendFlaggedVariantToClin(variant, 'delete');
         }
-
-
       },
       onFlaggedVariantsImported: function() {
-
-
       },
       onApplyVariantNotes: function(variant) {
         let self = this;
-
         // Set the flagged variant notes and interpretation
         if (self.launchedFromClin) {
           self.sendFlaggedVariantToClin(variant);
@@ -2102,32 +1920,23 @@ main.content, main.v-content
         if (variant == self.selectedVariant) {
           self.$set(self, "selectedVariantNotes", variant.notes);
         }
-
         let theTranscript = variant.transcript ? variant.transcript : self.geneModel.getCanonicalTranscript(variant.gene)
         self.cohortModel.setVariantInterpretation(variant.gene, theTranscript, variant);
-
-
       },
       onApplyVariantInterpretation: function(variant) {
         let self = this;
-
         if (self.launchedFromClin) {
           self.sendFlaggedVariantToClin(variant);
         }
-
         if (variant == self.selectedVariant) {
           self.$set(self, "selectedVariantInterpretation", variant.interpretation);
         }
-
         let theTranscript = variant.transcript ? variant.transcript : self.geneModel.getCanonicalTranscript(variant.gene)
         self.cohortModel.setVariantInterpretation(variant.gene, theTranscript, variant);
       },
       onFlaggedVariantSelected: function(flaggedVariant) {
         let self = this;
-
-
         let canonicalTranscript = self.geneModel.getCanonicalTranscript(flaggedVariant.gene);
-
         // Only select the gene if it hasn't previously been selected or the transcript is different
         let genePromise = null;
         if (self.selectedGene.gene_name == flaggedVariant.gene.gene_name) {
@@ -2159,13 +1968,10 @@ main.content, main.v-content
           self.selectedVariantRelationship = null;
           genePromise = self.promiseLoadGene(self.selectedGene.gene_name, self.selectedTranscript);
         }
-
         genePromise
                 .then(function() {
-
                   setTimeout(
                           function() {
-
                             let matchingVariantPromise = null;
                             self.calcFeatureMatrixWidthPercent();
                             if (flaggedVariant.isProxy) {
@@ -2173,14 +1979,10 @@ main.content, main.v-content
                             } else {
                               matchingVariantPromise = Promise.resolve(flaggedVariant);
                             }
-
-
                             matchingVariantPromise
                                     .then(function(matchingVariant) {
-
                                       if (matchingVariant && !matchingVariant.isProxy) {
                                         self.showVariantExtraAnnots('proband', matchingVariant);
-
                                         if (flaggedVariant.isProxy) {
                                           var isUserFlagged = flaggedVariant.isUserFlagged;
                                           var notes = flaggedVariant.notes;
@@ -2194,10 +1996,7 @@ main.content, main.v-content
                                           if (self.launchedFromClin) {
                                             self.sendFlaggedVariantToClin(flaggedVariant);
                                           }
-
                                         }
-
-
                                         self.$set(self, "selectedVariant", null);
                                         self.$set(self, "selectedVariant", flaggedVariant);
                                         self.$set(self, "selectedVariantNotes", flaggedVariant.notes);
@@ -2207,31 +2006,22 @@ main.content, main.v-content
                                             variantCard.showFlaggedVariant(flaggedVariant);
                                           }
                                         })
-
                                         if (!self.isBasicMode && self.$refs.featureMatrixCardRef) {
                                           self.$refs.featureMatrixCardRef.selectVariant(flaggedVariant);
                                         }
-
-
                                         self.$refs.variantCardRef.forEach(function(variantCard) {
                                           variantCard.showVariantCircle(flaggedVariant, true);
                                           variantCard.showCoverageCircle(flaggedVariant);
                                         })
-
-
                                         self.activeGeneVariantTab = self.isBasicMode ? "0" : "1";
                                         self.$refs.variantInspectRef.refresh();
-
                                       }
-
-
                                     })
                                     .catch(function(error) {
                                       console.log("GeneHome.onFlaggedVariantSelected. Unable to get matching variant");
                                     })
                           },
                           500);
-
                 });
       },
       onShowKnownVariantsCard: function(showIt) {
@@ -2266,7 +2056,6 @@ main.content, main.v-content
             self.$refs.navRef.onShowVariantsTab();
           }
           self.onGeneSelected(self.selectedGene.gene_name);
-
           if (self.launchedFromClin) {
             self.onSendFiltersToClin();
           }
@@ -2307,7 +2096,6 @@ main.content, main.v-content
                   })
         })
       },
-
       onTakeAppTour: function() {
         this.onLoadDemoData();
         this.$refs.appTourRef.startTour("main");
@@ -2319,26 +2107,21 @@ main.content, main.v-content
       promiseInitTourSample: function(tour, sampleIndex) {
         let self = this;
         return new Promise(function(resolve, reject) {
-
-
           var geneName = null;
           if (self.selectedGene && self.selectedGene.gene_name) {
             geneName = self.selectedGene.gene_name;
           }
           self.selectedGene = {};
-
           self.cohortModel.isLoaded = false;
           self.calcFeatureMatrixWidthPercent();
           self.cohortModel.promiseInitEduTour(tour, sampleIndex)
                   .then(function() {
                     self.models = self.cohortModel.sampleModels;
-
                     if (geneName == null) {
                       if (self.geneModel.sortedGeneNames && self.geneModel.sortedGeneNames.length > 0) {
                         geneName = self.geneModel.sortedGeneNames[0];
                       }
                     }
-
                     if (geneName) {
                       self.promiseLoadGene(geneName)
                               .then(function() {
@@ -2386,9 +2169,7 @@ main.content, main.v-content
       onShowSnackbar: function(snackbar) {
         if (snackbar && snackbar.message) {
           this.showSnackbar = true;
-
           this.snackbar = snackbar;
-
           if (this.snackbar.timeout == null) {
             this.snackbar.timeout = 6000;
           }
@@ -2397,7 +2178,6 @@ main.content, main.v-content
       onHideSnackbar: function() {
         this.showSnackbar = false;
       },
-
       onResize: function() {
         let self = this;
         self.mainContentWidth = $('main.content .container').outerWidth();
@@ -2407,9 +2187,7 @@ main.content, main.v-content
         } else {
           $('main.content .container').addClass("small");
         }
-
       },
-
       calcFeatureMatrixWidthPercent: function() {
         let self = this;
         if (self.cohortModel && self.cohortModel.isLoaded
@@ -2427,19 +2205,16 @@ main.content, main.v-content
             } else {
               minVariantDetailWidth = 652;
             }
-
             let minFeatureMatrixWidth = 0;
             if ($('#matrix-card').length > 0) {
               minFeatureMatrixWidth = +$('#matrix-card').css('min-width').split("px")[0];
             } else {
               minFeatureMatrixWidth = 300;
             }
-
             let fullFeatureMatrixWidth = 0;
             if ($('#feature-matrix-viz svg').length > 0) {
               fullFeatureMatrixWidth = +$('#feature-matrix-viz svg').outerWidth();
             }
-
             let width1 = minFeatureMatrixWidth;
             let width2 = minVariantDetailWidth;
             var remaining = +self.mainContentWidth - (minFeatureMatrixWidth + minVariantDetailWidth);
@@ -2458,30 +2233,23 @@ main.content, main.v-content
               width1 = minFeatureMatrixWidth;
               width2 = +self.mainContentWidth - minFeatureMatrixWidth;
             }
-
             self.featureMatrixWidthPercent = Math.round((width1 / self.mainContentWidth) * 100);
           }
         } else {
           self.featureMatrixWidthPercent = 0;
         }
-
       },
-
       onShowPileupForVariant: function(relationship="proband", variant) {
         let self = this;
         let theVariant = variant ? variant : this.selectedVariant;
         if (theVariant) {
           let variantInfo = this.globalApp.utility.formatDisplay(variant, this.cohortModel.translator, this.isEduMode);
-
           // Format the coordinate for the variant
           const chrom = this.globalApp.utility.stripRefName(theVariant.chrom);
           const start = theVariant.start - this.pileupInfo.SPAN;
           const end   = theVariant.start + this.pileupInfo.SPAN;
           this.pileupInfo.coord =  'chr' + chrom + ':' + start + '-' + end;
-
-
           this.pileupInfo.tracks = [];
-
           // Set the bam, vcf, and references
           this.cohortModel.getCanonicalModels().forEach(function(model) {
             let track               = {name: model.relationship};
@@ -2491,11 +2259,8 @@ main.content, main.v-content
             track.alignmentIndexURL = model.bam.baiUri;
             self.pileupInfo.tracks.push(track);
           })
-
-
           // Set the reference
           this.pileupInfo.referenceURL = this.pileupInfo.referenceURLs[this.genomeBuildHelper.getCurrentBuildName()];
-
           // set the title
           const titleParts = []
           titleParts.push("Read pileup");
@@ -2504,18 +2269,13 @@ main.content, main.v-content
                   + theVariant.chrom + ":" + theVariant.start + " " + theVariant.ref + "->" + theVariant.alt);
           titleParts.push(variantInfo.HGVSpAbbrev);
           this.pileupInfo.title = titleParts.join(' ')
-
           this.pileupInfo.show         = true;
-
           this.$modal.show('pileup-modal');
         }
         else {
           return '';
         }
-
       },
-
-
       receiveClinMessage: function(event)
       {
         let self = this;
@@ -2525,23 +2285,16 @@ main.content, main.v-content
         }
         this.clinIobioUrl = event.origin;
         this.launchedFromClin = true;
-
         var clinObject = JSON.parse(event.data);
-
         if (!this.isClinFrameVisible) {
           this.isClinFrameVisible = clinObject.isFrameVisible;
         }
-
         if (clinObject.type == 'apply-genes' && !self.isFullAnalysis) {
-
           self.applyGenesClin(clinObject);
-
-
         } else if (clinObject.type == 'set-data') {
           if (self.cohortModel == null || !self.cohortModel.isLoaded) {
             self.init(function() {
               self.geneModel.setRankedGenes({'gtr': clinObject.gtrFullList, 'phenolyzer': clinObject.phenolyzerFullList })
-
               self.promiseInitClin(clinObject);
             })
           } else {
@@ -2549,24 +2302,18 @@ main.content, main.v-content
             self.promiseInitClin(clinObject);
           }
         } else if (clinObject.type == 'show') {
-
           if (self.cohortModel && self.cohortModel.isLoaded) {
-
-
             self.$set(self, "isFullAnalysis", clinObject.receiver == 'genefull' ? true : false);
             self.filterModel.isFullAnalysis = self.isFullAnalysis;
-
             if (self.cacheHelper.analyzeAllInProgress) {
               self.showLeftPanelForGenes();
             } else {
               self.showLeftPanelWhenFlaggedVariants();
             }
-
             self.promiseShowClin();
           } else {
             console.log("** bypassing showData cohort NOT loaded **");
           }
-
         } else if (clinObject.type == 'show-coverage') {
           if (self.$refs.genesCardRef && self.$refs.genesCardRef.$refs.filterBadgesRef) {
             self.activeFilterName = 'coverage';
@@ -2575,7 +2322,6 @@ main.content, main.v-content
         } else if (clinObject.type == 'show-review' || clinObject.type == 'show-review-full') {
           if (self.$refs.genesCardRef && self.$refs.genesCardRef.$refs.filterBadgesRef) {
             self.$refs.genesCardRef.$refs.filterBadgesRef.onClearFilter();
-
             if (self.cacheHelper.analyzeAllInProgress) {
               self.showLeftPanelForGenes();
             } else {
@@ -2603,13 +2349,9 @@ main.content, main.v-content
             }
           }
         }
-
-
         var responseObject = {success: true, type: 'message-received', sender: 'gene.iobio.io'};
         window.parent.postMessage(JSON.stringify(responseObject), this.clinIobioUrl);
       },
-
-
       onInsufficientCoverage: function(theGeneCount) {
         let self = this;
         if (this.launchedFromClin) {
@@ -2621,10 +2363,7 @@ main.content, main.v-content
             geneCount:  theGeneCount};
           window.parent.postMessage(JSON.stringify(msgObject), self.clinIobioUrl);
         }
-
       },
-
-
       onSendGenesToClin: function() {
         let self = this;
         if (this.launchedFromClin && this.paramMode == null) {
@@ -2637,12 +2376,8 @@ main.content, main.v-content
           window.parent.postMessage(JSON.stringify(msgObject), self.clinIobioUrl);
         }
       },
-
-
-
       sendFlaggedVariantToClin: function(variant, action="update", callback) {
         let self = this;
-
         if (this.launchedFromClin) {
           self.cohortModel.promiseExportFlaggedVariant('json', variant)
                   .then(function(data) {
@@ -2654,7 +2389,6 @@ main.content, main.v-content
                       app:      'self.isFullAnalysis' ? 'genefull' : 'gene',
                       variants: data};
                     window.parent.postMessage(JSON.stringify(msgObject), self.clinIobioUrl);
-
                     if (callback) {
                       callback();
                     }
@@ -2663,11 +2397,8 @@ main.content, main.v-content
                     alertify.alert("Error", error);
                   })
         }
-
       },
-
       sendNextImportedVariantToClin: function(importedVariants, callback) {
-
         let self = this;
         if (importedVariants.length > 0) {
           var importedVariant = importedVariants.splice(0,1);
@@ -2694,7 +2425,6 @@ main.content, main.v-content
           }
         }
       },
-
       onSendFiltersToClin: function() {
         let self = this;
         if (this.launchedFromClin) {
@@ -2707,18 +2437,14 @@ main.content, main.v-content
           window.parent.postMessage(JSON.stringify(msgObject), self.clinIobioUrl);
         }
       },
-
       sendCacheToClin: function(geneName) {
         let self = this;
         if (this.launchedFromClin) {
-
           // If cache should not persist, bypass this functionality
           if (!self.clinPersistCache) {
             return;
           }
-
           console.log(" **** getting cache from clin **** ");
-
           self.cacheHelper.promiseGetClinCacheItems(geneName, ['vcfData', 'dangerSummary', 'geneCoverage'])
                   .then(function(cacheItems) {
                     var msgObject = {
@@ -2734,10 +2460,8 @@ main.content, main.v-content
                     var msg = "An error occurred in sendCacheToClin: " + error;
                     console.log(msg);
                   });
-
         }
       },
-
       sendConfirmSetDataToClin: function() {
         let self = this;
         if (this.launchedFromClin) {
@@ -2750,36 +2474,29 @@ main.content, main.v-content
           window.parent.postMessage(JSON.stringify(msgObject), self.clinIobioUrl);
         }
       },
-
       promiseSetCacheFromClin: function(clinObject) {
         let self = this;
-
         // If cache should not persist, bypass this functionality
         if (!self.clinPersistCache) {
           self.clinSetData.isCacheSet = true;
           return Promise.resolve();
         }
-
         return new Promise(function(resolve, reject) {
           let cachePromises = [];
           let summarizePromises = [];
           let genesToAdd = [];
-
           if (clinObject.cache && clinObject.cache.length > 0) {
             clinObject.cache.forEach(function(cacheItem) {
               let newCacheKey = cacheHelper.convertClinCacheKey(cacheItem.cache_key);
               let p = self.cacheHelper.promiseCacheData(newCacheKey, cacheItem.cache, {compress: false})
                       .then(function(theKey) {
                         let theKeyObject = CacheHelper._parseCacheKey(theKey);
-
                         if (theKeyObject.dataKind == 'dangerSummary') {
-
                           var dp = self.cacheHelper.promiseGetData(theKey)
                                   .then(function(data) {
                                     if (data && data.geneName) {
                                       self.geneModel.setDangerSummary(data.geneName.toUpperCase(), data);
                                       genesToAdd.push(data.geneName);
-
                                     }
                                   })
                           summarizePromises.push(dp);
@@ -2790,7 +2507,6 @@ main.content, main.v-content
           } else {
             cachePromises.push(Promise.resolve());
           }
-
           Promise.all(cachePromises)
                   .then(function() {
                     return Promise.all(summarizePromises)
@@ -2809,55 +2525,38 @@ main.content, main.v-content
                     console.log(msg);
                     reject(msg);
                   })
-
         })
-
       },
-
       setIobioConfigFromClin: function(clinObject) {
         let self = this;
-
         self.clinPersistCache = clinObject.persistCache;
-
         if (clinObject.batchSize) {
           self.globalApp.DEFAULT_BATCH_SIZE = clinObject.batchSize;
         }
-
-
         if (clinObject.iobioSource) {
           self.globalApp.IOBIO_SOURCE = clinObject.iobioSource;
           self.globalApp.initServices();
         }
-
-
         let endpoint = new EndpointCmd(self.globalApp,
                 self.cacheHelper.launchTimestamp,
                 self.genomeBuildHelper,
                 self.globalApp.utility.getHumanRefNames
         );
-
         self.cohortModel.endpoint = endpoint;
-
       },
-
       promiseInitClin: function(clinObject) {
         let self = this;
         return new Promise(function(resolve, reject) {
           self.isClinFrameVisible = true;
           self.clinSetData = clinObject;
-
           self.setIobioConfigFromClin(self.clinSetData);
           self.cohortModel.promiseInit(self.clinSetData.modelInfos)
                   .then(function() {
-
                     self.sendConfirmSetDataToClin();
-
                     self.onSendFiltersToClin();
-
                     self.models = self.cohortModel.sampleModels;
                     self.geneModel.setCandidateGenes(self.clinSetData.genes);
                     return self.promiseSetCacheFromClin(self.clinSetData)
-
                   })
                   .then(function() {
                     return self.promiseShowClin();
@@ -2868,14 +2567,10 @@ main.content, main.v-content
                   .catch(function(error) {
                     reject(error);
                   })
-
         })
       },
-
-
       promiseShowClin: function() {
         let self = this;
-
         return new Promise(function(resolve, reject) {
           self.promiseImportClin()
                   .then(function() {
@@ -2886,20 +2581,15 @@ main.content, main.v-content
                   })
         })
       },
-
-
       applyGenesClin: function(clinObject) {
         let self = this;
-
         if (self.clinSetData == null || !self.clinSetData.isImported || !self.clinSetData.isCacheSet) {
           return;
         }
-
         let genesToProcess = [];
         let candidateGenesOld = $.extend({}, self.geneModel.candidateGenes);
         self.geneModel.setCandidateGenes(clinObject.genes);
         self.geneModel.setRankedGenes({'gtr': clinObject.gtrFullList, 'phenolyzer': clinObject.phenolyzerFullList })
-
         if (clinObject.genes && Array.isArray(clinObject.genes)) {
           let deprecatedGenes = {};
           for (var oldGene in candidateGenesOld) {
@@ -2907,7 +2597,6 @@ main.content, main.v-content
               deprecatedGenes[oldGene] = true;
             }
           }
-
           self.geneModel.sortedGeneNames.forEach(function(gene) {
             if (!deprecatedGenes[gene]) {
               genesToProcess.push(gene);
@@ -2917,18 +2606,13 @@ main.content, main.v-content
             genesToProcess.push(gene);
           })
         }
-
         if (genesToProcess) {
           let genesString = genesToProcess ? genesToProcess.join(" ") : "";
           let phenotypeTerms = clinObject.searchTerms && Array.isArray(clinObject.searchTerms) ? clinObject.searchTerms.join(",") : (clinObject.searchTerms ? clinObject.searchTerms : "");
-
           if (genesString.length > 0 ) {
             let options = { isFromClin: true, replace: true, warnOnDup: false, phenotypes: phenotypeTerms }
             this.onApplyGenes(genesString, options, function() {
               if (self.cohortModel && self.cohortModel.isLoaded) {
-
-
-
                 self.cacheHelper.promiseGetGenesToAnalyze()
                         .then(function(genesToAnalyze) {
                           if (genesToAnalyze.length > 0) {
@@ -2939,17 +2623,11 @@ main.content, main.v-content
               }
             });
           }
-
         }
-
-
       },
-
-
       promiseSelectApplicableVariantClin: function() {
         let self = this;
         return new Promise(function(resolve, reject) {
-
           // Find first flagged variant in list
           let firstFlaggedVariant = null;
           let sortedFilters = self.cohortModel.organizeVariantsByFilterAndGene(null, self.isFullAnalysis);
@@ -2960,13 +2638,10 @@ main.content, main.v-content
               }
             })
           })
-
           if (firstFlaggedVariant) {
             self.showLeftPanelWhenFlaggedVariants();
             self.onFlaggedVariantSelected(firstFlaggedVariant);
           }
-
-
           /*
           let geneNameToSelect = null;
           if (self.launchedFromClin) {
@@ -2982,13 +2657,11 @@ main.content, main.v-content
                 geneNameToSelect = applicableGenes[0];
               }
             }
-
           } else {
             if (self.geneModel.sortedGeneNames && self.geneModel.sortedGeneNames.length > 0) {
               geneNameToSelect = self.geneModel.sortedGeneNames[0];
             }
           }
-
           if (geneNameToSelect) {
             self.promiseLoadGene(geneNameToSelect)
             .then(function() {
@@ -3001,52 +2674,31 @@ main.content, main.v-content
             resolve();
           }
           */
-
         })
       },
-
-
-
-
       promiseImportClin: function() {
         let self = this;
-
         return new Promise(function(resolve, reject) {
-
           if (!self.clinSetData.importInProgress && !self.clinSetData.isImported) {
-
             self.clinSetData.importInProgress = true;
             self.clinSetData.isImported = false;
-
             self.showLeftPanelForGenes();
-
-
             self.importVariantData(self.clinSetData.variantData,
                     function(importedVariants, importedGenes) {
-
                       let theGenes = self.clinSetData.genes.slice();
                       importedGenes.forEach(function(geneName) {
                         if (theGenes.indexOf(geneName) == -1) {
                           theGenes.push(geneName);
                         }
                       })
-
                       self.onApplyGenes( theGenes.join(" "),
                               {isFromClin: true, replace: true, warnOnDup: false, phenotypes: self.clinSetData.phenotypes.join(",")},
                               function() {
-
                                 if (self.clinSetData.variants.length > 0) {
                                   self.cohortModel.importFlaggedVariants('json', self.clinSetData.variants,
                                           function() {
-
-
-
-
                                             self.clinSetData.isImported = true;
-
                                             resolve();
-
-
                                           },
                                           function() {
                                             self.clinSetData.importInProgress = false;
@@ -3054,19 +2706,14 @@ main.content, main.v-content
                                             self.cacheHelper.analyzeAll(self.cohortModel, false);
                                           })
                                 } else {
-
                                   self.cohortModel.mergeImportedVariants(importedVariants);
                                   self.clinSetData.isImported = true;
                                   self.clinSetData.importInProgress = false;
-
                                   self.cacheHelper.analyzeAll(self.cohortModel, false);
-
                                   resolve();
-
                                 }
                               })
                     })
-
           } else {
             self.cacheHelper.promiseGetGenesToAnalyze()
                     .then(function(genesToAnalyze) {
@@ -3086,15 +2733,12 @@ main.content, main.v-content
                       resolve();
                     })
           }
-
         })
       },
-
       importVariantData: function(variantData, callback) {
         let self = this;
         let theImportedGenes = [];
         let theImportedVariants = [];
-
         if (self.clinSetData.variants.length > 0) {
           if (callback) {
             self.clinSetData.variants.forEach(function(v) {
@@ -3108,43 +2752,29 @@ main.content, main.v-content
           if (variantData) {
             self.cohortModel.importFlaggedVariants('gemini', variantData,
                     function() {
-
                       // clone the imported variants array
                       theImportedVariants = self.cohortModel.flaggedVariants.slice();
-
                       theImportedVariants.forEach(function(v) {
                         if (theImportedGenes.indexOf(v.geneName) == -1) {
                           theImportedGenes.push(v.geneName);
                         }
                       })
-
                       // sequentially send each imported variant to clin to be saved
                       self.sendNextImportedVariantToClin(theImportedVariants, function() {
-
                       });
-
-
                       if (callback) {
                         callback(theImportedVariants, theImportedGenes);
                       }
-
                     },
                     function() {
-
-
-
                     })
           } else {
             callback(theImportedGenes, theImportedVariants);
           }
-
-
         }
-
-
-
       }
     }
   }
 </script>
+
 

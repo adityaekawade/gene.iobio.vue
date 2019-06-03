@@ -1,8 +1,66 @@
+<style lang="sass" >
+    @import ../../../assets/sass/variables
+    #variant-inspect
+        padding-left: 10px
+        padding-top: 0px
+        padding-right: 10px
+        padding-bottom: 10px
+        margin-bottom: 10px
+        min-height: 200px
+        .variant-inspect-body
+            display: flex
+            flex-direction: row
+            flex-wrap: wrap
+            justify-content: space-between
+            .variant-inspect-column
+                display: flex
+                flex-direction: column
+                .variant-column-header
+                    font-size: 14px
+                    color:  $text-color
+                    margin-bottom: 10px
+                .variant-row
+                    display: flex
+                    flex-direction: row
+                    font-size: 13px
+                    margin-bottom: 10px
+                    max-width: 260px
+        .rel-header
+            font-style: italic
+        #variant-heading
+            color: $app-color
+            padding-bottom: 10px
+            font-size: 15px
+            padding-top: 5px
+        .variant-action-button
+            padding: 0px
+            height: 22px !important
+            margin: 0px
+            min-width: 100px !important
+            max-width: 100px
+            .btn__content
+                color: $text-color !important
+                padding-left: 8px
+                padding-right: 8px
+                font-size: 12px
+</style>
+
+
 <template>
 
     <v-card v-if="selectedVariant && info" tile id="variant-inspect" class="app-card full-width">
+
         <div  id="variant-heading" v-if="selectedVariant" class="text-xs-left">
-            <span>Variant</span>
+
+            <div style="display:inline-block;width:220px">
+                <variant-links-menu
+                        :selectedGene="selectedGene"
+                        :selectedVariant="selectedVariant"
+                        :geneModel="cohortModel.geneModel"
+                        :info="info">
+                </variant-links-menu>
+            </div>
+
             <span class="pr-1 pl-1" v-if="selectedVariantRelationship == 'known-variants'">
         <app-icon
                 icon="clinvar" width="16" height="16">
@@ -10,7 +68,7 @@
         <span class="rel-header">{{ selectedVariantRelationship | showRelationship }}</span>
       </span>
 
-      <span  >
+            <span  >
         <span>{{ selectedVariant.type ? selectedVariant.type.toUpperCase() : "" }}</span>
         <span class="pl-1">{{ info.coord }}</span>
         <span class="pl-1 refalt">{{ refAlt  }}</span>
@@ -18,63 +76,28 @@
       </span>
 
 
-    </div>
+        </div>
 
-    <div class="variant-inspect-body">
-      <div class="variant-inspect-column">
-          <div class="variant-column-header">
-            Pathogenicity
-          </div>
-          <variant-inspect-row  v-for="clinvar,clinvarIdx in info.clinvarLinks" :key="clinvarIdx"
-            :clazz="getClinvarClass(clinvar.significance)" :value="clinvar.clinsig" :label="`ClinVar`" :link="clinvar.url" >
-          </variant-inspect-row>
+        <div class="variant-inspect-body">
+            <div class="variant-inspect-column">
+                <div class="variant-column-header">
+                    Pathogenicity
+                </div>
+                <variant-inspect-row  v-for="clinvar,clinvarIdx in info.clinvarLinks" :key="clinvarIdx"
+                                      :clazz="getClinvarClass(clinvar.significance)" :value="clinvar.clinsig" :label="`ClinVar`" :link="clinvar.url" >
+                </variant-inspect-row>
 
-          <variant-inspect-row
-            :clazz="getImpactClass(info.vepImpact)" :value="info.vepImpact" :label="`Impact VEP`"  >
-          </variant-inspect-row>
+                <variant-inspect-row
+                        :clazz="getImpactClass(info.vepImpact)" :value="info.vepImpact" :label="`Impact VEP`"  >
+                </variant-inspect-row>
 
-          <variant-inspect-row
-            :clazz="getImpactClass(info.vepImpact)" :value="info.vepConsequence"   >
-          </variant-inspect-row>
+                <variant-inspect-row
+                        :clazz="getImpactClass(info.vepImpact)" :value="info.vepConsequence"   >
+                </variant-inspect-row>
 
-          <variant-inspect-row v-if="info.revel != '' && info.revel"
-            :clazz="getRevelClass(info)" :value="info.revel"   :label="`REVEL`" >
-          </variant-inspect-row>
-      </div>
-      <div class="variant-inspect-column">
-          <div class="variant-column-header">
-            Frequency
-          </div>
-          <variant-inspect-row :clazz="afGnomAD.class" :value="afGnomAD.percent" :label="`gnomAD`" :link="afGnomAD.link" >
-          </variant-inspect-row>
-          <div v-if="afGnomAD.totalCount > 0" class="variant-row no-icon">
-            <span>{{ afGnomAD.altCount }} out of {{ afGnomAD.totalCount }}</span>
-          </div>
-          <div v-if="afGnomAD.totalCount > 0"  class="variant-row no-icon">
-            <span>{{ afGnomAD.homCount }} hom</span>
-          </div>
-      </div>
-      <div class="variant-inspect-column">
-          <div class="variant-column-header">
-            Inheritance
-          </div>
-          <div class="variant-row ">
-            <app-icon :icon="selectedVariant.inheritance" style="margin-right:4px" width="16" height="16"></app-icon>
-            <span>{{ selectedVariant.inheritance == 'denovo' ? 'de novo' : selectedVariant.inheritance }}</span>
-          </div>
-      </div>
-      <div class="variant-inspect-column" v-if="showGenePhenotypes" >
-          <div class="variant-column-header">
-            Gene Phenotypes
-          </div>
-          <div v-if="geneHits" v-for="geneHit in genePhenotypeHits" :key="geneHit.key" class="variant-row" style="flex-flow:column">
-            <div v-for="geneRank in geneHit.geneRanks" :key="geneRank.rank">
-              <div>
-                <v-chip class="high">#{{ geneRank.rank }}</v-chip>
-                <span v-if="geneRank.source" class="pheno-source">{{ geneRank.source }}</span>
-                <span v-if="geneHit.searchTerm" class="pheno-search-term">{{ geneHit.searchTerm }}</span>
-              </div>
-
+                <variant-inspect-row v-if="info.revel != '' && info.revel"
+                                     :clazz="getRevelClass(info)" :value="info.revel"   :label="`REVEL`" >
+                </variant-inspect-row>
             </div>
             <div class="variant-inspect-column">
                 <div class="variant-column-header">
@@ -97,33 +120,17 @@
                     <app-icon :icon="selectedVariant.inheritance" style="margin-right:4px" width="16" height="16"></app-icon>
                     <span>{{ selectedVariant.inheritance == 'denovo' ? 'de novo' : selectedVariant.inheritance }}</span>
                 </div>
-                <div v-if="(pedTxt !== '')" class="variant-row">
-                    <Pedigree :pedTxtProp="pedTxt"></Pedigree>
-                </div>
             </div>
-            <div class="variant-inspect-column">
+            <div class="variant-inspect-column" v-if="showGenePhenotypes" >
                 <div class="variant-column-header">
                     Gene Phenotypes
                 </div>
-                <div class="variant-row ">
-                    <div>
+                <div v-if="geneHits" v-for="geneHit in genePhenotypeHits" :key="geneHit.key" class="variant-row" style="flex-flow:column">
+                    <div v-for="geneRank in geneHit.geneRanks" :key="geneRank.rank">
                         <div>
-                            <v-chip class="high">#14</v-chip>
-                            <span class="pheno-source">GTR</span>
-                            <span class="pheno-search-term">Smith Magenis Syndrome</span>
-                        </div>
-                        <div>
-                            <v-chip class="high">#28</v-chip>
-                            <span class="pheno-source">Phen.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="variant-row">
-                    <div>
-                        <div>
-                            <v-chip class="high">#114</v-chip>
-                            <span class="pheno-source">Phen.</span>
-                            <span class="pheno-search-term">Scoliosis</span>
+                            <v-chip class="high">#{{ geneRank.rank }}</v-chip>
+                            <span v-if="geneRank.source" class="pheno-source">{{ geneRank.source }}</span>
+                            <span v-if="geneHit.searchTerm" class="pheno-search-term">{{ geneHit.searchTerm }}</span>
                         </div>
                     </div>
                 </div>
@@ -133,9 +140,12 @@
                     Quality
                 </div>
                 <div class="variant-row">
-                    <v-icon class="sufficient">check_circle</v-icon>
-                    <span>Allele counts</span>
-                    <v-icon>more_vert</v-icon>
+                    <variant-allele-counts-menu
+                            :selectedVariant="selectedVariant"
+                            :affectedInfo="cohortModel.affectedInfo"
+                            :cohortModel="cohortModel.mode"
+                            :relationship="selectedVariantRelationship">
+                    </variant-allele-counts-menu>
                 </div>
                 <div class="variant-row">
                     <v-btn v-if="selectedVariantRelationship != 'known-variants' && cohortModel.getModel(selectedVariantRelationship ? selectedVariantRelationship : 'proband').isBamLoaded() "
@@ -150,16 +160,14 @@
 </template>
 
 <script>
-
-    import Vue               from 'vue'
-    import AppIcon           from "../partials/AppIcon.vue"
-    import VariantInspectRow from "../partials/VariantInspectRow.vue"
-    import VariantLinksMenu  from "../partials/VariantLinksMenu.vue"
-    import InfoPopup         from "../partials/InfoPopup.vue"
-    import GeneMenu          from "../partials/GeneMenu.vue"
-    import Pedigree from "pedigree-component"
-    import PedModel from "../../models/PedModel";
-
+    import Vue                      from 'vue'
+    import AppIcon                  from "../partials/AppIcon.vue"
+    import PedModel from "../../models/PedModel"
+    import VariantInspectRow        from "../partials/VariantInspectRow.vue"
+    import VariantLinksMenu         from "../partials/VariantLinksMenu.vue"
+    import VariantAlleleCountsMenu  from "../partials/VariantAlleleCountsMenu.vue"
+    import InfoPopup                from "../partials/InfoPopup.vue"
+    import TranscriptsMenu          from '../partials/TranscriptsMenu.vue'
     export default {
         name: 'variant-inspect-card',
         components: {
@@ -167,8 +175,7 @@
             InfoPopup,
             VariantLinksMenu,
             VariantInspectRow,
-            GeneMenu,
-            Pedigree
+            VariantAlleleCountsMenu
         },
         props: {
             selectedGene: null,
@@ -177,29 +184,21 @@
             selectedVariantRelationship: null,
             genomeBuildHelper: null,
             cohortModel: null,
+            showGenePhenotypes: null,
             info: null,
-            cohortModelReady: false
+            rawPedigree: null
+
         },
         data() {
             return {
-                pedTxt :  {
-                    Type: String,
-                    default: ''
-                }
-            }
-        },
-        watch: {
-            cohortModelReady: function() {
-                let self = this;
-                self.populatePedData();
-            },
-            'cohortModel.demoModelInfos.genome': function() {
-                // todo
+                genePhenotypeHits: null
             }
         },
         methods: {
+
             populatePedData: function(){
                 let self = this;
+                console.log("rawPed inside viz", self.rawPedigree);
                 let cohort = self.cohortModel.demoModelInfos.genome;
                 console.log("cohort", cohort);
                 let pModel = new PedModel(cohort);
@@ -260,13 +259,23 @@
             },
             getRevelClass: function(info) {
                 let self = this;
-                let clazz = "field-value revel-field";
+                let clazz = null;
                 self.cohortModel.translator.revelMap.forEach(function(revelRange) {
                     if (info.revel >= revelRange.min && info.revel < revelRange.max) {
-                        clazz += " " + revelRange.clazz;
+                        clazz = revelRange.clazz;
                     }
                 })
-                return clazz;
+                if (clazz) {
+                    if (clazz == 'revel_high') {
+                        return 'level-high';
+                    } else if (clazz == 'revel_moderate') {
+                        return 'level-medium';
+                    } else {
+                        return 'level-unremarkable';
+                    }
+                } else {
+                    return 'level-unremarkable';
+                }
             },
             getAfClass: function(af) {
                 if (af <= .01) {
@@ -283,84 +292,118 @@
                 } else if (impact == 'moderate') {
                     return 'level-medium'
                 } else {
+                    return 'level-unremarkable';
+                }
+            },
+            getClinvarClass: function(significance) {
+                if (significance == 'clinvar_path' || significance == 'clinvar_lpath') {
+                    return 'level-high';
+                } else if(significance == 'clinvar_cd') {
+                    return 'level-medium';
+                } else if (significance == 'clinvar_benign' || significance == 'clinvar_lbenign') {
+                    return 'level-unremarkable';
+                } else {
                     return '';
                 }
             },
-
-            onTranscriptSelected: function(transcript) {
-                var self = this;
-                self.$emit('transcript-selected', transcript);
-            },
-
-
-            onGeneSourceSelected: function(geneSource) {
+            initGenePhenotypeHits: function() {
                 let self = this;
-                self.$emit('gene-source-selected', geneSource);
-            },
-
-            onGeneRegionBufferChange: function(theGeneRegionBuffer) {
-                this.$emit("gene-region-buffer-change", theGeneRegionBuffer);
+                self.genePhenotypeHits = [];
+                let searchTermRecs = self.cohortModel.geneModel.getGenePhenotypeHits(self.selectedGene.gene_name);
+                if (searchTermRecs) {
+                    for (var searchTerm in searchTermRecs) {
+                        let searchTermLabel = searchTerm.split("_").join(" ");
+                        var rankRecs        = searchTermRecs[searchTerm];
+                        self.genePhenotypeHits.push( {key: searchTerm, searchTerm: searchTermLabel, geneRanks: rankRecs } );
+                    }
+                }
             }
         },
-
         computed: {
-            impactAndConsequence: function() {
-                return "<span class='" + this.getImpactClass(this.info.vepImpact) + "'>"
-                    + this.info.vepImpact
-                    + " - "
-                    +  this.info.vepConsequence
-                    + "</span>"
+            refAlt: function() {
+                let self = this;
+                var refAlt = "";
+                if (self.selectedGene && self.selectedGene.strand && self.selectedVariant) {
+                    if (self.isEduMode) {
+                        if (self.selectedGene.strand == "-") {
+                            refAlt = self.globalApp.utility.switchGenotype(self.selectedVariant.eduGenotype)
+                        } else {
+                            refAlt = self.selectedVariant.eduGenotype;
+                        }
+                    } else {
+                        refAlt =   self.info.refalt;
+                    }
+                }
+                return refAlt;
             },
             afGnomAD: function() {
-                if (this.selectedVariant.vepAf == null || this.selectedVariant.vepAf.gnomAD.AF == null) {
-                    return {percent: "?", link: null, class: ""};
-                } else if (this.selectedVariant.vepAf.gnomAD.AF == ".") {
-                    return {percent: "0%", link: null, class: "level-high"};
-                } else  {
-                    var gnomAD = {};
-                    gnomAD.link =  "http://gnomad.broadinstitute.org/variant/"
-                        + this.selectedVariant.chrom + "-"
-                        + this.selectedVariant.start + "-"
-                        + this.selectedVariant.ref + "-"
-                        + this.selectedVariant.alt;
-                    if (this.selectedVariant.gnomAD != null) {
+                if (this.selectedVariant.extraAnnot) {
+                    if (this.selectedVariant.gnomAD == null || this.selectedVariant.gnomAD.af == null) {
+                        return {percent: "?", link: null, class: ""};
+                    } else if (this.selectedVariant.gnomAD.af  == '.') {
+                        return {percent: "0%", link: null, class: "level-high"};
+                    } else  {
+                        var gnomAD = {};
+                        gnomAD.link =  "http://gnomad.broadinstitute.org/variant/"
+                            + this.selectedVariant.chrom + "-"
+                            + this.selectedVariant.start + "-"
+                            + this.selectedVariant.ref + "-"
+                            + this.selectedVariant.alt;
                         gnomAD.percent       = this.globalApp.utility.percentage(this.selectedVariant.gnomAD.af);
                         gnomAD.class         = this.getAfClass(this.selectedVariant.gnomAD.af);
                         gnomAD.percentPopMax = this.globalApp.utility.percentage(this.selectedVariant.gnomAD.afPopMax);
                         gnomAD.altCount      = this.selectedVariant.gnomAD.altCount;
                         gnomAD.totalCount    = this.selectedVariant.gnomAD.totalCount;
                         gnomAD.homCount      = this.selectedVariant.gnomAD.homCount;
-                    } else {
-                        gnomAD.percent       = this.globalApp.utility.percentage(this.selectedVariant.vepAF.gnomAD.AF);
-                        gnomAD.class         = this.getAfClass(this.selectedVariant.vepAF.gnomAD.AF);
+                        return gnomAD;
+                    }
+                } else {
+                    if (this.selectedVariant.vepAf == null || this.selectedVariant.vepAf.gnomAD.AF == null) {
+                        return {percent: "?", link: null, class: ""};
+                    } else if (this.selectedVariant.vepAf.gnomAD.AF == ".") {
+                        return {percent: "0%", link: null, class: "level-high"};
+                    } else  {
+                        var gnomAD = {};
+                        gnomAD.link =  "http://gnomad.broadinstitute.org/variant/"
+                            + this.selectedVariant.chrom + "-"
+                            + this.selectedVariant.start + "-"
+                            + this.selectedVariant.ref + "-"
+                            + this.selectedVariant.alt;
+                        gnomAD.percent       = this.globalApp.utility.percentage(this.selectedVariant.vepAf.gnomAD.AF);
+                        gnomAD.class         = this.getAfClass(this.selectedVariant.vepAf.gnomAD.AF);
                         gnomAD.percentPopMax = 0;
                         gnomAD.altCount      = 0;
                         gnomAD.totalCount    = 0;
                         gnomAD.homCount      = 0;
+                        return gnomAD;
                     }
-                    return gnomAD;
                 }
             },
-            af1000G: function(af) {
-                if (this.selectedVariant.af1000G == null) {
-                    return "0%";
-                } else  {
-                    var af = this.globalApp.utility.percentage(this.selectedVariant.af1000G);
-                    var popAF = this.formatPopAF(this.selectedVariant.vepAf['1000G']);
-                    return "<span class='"
-                        + this.getAfClass(this.selectedVariant.af1000G) + "'>"
-                        + af
-                        + "</span>"
-                        +"<span style='margin-left:2px''>"
-                        + popAF
-                        + "</span>";
-                }
-            },
-            afExAC: function() {
-                return this.selectedVariant.afExAC ? this.globalApp.utility.percentage(this.selectedVariant.afExAC) : "";
+            geneHits: function() {
+                return [
+                    { searchTerm: 'Smith Magenis',
+                        geneRanks: [
+                            {rank: 41, source: 'GTR'},
+                            {rank: 78, source: 'Phen.'},
+                        ]
+                    },
+                    { searchTerm: 'Scoliosis',
+                        geneRanks: [
+                            {rank: 115, source: 'Phen.'}
+                        ]
+                    },
+                ]
             }
         },
-
+        watch: {
+            cohortModelReady: function() {
+                let self = this;
+                self.populatePedData();
+            },
+            selectedVariant: function() {
+                this.initGenePhenotypeHits();
+            }
+        },
         filters: {
             showRelationship: function(buf) {
                 if (buf == null) {
@@ -371,73 +414,19 @@
                     // Capitalize first letter
                     return buf.charAt(0).toUpperCase() + buf.slice(1);
                 }
-            }
+            },
         },
-        updated() {
-            // let self = this;
-            // self.populatePedData();
+        updated: function() {
+        },
+        mounted: function() {
+        },
+        created: function() {
         }
     }
 </script>
 
 
-<style lang="sass" >
-    @import ../../../assets/sass/variables
-    #variant-inspect
-        padding-left: 10px
-        padding-top: 0px
-        padding-right: 10px
-        padding-bottom: 10px
-        margin-bottom: 10px
-        min-height: 200px
 
 
-        .variant-inspect-body
-            display: flex
-            flex-direction: row
-            flex-wrap: wrap
-            justify-content: space-between
-
-            .variant-inspect-column
-                display: flex
-                flex-direction: column
-
-
-                .variant-column-header
-                    font-size: 14px
-                    color:  $text-color
-                    margin-bottom: 10px
-
-                .variant-row
-                    display: flex
-                    flex-direction: row
-                    font-size: 13px
-                    margin-bottom: 10px
-
-
-        .rel-header
-            font-style: italic
-
-
-        #variant-heading
-            color: $app-color
-            padding-bottom: 10px
-            font-size: 15px
-            padding-top: 5px
-
-
-        .variant-action-button
-            padding: 0px
-            height: 22px !important
-            margin: 0px
-            min-width: 100px !important
-            max-width: 100px
-
-            .btn__content
-                color: $text-color !important
-                padding-left: 8px
-                padding-right: 8px
-                font-size: 12px
-</style>
 
 
