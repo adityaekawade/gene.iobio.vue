@@ -1,6 +1,6 @@
 import jQuery               from 'jquery'
-global.jQuery = jQuery
-global.$ = jQuery
+global.jQuery = jQuery;
+global.$ = jQuery;
 
 import globalEduTour        from './partials/GlobalEduTour.js'
 
@@ -25,20 +25,20 @@ import vue2animate          from 'vue2-animate/dist/vue2-animate.min.css'
 
 import bootstrap            from 'bootstrap/dist/css/bootstrap.css'
 import { Typeahead }        from 'uiv'
-Vue.use(Typeahead)
+Vue.use(Typeahead);
 
 import Vuetify              from 'vuetify'
 import                           'vuetify/dist/vuetify.css'
 import                           '../assets/css/siteVuetify.css'
-Vue.use(Vuetify)
+Vue.use(Vuetify);
 
 
 import VTooltip from 'v-tooltip'
 import                           '../assets/css/v-tooltip.css'
-Vue.use(VTooltip)
+Vue.use(VTooltip);
 
 import vmodal from 'vue-js-modal'
-Vue.use(vmodal)
+Vue.use(vmodal);
 
 
 import Util                 from './globals/Util.js'
@@ -166,20 +166,20 @@ const routes = [
     path: '/exhibit-cases-complete',
     component: ExhibitCasesComplete
   }
-]
+];
 
 const router = new VueRouter({
   'mode':  'history',
   'hashbang': false,
   'base': '/',
   'routes': routes
-})
+});
 
 // Google analytics
 Vue.use(VueAnalytics, {
   id: 'UA-47481907-5',
   router
-})
+});
 
 // define a globals mixin object
 Vue.mixin({
@@ -194,7 +194,7 @@ Vue.mixin({
     this.globalApp.utility = this.utility;
 
   }
-})
+});
 
 
 
@@ -205,4 +205,4 @@ window.vm = new Vue({
   },
   render: h => h(App),
   router
-})
+});

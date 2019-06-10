@@ -272,7 +272,7 @@ export default {
       let self = this;
       let sortedFilters = self.filterModel.getSortedActiveFilters().map(function(filter) {
         return {'name': filter.key, 'display': filter.title, 'custom': filter.custom, showTooltip: false, showEdit: false, tooltip: '' };
-      })
+      });
       sortedFilters.push(
         {name: 'coverage', display: 'Insufficient coverage',   showTooltip: false, showEdit: false, custom: false, tooltip: ''}
       );
@@ -309,7 +309,7 @@ export default {
     onEditFilter: function(filter) {
       this.filters.forEach(function(f) {
         f.showEdit = false;
-      })
+      });
       this.currentFilter = filter;
       this.currentFilter.showEdit = true;
     },
@@ -318,7 +318,7 @@ export default {
       if (self.currentFilter) {
         let refName = this.currentFilter.name + 'SettingsRef';
         self.$refs[refName].apply();
-        self.currentFilter.showEdit = false
+        self.currentFilter.showEdit = false;
         self.$emit('filter-settings-applied');
         self.$emit('filter-settings-closed');
       }

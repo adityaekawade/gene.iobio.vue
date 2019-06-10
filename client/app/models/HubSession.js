@@ -65,7 +65,7 @@ export default class HubSession {
                       'sample':         theSample.files.vcf ? theSample.vcf_sample_name : theSample.name,
                       'vcf':            theSample.files.vcf,
                       'tbi':            theSample.files.tbi == null || theSample.files.tbi.indexOf(theSample.files.vcf) == 0 ? null : theSample.files.tbi
-                    }
+                    };
 
                     if (theSample.files.bam != null) {
                       modelInfo.bam = theSample.files.bam;
@@ -83,7 +83,7 @@ export default class HubSession {
                     modelInfos.push(modelInfo);
                   }
 
-                })
+                });
                 promises.push(p);
               })
             }
@@ -162,7 +162,7 @@ export default class HubSession {
       self.getPedigreeForSample(project_id, sample_id)
       .done(rawPedigree => {
         const rawPedigreeOrig = $.extend({}, rawPedigree);
-        let pedigree = self.parsePedigree(rawPedigree, sample_id)
+        let pedigree = self.parsePedigree(rawPedigree, sample_id);
         resolve({pedigree: pedigree, rawPedigree: rawPedigreeOrig});
       })
       .fail(error => {
@@ -179,7 +179,7 @@ export default class HubSession {
     // the proband will be overwritten
     // This also assume no grandparents/grandchildren
 
-    let pedigree = {}
+    let pedigree = {};
 
     // Look for proband, which should have mother and father filled in and is the sample selected
     let probandIndex = raw_pedigree.findIndex(d => ( d.id == sample_id && d.pedigree.maternal_id && d.pedigree.paternal_id ) );
@@ -201,13 +201,13 @@ export default class HubSession {
       pedigree['proband'] = proband;
 
       // Get mother
-      const motherIndex = raw_pedigree.findIndex(d => d.id == proband.pedigree.maternal_id)
+      const motherIndex = raw_pedigree.findIndex(d => d.id == proband.pedigree.maternal_id);
       if (motherIndex != -1) {
         pedigree['mother'] = raw_pedigree.splice(motherIndex, 1)[0]
       }
 
       // Get mother
-      const fatherIndex = raw_pedigree.findIndex(d => d.id == proband.pedigree.paternal_id)
+      const fatherIndex = raw_pedigree.findIndex(d => d.id == proband.pedigree.paternal_id);
       if (fatherIndex != -1) {
         pedigree['father'] = raw_pedigree.splice(fatherIndex, 1)[0]
       }
@@ -220,12 +220,12 @@ export default class HubSession {
     raw_pedigree.forEach(sample => {
       if (sample.pedigree.maternal_id != null || sample.pedigree.paternal_id != null
           && sample.pedigree.id != pedigree.proband.id) {
-        pedigree['siblings'] = (pedigree['siblings'] || [] )
+        pedigree['siblings'] = (pedigree['siblings'] || [] );
         pedigree['siblings'].push(sample);
       } else {
         pedigree['unparsed'] = (pedigree['siblings'] || []).push(sample)
       }
-    })
+    });
 
 
     return pedigree;
@@ -272,9 +272,9 @@ export default class HubSession {
             if (file.type == 'vcf') {
               sample.vcf_sample_name = file.vcf_sample_name;
             }
-          })
+          });
           promises.push(p);
-        })
+        });
         Promise.all(promises)
         .then(response => {
           resolve({'sample': sample, 'relationship': relationship, 'fileMap': fileMap});
@@ -296,7 +296,7 @@ export default class HubSession {
         resolve(response.data);
       })
       .fail(error => {
-        console.log("Unable to get files for sample " + sample_id)
+        console.log("Unable to get files for sample " + sample_id);
         reject(error);
       })
     })

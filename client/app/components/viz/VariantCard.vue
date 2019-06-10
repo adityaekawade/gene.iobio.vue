@@ -777,7 +777,7 @@ export default {
         let theDepth = null;
         var matchingVariants = self.sampleModel.loadedVariants.features.filter(function(v) {
           return v.start == variant.start && v.alt == variant.alt && v.ref == variant.ref;
-        })
+        });
 
         if (matchingVariants.length > 0) {
           theDepth = matchingVariants[0].bamDepth;
@@ -850,7 +850,7 @@ export default {
         row += '<span class="' + (covFields[fieldName] ? 'danger' : '') + '">' + (covFields[fieldName] ? covFields[fieldName]: '') + '</span>';
         row += "</div>";
         return row;
-      }
+      };
 
       var html = '<div>'
                + '<span id="exon-tooltip-title"' + (lock ? 'style="margin-top:8px">' : '>') + (feature.hasOwnProperty("exon_number") ? "Exon " + feature.exon_number : "") + '</span>'
@@ -877,7 +877,7 @@ export default {
       if (lock) {
         tooltip.select("#exon-tooltip-thresholds").on("click", function() {
           self.$emit("show-coverage-cutoffs");
-        })
+        });
         tooltip.select("#exon-tooltip-close").on("click", function() {
           self.selectedExon = null;
           self.hideExonTooltip(true);

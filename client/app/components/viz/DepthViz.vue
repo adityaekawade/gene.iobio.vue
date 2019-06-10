@@ -195,7 +195,7 @@ export default {
           })
           .on("d3region", function(featureObject, feature, lock) {
             self.$emit("region-selected", featureObject, feature, lock );
-          })
+          });
 
           this.setDepthChart();
       },

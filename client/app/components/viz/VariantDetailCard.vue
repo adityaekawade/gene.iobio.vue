@@ -842,7 +842,7 @@ export default {
             adjustedMaxAlleleCount = +genotype.genotypeDepth;
           }
         }
-      })
+      });
 
 
       affectedInfo.forEach(function(info) {
@@ -882,7 +882,7 @@ export default {
 
 
           var barContainer = row.append("div")
-                                  .attr("class", rel + "-alt-count allele-count-bar")
+                                  .attr("class", rel + "-alt-count allele-count-bar");
           if (genotype) {
             me._appendAlleleCountSVG(barContainer,
               genotype.altCount,
@@ -1159,7 +1159,7 @@ export default {
       if (info.revel >= revelRange.min && info.revel < revelRange.max) {
           clazz += " " + revelRange.clazz;
         }
-      })
+      });
       return clazz;
     },
     getSiftClass: function(variant) {

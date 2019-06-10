@@ -116,7 +116,7 @@ export default function stackedAreaChartD3() {
       var categoryMap = {};
       categories.forEach(function(cat) {
         categoryMap[cat] = true;
-      })
+      });
       var maxY = d3.max(data, function(d) {
         var vals = d3.keys(d).map(function(key){
           return categoryMap.hasOwnProperty(key) ? d[key] : 0
@@ -187,9 +187,8 @@ export default function stackedAreaChartD3() {
 
 
     });
-  };
-
-  chart.categories = function(_) {
+  }
+    chart.categories = function(_) {
     if (!arguments.length) return categories;
     categories = _;
     return chart;
@@ -247,31 +246,31 @@ export default function stackedAreaChartD3() {
     if (!arguments.length) return xTickCount;
     xTickCount = _;
     return chart;
-  }
+  };
 
   chart.yTickCount = function(_) {
     if (!arguments.length) return yTickCount;
     yTickCount = _;
     return chart;
-  }
+  };
 
   chart.formatXTick = function(_) {
     if (!arguments.length) return formatXTick;
     formatXTick = _;
     return chart;
-  }
+  };
 
   chart.xAxisLabel = function(_) {
     if (!arguments.length) return xAxisLabel;
     xAxisLabel = _;
     return chart;
-  }
+  };
 
   chart.yAxisLabel = function(_) {
     if (!arguments.length) return yAxisLabel;
     yAxisLabel = _;
     return chart;
-  }
+  };
 
   chart.showXAxis = function(_) {
     if (!arguments.length) return showXAxis;

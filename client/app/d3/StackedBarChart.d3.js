@@ -113,7 +113,7 @@ export default function stackedBarChartD3() {
       } else {
         x.domain(d3.extent(data, function(d) { return xValue(d); }));
       }
-      var yMax = d3.max(data, function(d) { return d.total; })
+      var yMax = d3.max(data, function(d) { return d.total; });
       y.domain([0, yMax]);
 
       // What is the min y value that will equal a min height (the height of the chart is 0, so subtract min from height)
@@ -280,9 +280,8 @@ export default function stackedBarChartD3() {
 
 
     });
-  };
-
-  chart.calcBarWidth = function(x, d) {
+  }
+    chart.calcBarWidth = function(x, d) {
     var bw = 0;
     if (options.hasOwnProperty('featureBarWidth') && options.featureBarWidth == true) {
       bw = x(d.end) - x(d.start);
@@ -295,7 +294,7 @@ export default function stackedBarChartD3() {
     } else {
       return bw;
     }
-  }
+  };
 
   chart.categories = function(_) {
     if (!arguments.length) return categories;
@@ -400,31 +399,31 @@ export default function stackedBarChartD3() {
     if (!arguments.length) return xTickCount;
     xTickCount = _;
     return chart;
-  }
+  };
 
   chart.yTickCount = function(_) {
     if (!arguments.length) return yTickCount;
     yTickCount = _;
     return chart;
-  }
+  };
 
   chart.formatXTick = function(_) {
     if (!arguments.length) return formatXTick;
     formatXTick = _;
     return chart;
-  }
+  };
 
   chart.xAxisLabel = function(_) {
     if (!arguments.length) return xAxisLabel;
     xAxisLabel = _;
     return chart;
-  }
+  };
 
   chart.yAxisLabel = function(_) {
     if (!arguments.length) return yAxisLabel;
     yAxisLabel = _;
     return chart;
-  }
+  };
 
   chart.showXAxis = function(_) {
     if (!arguments.length) return showXAxis;

@@ -12,18 +12,18 @@ export default function featureMatrixD3() {
 
   var tooltipHTML = function(colObject, rowIndex) {
     return "tootip at row " + rowIndex;
-  }
+  };
 
   var _adjustTooltipCoordinates = function(variant) {
-    return;
-  }
+
+  };
 
   var columnLabel = function( d, i) {
     return d.type;
-  }
+  };
   var columnLabelClass = function( d, i) {
     return "";
-  }
+  };
   var columnLabelSymbol = null;
 
   // variables
@@ -72,7 +72,7 @@ export default function featureMatrixD3() {
         }
       }
     }
-  }
+  };
 
 
   function chart(selection, options) {
@@ -563,7 +563,7 @@ export default function featureMatrixD3() {
       columnLabel = _;
       return chart;
     }
-  }
+  };
 
   chart.columnLabelClass = function(_) {
     if (!arguments.length) {
@@ -572,7 +572,7 @@ export default function featureMatrixD3() {
       columnLabelClass = _;
       return chart;
     }
-  }
+  };
 
 
   chart.columnLabelSymbol = function(_) {
@@ -582,7 +582,7 @@ export default function featureMatrixD3() {
       columnLabelSymbol = _;
       return chart;
     }
-  }
+  };
 
   chart.margin = function(_) {
     if (!arguments.length) return margin;
@@ -618,7 +618,7 @@ export default function featureMatrixD3() {
     if (!arguments.length) return _adjustTooltipCoordinates;
     _adjustTooltipCoordinates = _;
     return chart;
-  }
+  };
 
   chart.x = function(_) {
     if (!arguments.length) return x;
@@ -649,19 +649,19 @@ export default function featureMatrixD3() {
     if (!arguments.length) return showTransition;
     showTransition = _;
     return chart;
-  }
+  };
 
   chart.matrixRows = function(_) {
     if (!arguments.length) return matrixRows;
     matrixRows = _;
     return chart;
-  }
+  };
 
   chart.cellSize = function(_) {
     if (!arguments.length) return cellSize;
     cellSize = _;
     return chart;
-  }
+  };
 
 
   chart.cellWidth = function(_) {
@@ -671,7 +671,7 @@ export default function featureMatrixD3() {
       cellWidth = _;
       return chart;
     }
-  }
+  };
 
   chart.cellHeight = function(_) {
     if (!arguments.length) {
@@ -680,7 +680,7 @@ export default function featureMatrixD3() {
       cellHeight = _;
       return chart;
     }
-  }
+  };
 
   chart.cellHeights = function(_) {
     if (!arguments.length) {
@@ -689,23 +689,23 @@ export default function featureMatrixD3() {
       cellHeights = _;
       return chart;
     }
-  }
+  };
 
   chart.rowLabelWidth = function(_) {
     if (!arguments.length) return rowLabelWidth;
     rowLabelWidth = _;
     return chart;
-  }
+  };
   chart.columnLabelHeight = function(_) {
     if (!arguments.length) return columnLabelHeight;
     columnLabelHeight = _;
     return chart;
-  }
+  };
   chart.tooltipHTML = function(_) {
     if (!arguments.length) return tooltipHTML;
     tooltipHTML = _;
     return chart;
-  }
+  };
 
   chart.selectVariant = function(_) {
     if (!arguments.length) {
@@ -714,7 +714,7 @@ export default function featureMatrixD3() {
       selectVariant = _;
       return chart;
     }
-  }
+  };
 
   chart.highlightVariant = function(_) {
     if (!arguments.length) {
@@ -723,7 +723,7 @@ export default function featureMatrixD3() {
       highlightVariant = _;
       return chart;
     }
-  }
+  };
 
 
   // This adds the "on" methods to our custom exports

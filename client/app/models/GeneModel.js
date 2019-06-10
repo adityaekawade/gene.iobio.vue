@@ -24,7 +24,7 @@ class GeneModel {
         humanproteinatlas:
                    { display: 'Human Protein Atlas', url: 'https://www.proteinatlas.org/search/gene_name:GENESYMBOL'},
         ucsc:      { display: 'UCSC Browser', url: 'http://genome.ucsc.edu/cgi-bin/hgTracks?db=GENOMEBUILD-ALIAS-UCSC&position=GENECOORD'}
-    }
+    };
 
     this.variantLinkTemplates = {
         gnomad:    { display: 'gnomAD',       url: 'http://gnomad.broadinstitute.org/variant/VARIANTCOORD-GNOMAD'},
@@ -32,7 +32,7 @@ class GeneModel {
         dbsnp:     { display: 'dbSNP',        url: 'http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=VARIANT-RSID'},
         ucsc:      { display: 'UCSC Browser', url: 'http://genome.ucsc.edu/cgi-bin/hgTracks?db=GENOMEBUILD-ALIAS-UCSC&position=VARIANTCOORD-UCSC'},
         clinvar:   { display: 'ClinVar',      url: 'https://www.ncbi.nlm.nih.gov/clinvar/variation/VARIANT-CLINVAR-UID/'}
-    }
+    };
 
     this.geneSource = null;
     this.refseqOnly = {};
@@ -257,7 +257,7 @@ class GeneModel {
         me.geneNames.forEach(function(geneName) {
           promises.push(me.promiseGetGeneObject(geneName));
           promises.push(me.promiseGetGenePhenotypes(geneName));
-        })
+        });
 
         return Promise.all(promises)
       })
@@ -310,7 +310,7 @@ class GeneModel {
             } else {
               unknownGeneNames[geneName.trim().toUpperCase()] = true;
             }
-          })
+          });
           promises.push(p);
         }
       });
@@ -326,7 +326,7 @@ class GeneModel {
         genesToAdd.forEach(function(geneName) {
           me.geneNames.push(geneName);
           me.sortedGeneNames.push(geneName);
-        })
+        });
 
 
 
@@ -410,7 +410,7 @@ class GeneModel {
                   var fields = rec.split("\t");
                   me.clinvarGenes[fields[0]] = +fields[1];
                 }
-              })
+              });
 
               resolve();
             } else {
@@ -498,7 +498,7 @@ class GeneModel {
           if (feature.feature_type == 'CDS') {
             cdsLength += Math.abs(parseInt(feature.end) - parseInt(feature.start));
           }
-        })
+        });
         transcript.cdsLength = cdsLength;
       } else {
         transcript.cdsLength = +0;
@@ -611,7 +611,7 @@ class GeneModel {
           if (feature.feature_type == 'CDS') {
             cdsLength += Math.abs(parseInt(feature.end) - parseInt(feature.start));
           }
-        })
+        });
         if (cdsLength > maxCdsLength) {
           maxCdsLength = cdsLength;
           canonical = transcript;
@@ -673,18 +673,18 @@ class GeneModel {
 
         return compare * strandMultiplier;
 
-      })
+      });
 
     var exonCount = 0;
     sortedExons.forEach(function(exon) {
       exonCount++
-    })
+    });
 
     var exonNumber = 1;
     sortedExons.forEach(function(exon) {
       exon.exon_number = exonNumber + "/" + exonCount;
       exonNumber++;
-    })
+    });
     return sortedExons;
   }
 
@@ -707,7 +707,7 @@ class GeneModel {
 
       let theGeneNames = geneNames.filter(function(geneName) {
         return me.geneNCBISummaries[geneName] == null;
-      })
+      });
 
       if (theGeneNames.length == 0) {
         resolve();
@@ -722,7 +722,7 @@ class GeneModel {
             }
             searchGeneExpr += geneName + "[Gene name]";
           }
-        })
+        });
         var searchUrl = me.NCBI_GENE_SEARCH_URL + "&term=" + "(9606[Taxonomy ID] AND (" + searchGeneExpr + "))";
         me.pendingNCBIRequests[theGeneNames] = true;
 
@@ -738,7 +738,7 @@ class GeneModel {
                 if (sumData.result == null || sumData.result.uids.length == 0) {
                   if (sumData.esummaryresult && sumData.esummaryresult.length > 0) {
                     sumData.esummaryresult.forEach( function(message) {
-                      console.log("Unable to get NCBI gene summary from eutils esummary")
+                      console.log("Unable to get NCBI gene summary from eutils esummary");
                       console.log(message);
                     });
                   }
@@ -751,7 +751,7 @@ class GeneModel {
                     var geneInfo = sumData.result[uid];
                     me.geneNCBISummaries[geneInfo.name] = geneInfo;
 
-                  })
+                  });
                   delete me.pendingNCBIRequests[theGeneNames];
                   resolve();
                 }
@@ -801,7 +801,7 @@ class GeneModel {
               if (sumData.result == null || sumData.result.uids.length == 0) {
                 if (sumData.esummaryresult && sumData.esummaryresult.length > 0) {
                   sumData.esummaryresult.forEach( function(message) {
-                    console.log("Unable to get NCBI gene summary from eutils esummary")
+                    console.log("Unable to get NCBI gene summary from eutils esummary");
                     console.log(message);
                   });
                 }
@@ -1127,7 +1127,7 @@ class GeneModel {
 
     var variantCoordUCSC = null;
     var variantCoordVarSome = null;
-    var variantCoordGNomAD
+    var variantCoordGNomAD;
     var geneObject = me.geneObjects[geneName];
 
     var buildAliasUCSC = me.genomeBuildHelper.getBuildAlias('UCSC');
@@ -1230,7 +1230,7 @@ class GeneModel {
       return this.allKnownGeneNames[geneName];
     } else {
       return this.allKnownGeneNames[geneName.toUpperCase()]
-    };
+    }
   }
 
 

@@ -40,7 +40,7 @@ export default function variantD3() {
     return (variant.type + ': '
           + variant.start
           + (variant.end > variant.start+1 ?  ' - ' + variant.end : ""));
-  }
+  };
 
 
   function getSymbol(d,i) {
@@ -142,7 +142,7 @@ export default function variantD3() {
                   .duration(500)
                   .style("opacity", 0);
     }
-  }
+  };
 
 
 
@@ -302,7 +302,7 @@ export default function variantD3() {
 
         svg.on("click", function(d) {
           dispatch.d3outsideclick(null);
-        })
+        });
 
         var g = svg.select("g.group");
 
@@ -593,7 +593,7 @@ export default function variantD3() {
                   .attr("y2", variantHeight + 2)
                   .style("opacity", 0);
           }
-        })
+        });
 
 
 
@@ -658,7 +658,7 @@ export default function variantD3() {
 
     return chart;
 
-  }
+  };
 
 
   chart.removeFlaggedVariant = function(svg, variant) {
@@ -674,9 +674,9 @@ export default function variantD3() {
        }
     });
     if (!matchingVariant) {
-      return;
+
     }
-  }
+  };
 
   function tickFormatter (d) {
     if ((d / 1000000) >= 1)
@@ -775,79 +775,79 @@ export default function variantD3() {
     if (!arguments.length) return xTickFormat;
     xTickFormat = _;
     return chart;
-  }
+  };
 
    chart.showBrush = function(_) {
     if (!arguments.length) return showBrush;
     showBrush = _;
     return chart;
-  }
+  };
 
   chart.brushHeight = function(_) {
     if (!arguments.length) return brushHeight;
     brushHeight = _;
     return chart;
-  }
+  };
 
   chart.verticalLayers = function(_) {
     if (!arguments.length) return verticalLayers;
     verticalLayers = _;
     return chart;
-  }
+  };
 
   chart.verticalPadding = function(_) {
     if (!arguments.length) return verticalPadding;
     verticalPadding = _;
     return chart;
-  }
+  };
 
 
   chart.showTransition = function(_) {
     if (!arguments.length) return showTransition;
     showTransition = _;
     return chart;
-  }
+  };
 
   chart.clazz = function(_) {
     if (!arguments.length) return clazz;
     clazz = _;
     return chart;
-  }
+  };
 
   chart.lowestWidth = function(_) {
     if (!arguments.length) return lowestWidth;
     lowestWidth = _;
     return chart;
-  }
+  };
 
   chart.dividerLevel = function(_) {
     if (!arguments.length) return dividerLevel;
     dividerLevel = _;
     return chart;
-  }
+  };
 
   chart.tooltipHTML = function(_) {
     if (!arguments.length) return tooltipHTML;
     tooltipHTML = _;
     return chart;
-  }
+  };
 
 
   chart.showCircle = function(_) {
     if (!arguments.length) return showCircle;
     showCircle = _;
     return chart;
-  }
+  };
   chart.hideCircle = function(_) {
     if (!arguments.length) return hideCircle;
     hideCircle = _;
     return chart;
-  }
+  };
   chart.highlightVariant = function(_) {
     if (!arguments.length) return highlightVariant;
     highlightVariant = _;
     return chart;
-  }
+  };
 
 
 

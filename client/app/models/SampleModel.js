@@ -77,7 +77,7 @@ class SampleModel {
         theVcfData.loadState[taskName] = true;
       }
       resolve();
-    }
+    };
 
     return new Promise(function(resolve, reject) {
       if (theVcfData != null) {
@@ -372,9 +372,9 @@ class SampleModel {
           exonBin.other    += +rec.other;
           exonBin.unknown  += +rec.unknown;
         }
-      })
+      });
       exonBins.push(exonBin);
-    })
+    });
     return exonBins;
   }
 
@@ -561,7 +561,7 @@ class SampleModel {
       }
       resolve(loadedVariantCount);
 
-    }
+    };
     return new Promise(function(resolve, reject) {
       var theVcfData = null;
       if (data != null && data.features != null) {
@@ -673,7 +673,7 @@ class SampleModel {
           if (data.fbData && data.fbData.features) {
             var calledVariants = data.fbData.features.filter(function(variant) {
               return !SampleModel.bypassZyg(variant, me.relationship);
-            })
+            });
             resolve(calledVariants.length > 0);
           } else {
             resolve(false);
@@ -1216,7 +1216,7 @@ class SampleModel {
               callbackDataLoaded(coverageData);
             }
       }
-    }
+    };
 
     var performCallback = function(regions, theVcfData, coverageForRegion, coverageForPoints) {
       if (regions.length > 0) {
@@ -1230,7 +1230,7 @@ class SampleModel {
               callbackDataLoaded(coverageForRegion, CacheHelper.BAM_DATA);
             }
       }
-    }
+    };
 
 
     // A gene has been selected.  Read the bam file to obtain
@@ -1405,7 +1405,7 @@ class SampleModel {
                       found = true;
                     }
 
-                  })
+                  });
                   return found;
                 }
               });
@@ -1473,7 +1473,7 @@ class SampleModel {
                           extraAnnotFields.forEach(function(field) {
                             theVariant[field]        = v[field];
                             sourceVariant[field]     = v[field];
-                          })
+                          });
 
 
 
@@ -1564,7 +1564,7 @@ class SampleModel {
           }
         }).map(function(variant) {
           return {name: trRefName, start: variant.start, end: variant.end};
-        })
+        });
 
         if (regions.length > 0) {
 
@@ -1767,9 +1767,9 @@ class SampleModel {
               model.fbData = me.reconstituteFbData(vcfData);
             }
           }
-         })
+         });
          promises.push(p);
-      })
+      });
 
 
 
@@ -1846,7 +1846,7 @@ class SampleModel {
                     if (callback) {
                       callback();
                     }
-                    return;
+
                   } else {
                     var model          = variantModels[idx];
                     var theVcfData  = results[idx];
@@ -1861,7 +1861,7 @@ class SampleModel {
                     theVcfData.gene = theGeneObject;
                     theVcfData.features.forEach(function(variant) {
                       variant.gene = theGeneObject;
-                    })
+                    });
                     resultMap[model.relationship] = theVcfData;
 
                     if (!isBackground) {
@@ -1871,7 +1871,7 @@ class SampleModel {
                     postProcessNextVariantCard(idx, callback);
 
                   }
-                }
+                };
 
                 postProcessNextVariantCard(idx, function() {
 
@@ -1897,7 +1897,7 @@ class SampleModel {
                 reject(error);
               }
             } else {
-              var error = "ERROR - empty vcf results for " + theGene.gene_name;;
+              var error = "ERROR - empty vcf results for " + theGene.gene_name;
               console.log(error);
               reject(error);
             }
@@ -1940,13 +1940,13 @@ class SampleModel {
 
       var affectedSibs = affectedInfo.filter(function(info) {
         return info.status == 'affected' && info.relationship == 'sibling';
-      })
-      me._determineAffectedStatusImpl(theVcfData, 'affected', affectedSibs)
+      });
+      me._determineAffectedStatusImpl(theVcfData, 'affected', affectedSibs);
 
       var unaffectedSibs = affectedInfo.filter(function(info) {
         return info.status == 'unaffected' && info.relationship == 'sibling';
-      })
-      me._determineAffectedStatusImpl(theVcfData, 'unaffected', unaffectedSibs)
+      });
+      me._determineAffectedStatusImpl(theVcfData, 'unaffected', unaffectedSibs);
 
       // For some reason, vcf data is reset to pre determineSibStatus unless we clear out vcfData
       // at this point
@@ -1985,7 +1985,7 @@ class SampleModel {
         var candidateVariants = {
           'mother': [],
           'father': []
-        }
+        };
 
         theVcfData.features.forEach(function(variant) {
           let passes = me.cohort.filterModel.determinePassCriteria('compoundHet', variant, {'ignore': ['inheritance']});
@@ -2008,7 +2008,7 @@ class SampleModel {
               candidateVariants.father.push(variant);
             }
           }
-        })
+        });
 
 
 
@@ -2032,7 +2032,7 @@ class SampleModel {
                       start: otherVariant.start,
                       ref:   otherVariant.ref,
                       alt:   otherVariant.alt
-                    }
+                    };
                     theVariant.compoundHets.push(proxyVariant);
                   }
                 })
@@ -2097,7 +2097,7 @@ class SampleModel {
       var current = variant;
       subfields.forEach(function(subfield) {
         current = current[subfield];
-      })
+      });
       return current;
     } else {
       return null;
@@ -2394,7 +2394,7 @@ class SampleModel {
               ];
             extraAnnotFields.forEach(function(field) {
               variant[field]        = annotatedRec[field];
-            })
+            });
 
             vcfIter++;
             annotIter++;
@@ -2416,11 +2416,11 @@ class SampleModel {
           annotIter++;
         }
       }
-    }
+    };
 
     // Load the clinvar info for the variants loaded from the vcf
     var sortedFeatures      = theVcfData.features.sort(SampleModel.orderVariantsByPosition);
-    var sortedAnnotVariants = annotatedVcfData.features.sort(SampleModel.orderVariantsByPosition)
+    var sortedAnnotVariants = annotatedVcfData.features.sort(SampleModel.orderVariantsByPosition);
     loadVariantIds(sortedFeatures, sortedAnnotVariants);
   }
 
@@ -2464,7 +2464,7 @@ class SampleModel {
           clinvarIter++;
         }
       }
-    }
+    };
 
     // Load the clinvar info for the variants loaded from the vcf
     var sortedFeatures = theVcfData.features.sort(SampleModel.orderVariantsByPosition);
@@ -2519,11 +2519,11 @@ class SampleModel {
           clinvarIter++;
         }
       }
-    }
+    };
 
     // Load the clinvar info for the variants loaded from the vcf
     var sortedFeatures = theVcfData.features.sort(SampleModel.orderVariantsByPosition);
-    var sortedClinvarVariants = clinvarVariants.sort(SampleModel.orderVariantsByPosition)
+    var sortedClinvarVariants = clinvarVariants.sort(SampleModel.orderVariantsByPosition);
     loadClinvarProperties(sortedFeatures, sortedClinvarVariants);
 
   }
@@ -2573,7 +2573,7 @@ class SampleModel {
       variant.clinvarTrait = {};
     }
 
-    var phTokens = clinvar.trait_set.map(function(d) { return d.trait_name; }).join ('; ')
+    var phTokens = clinvar.trait_set.map(function(d) { return d.trait_name; }).join ('; ');
     if (phTokens != "") {
       var tokens = phTokens.split("; ");
       var idx = 0;
@@ -2632,7 +2632,7 @@ class SampleModel {
               var attr = affectedStatus + "_" + field;
               fbVariant[attr]  = source[attr];
             })
-          })
+          });
           if (me.relationship != 'proband') {
             fbVariant.genotypeRefCountProband      = source.genotypeRefCountProband;
             fbVariant.genotypeAltCountProband      = source.genotypeAltCountProband;
@@ -2676,7 +2676,7 @@ class SampleModel {
     // vcf data to start fresh
     theVcfData.features  = theVcfData.features.filter(function(d,i) {
       return !d.hasOwnProperty("fbCalled") || d.fbCalled != 'Y';
-    })
+    });
 
 
     // Compare the variant sets, marking the variants as unique1 (only in vcf),
@@ -2866,7 +2866,7 @@ class SampleModel {
       var incrementEqualityCount = function(condition, counterObject) {
         var countAttribute = condition ? 'matchCount' : 'notMatchCount';
         counterObject[countAttribute]++;
-      }
+      };
       // Iterate through the clicked annotations for each variant. The variant
       // needs to match
       // at least one of the selected values (e.g. HIGH or MODERATE for IMPACT)
@@ -2946,7 +2946,7 @@ class SampleModel {
       // we set that the annotation critera was not met.  Example:  When filter is
       // clinvar 'not equal' pathogenic, and variant.clinvar == 'pathogenic' matchCount > 0,
       // so the variants does not meet the annotation criteria
-      var meetsNotEqualAnnot = true
+      var meetsNotEqualAnnot = true;
       for (var key in evaluations) {
         var evalObject = evaluations[key];
 
@@ -2986,7 +2986,7 @@ class SampleModel {
 
     var theFilters = filterModel.getModelSpecificFilters('known-variants').filter(function(theFilter) {
       return theFilter.value == true;
-    })
+    });
 
     var filteredVariants = data.features.filter(function (d) {
 
@@ -3009,7 +3009,7 @@ class SampleModel {
 
       return meetsRegion && meetsFilter;
 
-    })
+    });
 
     var pileupObject = this._pileupVariants(filteredVariants, start, end);
 
@@ -3033,7 +3033,7 @@ class SampleModel {
 
       var theFilters = filterModel.getModelSpecificFilters('sfari-variants').filter(function(theFilter) {
           return theFilter.value === true;
-      })
+      });
 
       var filteredVariants = data.features.filter(function (d) {
 
@@ -3199,7 +3199,7 @@ class SampleModel {
         console.log(msg);
         reject(msg);
       } else {
-        var key = me._getCacheKey(dataKind, geneName.toUpperCase(), transcript)
+        var key = me._getCacheKey(dataKind, geneName.toUpperCase(), transcript);
         me.getCacheHelper().promiseGetData(key)
          .then(function(data) {
           resolve(data);
@@ -3381,7 +3381,7 @@ SampleModel._summarizeDanger = function(geneName, theVcfData, options = {}, gene
       dangerObject[lowestClazz] =  clazzes[lowestClazz];
     }
     return dangerObject;
-  }
+  };
 
   var getLowestImpact = function(impactClasses) {
     var classes = ['HIGH', 'MODERATE', 'MODIFIER', 'LOW'];
@@ -3394,7 +3394,7 @@ SampleModel._summarizeDanger = function(geneName, theVcfData, options = {}, gene
       }
     }
     return {};
-  }
+  };
 
   var hvLevel = dangerCounts.harmfulVariantsInfo
                 .map( d => d.level )
@@ -3425,7 +3425,7 @@ SampleModel._summarizeDanger = function(geneName, theVcfData, options = {}, gene
   dangerCounts.failedFilter = filterModel.hasFilters() && dangerCounts.featureCount == 0;
 
   return dangerCounts;
-}
+};
 
 SampleModel.isZygosityToBypass = function(variant, relationship) {
   return variant.zygosity == null
@@ -3433,7 +3433,7 @@ SampleModel.isZygosityToBypass = function(variant, relationship) {
          || variant.zygosity.toUpperCase() == "NONE"
          || (variant.zygosity.toUpperCase() == "GT_UNKNOWN" && relationship != 'known-variants')
          || variant.zygosity == "";
-}
+};
 
 
 
@@ -3454,7 +3454,7 @@ SampleModel._determineAffectedStatusForVariant = function(variant, affectedStatu
         matchesCount++;
       }
     }
-  })
+  });
 
   if (matchesCount > 0 && matchesCount == affectedInfo.length) {
     variant[summaryField] = "present_all";
@@ -3463,7 +3463,7 @@ SampleModel._determineAffectedStatusForVariant = function(variant, affectedStatu
   }  else {
     variant[summaryField] = "present_none";
   }
-}
+};
 
 
 
@@ -3525,20 +3525,20 @@ SampleModel.summarizeDangerForGeneCoverage = function(dangerObject, geneCoverage
   }
 
   return dangerObject;
-}
+};
 
 SampleModel.summarizeError =  function(theError) {
   var summaryObject = {};
 
   summaryObject.CONSEQUENCE = {};
   summaryObject.IMPACT = {};
-  summaryObject.CLINVAR = {}
+  summaryObject.CLINVAR = {};
   summaryObject.INHERITANCE = {};
   summaryObject.ERROR = theError;
   summaryObject.featureCount = 0;
 
   return summaryObject;
-}
+};
 
 
 
@@ -3553,7 +3553,7 @@ SampleModel.calcMaxAlleleCount = function(theVcfData, maxAlleleCount=0) {
     })
   }
   return maxAlleleCount;
-}
+};
 
 
 
@@ -3565,11 +3565,10 @@ SampleModel.orderVariantsByPosition = function(a, b) {
   var chromB = b.chrom.indexOf("chr") == 0 ? b.chrom.split("chr")[1] : b.chrom;
   if (!$.isNumeric(chromA)) {
     chromA = chromA.charCodeAt(0);
-  };
+  }
   if (!$.isNumeric(chromB)) {
     chromB = chromB.charCodeAt(0);
-  };
-
+  }
   if (+chromA == +chromB) {
     if (a.start == b.start) {
       if (refAltA == refAltB) {
@@ -3593,7 +3592,7 @@ SampleModel.orderVariantsByPosition = function(a, b) {
   }
 
 
-}
+};
 
 SampleModel.orderVcfRecords = function(rec1, rec2) {
 
@@ -3605,11 +3604,10 @@ SampleModel.orderVcfRecords = function(rec1, rec2) {
   var chrom2 = fields2[0].indexOf("chr") == 0 ? fields2[0].split("chr")[1] : fields2[0];
   if (!$.isNumeric(chrom1)) {
     chrom1 = chrom1.charCodeAt(0);
-  };
+  }
   if (!$.isNumeric(chrom2)) {
     chrom2 = chrom2.charCodeAt(0);
-  };
-
+  }
   var start1  = +fields1[1];
   var start2  = +fields2[1];
 
@@ -3637,7 +3635,7 @@ SampleModel.orderVcfRecords = function(rec1, rec2) {
     }
   }
 
-}
+};
 export default SampleModel
 
 

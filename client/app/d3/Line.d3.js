@@ -53,11 +53,11 @@ export default function lineD3() {
     var xn = ctm.e + x*ctm.a;
     var yn = ctm.f + y*ctm.d;
     return { x: xn, y: yn };
-  }
+  };
 
   var formatCircleText = function(pos, depth) {
         return pos + ',' + depth;
-  }
+  };
   var showCircle = function(start, theDepth) {
     if (container == null) {
       return;
@@ -143,7 +143,7 @@ export default function lineD3() {
                  .duration(500)
                  .style("opacity", 0);
 
-  }
+  };
 
   function exports(selection, cb) {
 
@@ -262,7 +262,7 @@ export default function lineD3() {
 
 
       var yAxis = d3.svg.axis()
-          .scale(y)
+          .scale(y);
       if (yAxisLine) {
           yAxis.innerTickSize(-innerWidth)
                .outerTickSize(0)
@@ -276,7 +276,7 @@ export default function lineD3() {
         var newTickValues = [];
         newTickValues.push(0);
         newTickValues.push(d3.round(y.domain()[1]/2));
-        newTickValues.push(y.domain()[1])
+        newTickValues.push(y.domain()[1]);
         yAxis.tickValues(newTickValues);
       } else if (yTicks) {
         xAxis.ticks(yTicks);
@@ -303,7 +303,7 @@ export default function lineD3() {
       }
 
 
-      svgGroup = svg.selectAll("g.group")
+      svgGroup = svg.selectAll("g.group");
       svgGroup.selectAll("g.x").remove();
       if (showXAxis) {
         svgGroup.selectAll("g.x").data([data]).enter()
@@ -324,7 +324,7 @@ export default function lineD3() {
       // not sure why, but second time through, the svgGroup is a
       // "placeholder", so we will just select the group again
       // to remove the path and then add the new one.
-      svgGroup = svg.selectAll("g.group")
+      svgGroup = svg.selectAll("g.group");
       svgGroup.select("#line-chart-path").remove();
 
       var linePath = svgGroup.append("path")
@@ -427,7 +427,7 @@ export default function lineD3() {
              .attr("x1", d3.round(x(x.domain()[0])))
              .attr("x2", d3.round(x(x.domain()[1])))
              .attr("y1", 0)
-             .attr("y2", 0)
+             .attr("y2", 0);
     if (label) {
       lineGroup.append("text")
                .attr("x", d3.round(x(x.domain()[1])))
@@ -441,7 +441,7 @@ export default function lineD3() {
 
 
     }
-  }
+  };
 
   exports.highlightRegions = function(regions, options, regionStart, regionEnd, regionHeight) {
     if (container == null) {
@@ -496,25 +496,25 @@ export default function lineD3() {
      })
 
 
-  }
+  };
 
 
   exports.showCircle = function(_) {
     if (!arguments.length) return showCircle;
     showCircle = _;
     return exports;
-  }
+  };
   exports.hideCircle = function(_) {
     if (!arguments.length) return hideCircle;
     hideCircle = _;
     return exports;
-  }
+  };
 
   exports.regionGlyph = function(_) {
     if (!arguments.length) return regionGlyph;
     regionGlyph = _;
     return exports;
-  }
+  };
 
 
 
@@ -558,103 +558,103 @@ export default function lineD3() {
     if (!arguments.length) return pos;
     pos = _;
     return exports;
-  }
+  };
 
   exports.depth = function(_) {
     if (!arguments.length) return depth;
     depth = _;
     return exports;
-  }
+  };
 
   exports.kind = function(_) {
     if (!arguments.length) return kind;
     kind = _;
     return exports;
-  }
+  };
 
   exports.maxDepth = function(_) {
     if (!arguments.length) return maxDepth;
     maxDepth = _;
     return exports;
-  }
+  };
 
   exports.showXAxis = function(_) {
     if (!arguments.length) return showXAxis;
     showXAxis = _;
     return exports;
-  }
+  };
 
   exports.showYAxis = function(_) {
     if (!arguments.length) return showYAxis;
     showYAxis = _;
     return exports;
-  }
+  };
 
   exports.yAxisLine = function(_) {
     if (!arguments.length) return yAxisLine;
     yAxisLine = _;
     return exports;
-  }
+  };
 
   exports.yTicks = function(_) {
     if (!arguments.length) return yTicks;
     yTicks = _;
     return exports;
-  }
+  };
 
   exports.yTickFormat = function(_) {
     if (!arguments.length) return yTickFormat;
     yTickFormat = _;
     return exports;
-  }
+  };
 
   exports.formatXTick = function(_) {
     if (!arguments.length) return formatXTick;
     formatXTick = _;
     return exports;
-  }
+  };
 
   exports.showTransition = function(_) {
     if (!arguments.length) return showTransition;
     showTransition = _;
     return exports;
-  }
+  };
 
   exports.showGradient = function(_) {
     if (!arguments.length) return showGradient;
     showGradient = _;
     return exports;
-  }
+  };
 
   exports.showBrush = function(_) {
     if (!arguments.length) return showBrush;
     showBrush = _;
     return exports;
-  }
+  };
 
   exports.brushHeight = function(_) {
     if (!arguments.length) return brushHeight;
     brushHeight = _;
     return exports;
-  }
+  };
 
   exports.xStart = function(_) {
     if (!arguments.length) return xStart;
     xStart = _;
     return exports;
-  }
+  };
 
   exports.xEnd = function(_) {
     if (!arguments.length) return xEnd;
     xEnd = _;
     return exports;
-  }
+  };
 
   exports.formatCircleText = function(_) {
     if (!arguments.length) return formatCircleText;
     formatCircleText = _;
     return exports;
-  }
+  };
 
   // This adds the "on" methods to our custom exports
   d3.rebind(exports, dispatch, "on");

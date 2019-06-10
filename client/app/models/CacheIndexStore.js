@@ -38,7 +38,7 @@ CacheIndexStore.prototype.promiseInit = function(callback) {
 
   })
 
-}
+};
 
 CacheIndexStore.prototype.promiseCreateObjectStores = function(event) {
   var me = this;
@@ -57,13 +57,13 @@ CacheIndexStore.prototype.promiseCreateObjectStores = function(event) {
               transaction.oncomplete = function(event) {
                     // Now store is available to be populated
                     resolve();
-                }
+                };
                 transaction.onerror = function(event) {
             var msg = "Error in CacheIndexStore.promiseCreateObjectStores():  " + event.target.errorCode;
               console.log(msg);
               reject(msg);
             };
-        })
+        });
         promises.push(p);
       }
     }
@@ -76,7 +76,7 @@ CacheIndexStore.prototype.promiseCreateObjectStores = function(event) {
 
   })
 
-}
+};
 
 CacheIndexStore.prototype.promiseSetData = function(dataKind, gene, key, data) {
   var me = this;
@@ -87,18 +87,18 @@ CacheIndexStore.prototype.promiseSetData = function(dataKind, gene, key, data) {
 
     tx.oncomplete = function() {
       resolve();
-    }
+    };
     tx.onerror = function(event) {
       var msg = "Error in CacheIndexStore.promiseSetData():  " + event.target.errorCode;
         console.log(msg);
         reject(msg);
-    }
+    };
 
     store.put({id: key, gene: gene, data: data});
   })
 
 
-}
+};
 
 CacheIndexStore.prototype.promiseGetData = function(dataKind, key) {
   var me = this;
@@ -123,7 +123,7 @@ CacheIndexStore.prototype.promiseGetData = function(dataKind, key) {
   })
 
 
-}
+};
 
 CacheIndexStore.prototype.promiseRemoveData = function(dataKind, key) {
   var me = this;
@@ -135,7 +135,7 @@ CacheIndexStore.prototype.promiseRemoveData = function(dataKind, key) {
 
     delData.onsuccess = function(event) {
       resolve();
-    }
+    };
     delData.onerror = function(event) {
         var msg = "Error in CacheIndexStore.promiseRemoveData():  " + event.target.errorCode + ". " + dataKind;
         console.log(msg);
@@ -143,7 +143,7 @@ CacheIndexStore.prototype.promiseRemoveData = function(dataKind, key) {
       }
   });
 
-}
+};
 
 CacheIndexStore.prototype.getDataByGene = function(dataKind, gene, callback) {
 
@@ -161,7 +161,7 @@ CacheIndexStore.prototype.getDataByGene = function(dataKind, gene, callback) {
       }
     };
 
-}
+};
 
 CacheIndexStore.prototype.getKeys = function(dataKind, callback) {
   var me = this;
@@ -178,7 +178,7 @@ CacheIndexStore.prototype.getKeys = function(dataKind, callback) {
         callback(getKeys.result);
       }
     };
-}
+};
 
 CacheIndexStore.prototype.promiseGetAllKeys = function() {
   var me = this;
@@ -198,7 +198,7 @@ CacheIndexStore.prototype.promiseGetAllKeys = function() {
           var msg = "Error in CacheIndexStore.promiseGetAllKeys():  " + event.target.errorCode + ". " + dataKind;
             console.log(msg);
             reject(msg);
-        }
+        };
 
           getKeys.onsuccess = function(event) {
           if (event.target.result != null) {
@@ -218,7 +218,7 @@ CacheIndexStore.prototype.promiseGetAllKeys = function() {
     }
   })
 
-}
+};
 
 CacheIndexStore.prototype.showContents = function(dataKind, callback) {
   var me = this;
@@ -239,4 +239,4 @@ CacheIndexStore.prototype.showContents = function(dataKind, callback) {
       }
     }
   };
-}
+};

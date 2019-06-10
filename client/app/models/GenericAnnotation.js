@@ -97,7 +97,7 @@ export default function GenericAnnotation(glyph) {
         filter:     'range'
       }
     }
-  }
+  };
 
   me.descriptor.AVIA3['GNOMAD_EXOME.gnomAD_exome_ALL'].matrixRow =
   {
@@ -106,7 +106,7 @@ export default function GenericAnnotation(glyph) {
       match:     'range',
       attribute: me.descriptor.AVIA3['GNOMAD_EXOME.gnomAD_exome_ALL'].fieldPath,
       map:       me.descriptor.AVIA3['GNOMAD_EXOME.gnomAD_exome_ALL'].valueMap
-  }
+  };
 
   me.descriptor.AVIA3['MT:KEY'].matrixRow =
   {
@@ -136,7 +136,7 @@ GenericAnnotation.prototype.getMatrixRows = function(annotators) {
     })
   }
   return matrixRows;
-}
+};
 
 GenericAnnotation.prototype.appendGenericFilters = function(annotators) {
   var me = this;
@@ -199,7 +199,7 @@ GenericAnnotation.prototype.appendGenericFilters = function(annotators) {
   }
   return html;
 
-}
+};
 
 GenericAnnotation.prototype.formatContent = function(variant, clazzMap, EMPTY_VALUE) {
   var me = this;
@@ -240,7 +240,7 @@ GenericAnnotation.prototype.formatContent = function(variant, clazzMap, EMPTY_VA
     annotDiv += "</div>"
   }
   return annotDiv;
-}
+};
 
 GenericAnnotation.prototype._formatContentRow = function(label, value, clazzMap, EMPTY_VALUE) {
   if (value == "") {
@@ -250,7 +250,7 @@ GenericAnnotation.prototype._formatContentRow = function(label, value, clazzMap,
         + '<div class="' + clazzMap.label + '" style="text-align:right">' + label + '</div>'
         + '<div class="' + clazzMap.value + '">' + value + '</div>'
         + '</div>';
-}
+};
 
 GenericAnnotation.prototype.shouldShow = function(annotator, fieldPath) {
   var me = this;
@@ -266,7 +266,7 @@ GenericAnnotation.prototype.shouldShow = function(annotator, fieldPath) {
   }
 
   return !hide;
-}
+};
 
 GenericAnnotation.prototype.getLabel = function(annotator, fieldPath) {
   var me = this;
@@ -283,7 +283,7 @@ GenericAnnotation.prototype.getLabel = function(annotator, fieldPath) {
   }
 
   return label ? label : fieldPath[fieldPath.length-1];
-}
+};
 
 GenericAnnotation.prototype.getValue = function(variant, fieldPath) {
   var me = this;
@@ -300,9 +300,9 @@ GenericAnnotation.prototype.getValue = function(variant, fieldPath) {
         node = null;
       }
     }
-  })
+  });
   return node;
-}
+};
 
 GenericAnnotation.prototype.setSimpleFields = function(variant) {
   var me = this;
@@ -322,6 +322,6 @@ GenericAnnotation.prototype.setSimpleFields = function(variant) {
 
     }
   }
-}
+};
 
 

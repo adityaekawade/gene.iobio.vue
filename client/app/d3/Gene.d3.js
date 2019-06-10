@@ -42,7 +42,7 @@ export default function geneD3() {
       minFtWidth = 0.5;
   var transcriptClass = function(d,i) {
     return 'transcript';
-  }
+  };
   var geneD3_utrHeight = undefined,
       geneD3_cdsHeight = undefined,
       geneD3_arrowHeight = undefined,
@@ -56,7 +56,7 @@ export default function geneD3() {
 
   var featureClass = function(d,i) {
     return d.feature_type.toLowerCase();
-  }
+  };
 
   var featureGlyph = function(d,i) {
   };
@@ -109,7 +109,7 @@ export default function geneD3() {
         transcript.features.forEach(function(feature) {
           feature.transcript_type = transcript.transcript_type;
         })
-      })
+      });
 
 
       // Select the svg element, if it exists.
@@ -118,7 +118,7 @@ export default function geneD3() {
       svg.enter()
         .append("svg")
         .attr("width", geneD3_widthPercent ? geneD3_widthPercent : geneD3_width)
-        .attr("height", geneD3_heightPercent ? geneD3_heightPercent : geneD3_height+margin.top+margin.bottom)
+        .attr("height", geneD3_heightPercent ? geneD3_heightPercent : geneD3_height+margin.top+margin.bottom);
 
       // The chart dimensions could change after instantiation, so update viewbox dimensions
       // every time we draw the chart.
@@ -169,7 +169,7 @@ export default function geneD3() {
              .style("visibility", "visible");
           container.selectAll("svg").selectAll(".x.brush .resize path")
              .style("visibility", "visible");
-        })
+        });
 
 
       var axisEnter = svg.selectAll("g.x.axis").data([0]).enter().append('g');
@@ -218,7 +218,7 @@ export default function geneD3() {
             svg.selectAll('.transcript.current').classed("current", false);
             d3.select(this.parentNode).classed("current", true);
             dispatch.d3selected(selectedTranscript);
-          })
+          });
 
       transcript.selectAll(".reference").remove();
       transcript.selectAll('.reference')
@@ -285,7 +285,7 @@ export default function geneD3() {
           } else {
             return feature.feature_type.toLowerCase() == 'exon';
           }
-      }
+      };
 
 
       transcript.selectAll('.transcript rect.utr, .transcript rect.cds, .transcript rect.exon').data(function(d) {
@@ -337,7 +337,7 @@ export default function geneD3() {
               // show the tooltip
               var featureObject = d3.select(this);
               dispatch.d3featuretooltip(featureObject, d, true);
-           })
+           });
 
 
       // Add any feature glyphs
@@ -370,7 +370,7 @@ export default function geneD3() {
                   // show the tooltip
                   var featureObject = d3.select(this);
                   dispatch.d3featureglyphtooltip(featureObject, d, true);
-               })
+               });
 
 
       // Update class
@@ -630,19 +630,19 @@ export default function geneD3() {
     if (!arguments.length) return showBrush;
     geneD3_showBrush = _;
     return chart;
-  }
+  };
 
   chart.selectedTranscript = function(_) {
     if (!arguments.length) return selectedTranscript;
     selectedTranscript = _;
     return chart;
-  }
+  };
 
   chart.showLabel = function(_) {
     if (!arguments.length) return geneD3_showLabel;
     geneD3_showLabel = _;
     return chart;
-  }
+  };
 
 
   // This adds the "on" methods to our custom exports

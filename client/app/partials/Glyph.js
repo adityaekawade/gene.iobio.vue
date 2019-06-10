@@ -199,7 +199,7 @@ export default class Glyph {
       af_rare:      { fill: "rgb(247, 138, 31)",       transform: symbolDim.transform,   size: symbolDim.size},
       af_uncommon:  { fill: "rgb(224, 195, 128)",      transform: symbolDim.transform,   size: symbolDim.size},
       af_common:    { fill: "rgb(189,189,189)",        transform: symbolDim.transform,   size: symbolDim.size}
-    }
+    };
     // For the gene badge, we will display in a smaller size
     if (options && options.hasOwnProperty('transform')) {
       symbolAttrs[selection.datum().clazz].transform = options.transform;
@@ -225,7 +225,7 @@ export default class Glyph {
     }
     var symbolAttrs = {
       afhighest_rare:  { fill: "rgba(204, 28, 29, 0.79)", transform: symbolDim.transform,   size: symbolDim.size}
-    }
+    };
     // For the gene badge, we will display in a smaller size
     if (options && options.hasOwnProperty('transform')) {
       symbolAttrs[selection.datum().clazz].transform = options.transform;
@@ -546,7 +546,7 @@ export default class Glyph {
                    .attr("x", 0)
                    .attr("y", 11)
                    .attr("dy", "0em")
-                   .text(selection.datum().value)
+                   .text(selection.datum().value);
 
     this.wrap(text, options.cellSize, 3);
   }

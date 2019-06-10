@@ -38,14 +38,14 @@ export default {
   },
   methods: {
     dragStart (e) {
-      this.dragging = true
-      this.startX = e.pageX
+      this.dragging = true;
+      this.startX = e.pageX;
       this.startSplit = this.split
     },
     dragMove (e) {
       if (this.dragging) {
-        const dx = e.pageX - this.startX
-        const totalWidth = this.$el.offsetWidth
+        const dx = e.pageX - this.startX;
+        const totalWidth = this.$el.offsetWidth;
         this.split = this.startSplit + ~~(dx / totalWidth * 100)
       }
     },

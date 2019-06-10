@@ -67,7 +67,7 @@ export default function vcfiobio(theGlobalApp) {
     '6':   'drug_response',
     '7':   'other',
     '255': 'other'
-  }
+  };
 
   var GNOMAD_TAGS = {
     'AF':          'af',
@@ -107,7 +107,7 @@ export default function vcfiobio(theGlobalApp) {
     'AF_sas': ['pop', 'sas', 'af'],
     'AC_sas': ['pop', 'sas', 'altCount'],
     'AN_sas': ['pop', 'sas', 'totalCount'],
-  }
+  };
 
 
   var effectCategories = [
@@ -153,54 +153,54 @@ export default function vcfiobio(theGlobalApp) {
 
   exports.isFile = function() {
     return sourceType != null && sourceType == SOURCE_TYPE_FILE;
-  }
+  };
 
   exports.hasFileOrUrl = function() {
     return vcfURL != null || vcfFile !=null;
-  }
+  };
 
   exports.clear = function() {
     vcfURL = null;
     tbiUrl = null;
     vcfFile = null;
-  }
+  };
 
   exports.clearVcfURL = function() {
     vcfURL = null;
     tbiUrl = null;
-  }
+  };
 
   exports.setEndpoint = function(theEndpoint) {
     endpoint = theEndpoint;
-  }
+  };
 
   exports.getEndpoint = function() {
     return endpoint;
-  }
+  };
 
   exports.setIsEduMode = function(flagIsEduMode) {
     isEduMode = flagIsEduMode;
-  }
+  };
 
 
   exports.setGenericAnnotation = function(theGenericAnnotation) {
     genericAnnotation = theGenericAnnotation;
-  }
+  };
 
   exports.getGenericAnnotation = function() {
     return genericAnnotation;
-  }
+  };
 
   exports.setGenomeBuildHelper = function(theGenomeBuildHelper) {
     genomeBuildHelper = theGenomeBuildHelper;
-  }
+  };
 
   exports.getGenomeBuildHelper = function() {
     return genomeBuildHelper;
-  }
+  };
   exports.getAnnotators = function() {
     return this.infoFields ? Object.keys(this.infoFields) : [];
-  }
+  };
 
   var errorMessageMap =  {
     "tabix Could not load .tbi": {
@@ -215,7 +215,7 @@ export default function vcfiobio(theGlobalApp) {
         regExp:  /tabix\sError:\s.*:\sstderr\s-\s\[E::hts_open_format\]\sfail\sto\sopen\sfile/,
         message: "Unable to access the file. "
      }
-  }
+  };
 
   var ignoreMessages =  [
     /tabix\sError:\s.*:\sstderr\s-\s\[M::test_and_fetch\]\sdownloading\sfile\s.*/,
@@ -235,7 +235,7 @@ export default function vcfiobio(theGlobalApp) {
         callback(success, message);
     });
 
-  }
+  };
 
   exports.getHeader = function(callback) {
     var me = this;
@@ -264,7 +264,7 @@ export default function vcfiobio(theGlobalApp) {
 
       cmd.on('error', function(error) {
         console.log(error);
-      })
+      });
       cmd.run();
 
     } else if (vcfFile) {
@@ -277,7 +277,7 @@ export default function vcfiobio(theGlobalApp) {
       callback(null);
     }
 
-  }
+  };
 
 
   exports.checkVcfUrl = function(url, tbiUrl, callback) {
@@ -304,7 +304,7 @@ export default function vcfiobio(theGlobalApp) {
           if (rec.indexOf("#") == 0) {
             me._parseHeaderForInfoFields(rec);
           }
-        })
+        });
         callback(success);
       }
     });
@@ -322,7 +322,7 @@ export default function vcfiobio(theGlobalApp) {
     });
 
     cmd.run();
-  }
+  };
 
   exports.ignoreErrorMessage = function(error) {
     var me = this;
@@ -334,7 +334,7 @@ export default function vcfiobio(theGlobalApp) {
     });
     return ignore;
 
-  }
+  };
 
   exports.translateErrorMessage = function(error) {
     var me = this;
@@ -346,13 +346,13 @@ export default function vcfiobio(theGlobalApp) {
       }
     }
     return message ? message : error;
-  }
+  };
 
   exports.clearVcfFile = function() {
     vcfReader = null;
     vcfFile = null;
     tabixFile = null;
-  }
+  };
 
   exports.openVcfFile = function(fileSelection, callback) {
     sourceType = SOURCE_TYPE_FILE;
@@ -406,9 +406,9 @@ export default function vcfiobio(theGlobalApp) {
     }
 
     callback(true);
-    return;
 
-  }
+
+  };
 
 
   function showFileFormatMessage() {
@@ -424,7 +424,7 @@ export default function vcfiobio(theGlobalApp) {
     alertify.confirm("You must select a compressed vcf file and its corresponding index file in order to run this app. ",
         function (e) {
         if (e) {
-            return;
+
         } else {
             window.location = 'http://iobio.io/2015/09/03/install-run-tabix/';
         }
@@ -437,40 +437,40 @@ export default function vcfiobio(theGlobalApp) {
 
   exports.setSamples = function(sampleNames) {
     samples = sampleNames;
-  }
+  };
   exports.getSamples = function() {
     return samples;
-  }
+  };
   exports.getVcfFile = function() {
     return vcfFile;
-  }
+  };
   exports.getTabixFile = function() {
     return tabixFile;
-  }
+  };
   exports.setVcfFile = function(file) {
     vcfFile = file;
-  }
+  };
 
   exports.getVcfURL = function() {
     return vcfURL;
-  }
+  };
 
   exports.getTbiURL = function() {
     return tbiUrl;
-  }
+  };
 
   exports.setVcfURL = function(url, tbiUrl) {
     vcfURL = url;
     tbiUrl = tbiUrl;
-  }
+  };
 
   exports.getSourceType = function() {
     return sourceType;
-  }
+  };
 
   exports.setSourceType = function(st) {
     sourceType = st;
-  }
+  };
 
 
 
@@ -485,12 +485,12 @@ export default function vcfiobio(theGlobalApp) {
     } else {
       return ref;
     }
-  }
+  };
 
 
   exports.isNumeric = function(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
-  }
+  };
 
 
 
@@ -500,7 +500,7 @@ export default function vcfiobio(theGlobalApp) {
     } else {
       this._getLocalReferenceLengths(callback);
     }
-  }
+  };
 
 
 
@@ -513,7 +513,7 @@ export default function vcfiobio(theGlobalApp) {
       refDensity.length = 0;
 
       if (tbiIdx.idxContent.head.n_ref == 0) {
-        var errorMsg = "Invalid index file.  The number of references is set to zero.  Try recompressing the vcf with bgzip and regenerating the index with tabix."
+        var errorMsg = "Invalid index file.  The number of references is set to zero.  Try recompressing the vcf with bgzip and regenerating the index with tabix.";
         if (callbackError) {
           callbackError(errorMsg);
         }
@@ -547,7 +547,7 @@ export default function vcfiobio(theGlobalApp) {
 
     });
 
-  }
+  };
 
 
   exports._getRemoteReferenceLengths = function(callback, callbackError) {
@@ -555,7 +555,7 @@ export default function vcfiobio(theGlobalApp) {
     var buffer = "";
     var refName;
 
-    var cmd = me.getEndpoint().getVcfDepth(vcfURL, tbiUrl)
+    var cmd = me.getEndpoint().getVcfDepth(vcfURL, tbiUrl);
 
     cmd.on('data', function(data) {
 
@@ -565,7 +565,7 @@ export default function vcfiobio(theGlobalApp) {
 
       buffer += data;
 
-    })
+    });
 
     // All data has been streamed.
     cmd.on('end', function() {
@@ -625,7 +625,7 @@ export default function vcfiobio(theGlobalApp) {
       if (callback) {
         callback(refData);
       }
-    })
+    });
 
     // Catch error event when fired
     cmd.on('error', function(error) {
@@ -633,7 +633,7 @@ export default function vcfiobio(theGlobalApp) {
       if (callbackError) {
         callbackError("Error occurred in loadRemoteIndex. " +  error);
       }
-    })
+    });
 
     // execute command
     cmd.run();
@@ -663,7 +663,7 @@ export default function vcfiobio(theGlobalApp) {
           }
 
       });
-  }
+  };
 
 
   /* When sfariMode = true, variant id field is assigned. */
@@ -717,7 +717,7 @@ export default function vcfiobio(theGlobalApp) {
       }
 
     });
-  }
+  };
 
 
   exports._getLocalVariantsImpl = function(refName, geneObject, selectedTranscript, regions, isMultiSample, vcfSampleNames, sampleNamesToGenotype, annotationEngine, clinvarMap, isRefSeq, hgvsNotation, getRsId, vepAF, cache, callback, errorCallback, gnomADExtra=false) {
@@ -750,7 +750,7 @@ export default function vcfiobio(theGlobalApp) {
           callback(theRecords);
         }
       }
-    }
+    };
 
 
     var theRegions = null;
@@ -782,7 +782,7 @@ export default function vcfiobio(theGlobalApp) {
 
 
 
-  }
+  };
 
   exports._getRemoteVariantsImpl = function(refName, geneObject, selectedTranscript, regions, isMultiSample, vcfSampleNames, sampleNamesToGenotype, annotationEngine, clinvarMap, isRefSeq, hgvsNotation, getRsId, vepAF, useServerCache, callback, errorCallback, sfariMode = false, gnomADExtra = false) {
 
@@ -865,7 +865,7 @@ export default function vcfiobio(theGlobalApp) {
 
     cmd.run();
 
-  }
+  };
 
 
 
@@ -887,7 +887,7 @@ export default function vcfiobio(theGlobalApp) {
         });
 
     });
-  }
+  };
 
   exports._getExonRegions = function(transcript) {
 
@@ -907,7 +907,7 @@ export default function vcfiobio(theGlobalApp) {
       .map( function(exon) {
         return {start: exon.start, end: exon.end};
       })
-  }
+  };
 
   exports._getKnownVariantsHistoDataImpl = function(refName, geneObject, transcript, binLength, callback) {
 
@@ -946,7 +946,7 @@ export default function vcfiobio(theGlobalApp) {
               // All fields are numeric
               resultRec[fieldName] = +fields[i];
               i++;
-            })
+            });
             // Find the mid-point of the interval (binned region)
             resultRec.point = resultRec.start + ((resultRec.end - resultRec.start) / 2);
 
@@ -964,13 +964,13 @@ export default function vcfiobio(theGlobalApp) {
 
     cmd.run();
 
-  }
+  };
 
 
 
   exports.clearVepInfoFields = function() {
     this.infoFields.VEP = null;
-  }
+  };
 
   exports._parseHeaderForInfoFields = function(record) {
     var me = this;
@@ -984,7 +984,7 @@ export default function vcfiobio(theGlobalApp) {
       var fieldMap = me._parseInfoHeaderRecord(record);
       me.infoFields.AVIA3 = fieldMap;
     }
-  }
+  };
 
   exports._parseInfoHeaderRecord = function(record) {
     var fieldMap = {};
@@ -1004,7 +1004,7 @@ export default function vcfiobio(theGlobalApp) {
       }
     }
     return fieldMap;
-  }
+  };
 
 
   exports.getSampleNames = function(callback) {
@@ -1013,7 +1013,7 @@ export default function vcfiobio(theGlobalApp) {
     } else {
       this._getLocalSampleNames(callback);
     }
-  }
+  };
 
 
   exports._getLocalSampleNames = function(callback) {
@@ -1037,7 +1037,7 @@ export default function vcfiobio(theGlobalApp) {
       });
    });
 
-  }
+  };
 
 
   exports._getRemoteSampleNames = function(callback) {
@@ -1073,7 +1073,7 @@ export default function vcfiobio(theGlobalApp) {
 
     cmd.run();
 
-  }
+  };
 
   exports.parseVcfRecordsForASample = function(annotatedRecs, refName, geneObject, selectedTranscript, clinvarMap, hasExtraAnnot, sampleNamesToGenotype, sampleIndex, vepAF) {
     var me = this;
@@ -1118,7 +1118,7 @@ export default function vcfiobio(theGlobalApp) {
       var results = me._parseVcfRecords(vcfObjects, refName, geneObject, selectedTranscript, clinvarMap, hasExtraAnnot, false, sampleNamesToGenotype, sampleIndex, vepAF, false);
       return {'annotatedRecs': annotatedRecs, 'results': results};
 
-  }
+  };
 
   exports._promiseAnnotateVcfRecords = function(records, refName, geneObject, selectedTranscript, clinvarMap, hasExtraAnnot, isMultiSample, vcfSampleNames, sampleNamesToGenotype, annotationEngine, isRefSeq, hgvsNotation, getRsId, vepAF, useServerCache, gnomADExtra) {
     var me = this;
@@ -1165,7 +1165,7 @@ export default function vcfiobio(theGlobalApp) {
         resolve([annotatedRecs, results]);
       });
     });
-  }
+  };
 
   exports.promiseGetClinvarRecords = function(theVcfData, refName, geneObject, clinvarGenes, clinvarLoadVariantsFunction) {
     var me = this;
@@ -1216,7 +1216,7 @@ export default function vcfiobio(theGlobalApp) {
 
 
     });
-  }
+  };
 
   exports._getClinvarVariantRegions = function(refName, geneObject, variants, clinvarGenes) {
     var regions = [];
@@ -1240,7 +1240,7 @@ export default function vcfiobio(theGlobalApp) {
       regions.push({'refName': '0', 'start': 0, 'end': 0});
     }
     return regions;
-  }
+  };
 
   // This method will obtain clinvar annotations from a clinvar vcf.
   // When there is no internet (isOffline == true), read the clinvar vcf from a locally served
@@ -1321,7 +1321,7 @@ export default function vcfiobio(theGlobalApp) {
       cmd.run();
     });
 
-  }
+  };
 
 
   exports.promiseGetClinvarEutilsImpl = function(variants, refName, geneObject, clinvarLoadVariantsFunction) {
@@ -1382,16 +1382,16 @@ export default function vcfiobio(theGlobalApp) {
             if (data["esearchresult"]["ERROR"] != undefined) {
               if (requestClinvarSummaryTries < 2 ) {
                 requestClinvarSummaryTries += 1;
-                console.log('clinvar request failed ' + requestClinvarSummaryTries + ' times (' + data["esearchresult"]["ERROR"] + '). Trying again ...')
+                console.log('clinvar request failed ' + requestClinvarSummaryTries + ' times (' + data["esearchresult"]["ERROR"] + '). Trying again ...');
                 requestClinvarSummary(url);
               } else {
-                console.log('clinvar request failed 3 times (' + data.esearchresult.ERROR + '). Aborting ...')
+                console.log('clinvar request failed 3 times (' + data.esearchresult.ERROR + '). Aborting ...');
                 resolve("clinvarError");
               }
             } else {
               var webenv = data["esearchresult"]["webenv"];
               var queryKey = data["esearchresult"]["querykey"];
-              var summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=clinvar&query_key=" + queryKey + "&retmode=json&WebEnv=" + webenv + "&usehistory=y"
+              var summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=clinvar&query_key=" + queryKey + "&retmode=json&WebEnv=" + webenv + "&usehistory=y";
               $.ajax( summaryUrl )
                 .done(function(sumData) {
 
@@ -1411,7 +1411,7 @@ export default function vcfiobio(theGlobalApp) {
                         return 1;
                       else
                         return -1;
-                    })
+                    });
                     sumData.result.uids = sorted;
                     if (clinvarLoadVariantsFunction) {
                       clinvarLoadVariantsFunction(sumData.result);
@@ -1435,7 +1435,7 @@ export default function vcfiobio(theGlobalApp) {
         }
       });
 
-  }
+  };
 
 
 
@@ -1455,7 +1455,7 @@ export default function vcfiobio(theGlobalApp) {
       });
 
       stream.end();
-    }
+    };
 
     var cmd = me.getEndpoint().annotateVariants({'writeStream': writeStream}, refName, regions, null, annotationEngine, isRefSeq, hgvsNotation, getRsId, vepAF, useServerCache);
 
@@ -1477,7 +1477,7 @@ export default function vcfiobio(theGlobalApp) {
     // Run the iobio command
     cmd.run();
 
-  }
+  };
 
 
   exports._parseVcfRecords = function(vcfRecs, refName, geneObject, selectedTranscript, clinvarMap, hasExtraAnnot, parseMultiSample, sampleNames, sampleIndex, vepAF, sfariMode = false, gnomADExtra = false) {
@@ -1494,7 +1494,7 @@ export default function vcfiobio(theGlobalApp) {
       var gtSampleNames = null;
 
       if (sampleNames != null && sampleNames != "") {
-        gtSampleNames   = globalApp.utility.uniq(sampleNames.split(","))
+        gtSampleNames   = globalApp.utility.uniq(sampleNames.split(","));
         gtSampleIndices = gtSampleNames.map(function(sampleName,i) {
           return i;
         });
@@ -1888,7 +1888,7 @@ exports._parseAnnot = function(rec, altIdx, isMultiAllelic, geneObject, selected
 
 
   return annot;
-}
+};
 /* To parse the VEP annot, split the CSQ string into its parts.
    Each part represents the annotations for a given transcript.
 
@@ -1945,7 +1945,7 @@ exports._parseVepAnnot = function(altIdx, isMultiAllelic, annotToken, annot, gen
           var consequence = vepTokens[vepFields.Consequence];
           consequence.split("&").forEach( function(token) {
             annot.vep.vepConsequence[token] = token;
-          })
+          });
 
           if (vepTokens[vepFields.EXON] && vepTokens[vepFields.EXON].length > 0) {
             annot.vep.vepExon[vepTokens[vepFields.EXON]] = vepTokens[vepFields.EXON];
@@ -2074,7 +2074,7 @@ exports._parseVepAnnot = function(altIdx, isMultiAllelic, annotToken, annot, gen
   });
 
 
-}
+};
 
 exports._parseVepAfAnnot = function(fieldNames, vepFields, vepTokens, afSource, omitPrefix, annot) {
   fieldNames.forEach(function(fieldName) {
@@ -2086,7 +2086,7 @@ exports._parseVepAfAnnot = function(fieldNames, vepFields, vepTokens, afSource, 
       annot.vep.af[afSource][targetFieldName] = ".";
     }
   })
-}
+};
 
 exports._parseGnomADAnnot = function(annotTokens, annot) {
 
@@ -2096,12 +2096,12 @@ exports._parseGnomADAnnot = function(annotTokens, annot) {
     var field = gnomADTags[idx];
     if (idx == gnomADTags.length - 1) {
       annotObject[field] = theValue;
-      return;
+
     } else {
       idx++;
       setNestedValue(annotObject[field], gnomADTags, idx, theValue)
     }
-  }
+  };
 
   annotTokens.forEach(function(annotToken) {
     var tagValue = annotToken.split("\=");
@@ -2111,7 +2111,7 @@ exports._parseGnomADAnnot = function(annotTokens, annot) {
     var gnomADTag         = GNOMAD_TAGS[annotTag];
     if (gnomADTag && annotValue) {
       if (Array.isArray(gnomADTag)) {
-        var idx = 0
+        var idx = 0;
         setNestedValue(annot.gnomAD, gnomADTag, idx, annotValue);
       } else {
         annot.gnomAD[gnomADTag] = annotValue;
@@ -2119,7 +2119,7 @@ exports._parseGnomADAnnot = function(annotTokens, annot) {
     }
   })
 
-}
+};
 
 exports._parseGenericAnnot = function(annotator, annotToken, annot) {
   var me = this;
@@ -2149,7 +2149,7 @@ exports._parseGenericAnnot = function(annotator, annotToken, annot) {
     annotObject[fieldName] = valueObject;
   }
   annot.genericAnnots[annotator] = annotObject;
-}
+};
 
 /* Split the EFF annotation into its parts.  Each
     part represents the annotations for a given transcript.
@@ -2219,7 +2219,7 @@ exports._parseSnpEffAnnot = function(annotToken, annot, geneObject, selectedTran
   if ($.isEmptyObject(annot.snpEff.impacts)) {
     annot.snpEff.impacts["NOIMPACT"] = "NOIMPACT";
   }
-}
+};
 
 exports.getClinvarAnnots = function() {
   return   {
@@ -2232,7 +2232,7 @@ exports.getClinvarAnnots = function() {
     clinvarRank: null,
     clinvar: null
   };
-}
+};
 
 exports.parseClinvarInfo = function(rec, clinvarMap) {
   var me = this;
@@ -2249,7 +2249,7 @@ exports.parseClinvarInfo = function(rec, clinvarMap) {
     return me._parseClinInfoDeprecated(rec, clinvarMap);
   }
 
-}
+};
 
 exports._parseClinvarInfo = function(rec, clinvarMap) {
   var me = this;
@@ -2291,9 +2291,9 @@ exports._parseClinvarInfo = function(rec, clinvarMap) {
       result.clinvarRevStat = annotToken.substring("CLNREVSTAT=".length, annotToken.length);
     }
 
-  })
+  });
   return result;
-}
+};
 
 exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
   var me = this;
@@ -2305,7 +2305,7 @@ exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
       var entry = { clinsig: "", phenotype: "", accession: "" };
       clinvarSubmissions.push(entry);
     }
-  }
+  };
 
   // This is the older format (summer 2018 and earlier)
   rec.info.split(";").forEach( function (annotToken) {
@@ -2335,7 +2335,7 @@ exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
               result.clinvarClinSig[clinvarToken] = idx.toString();
             }
 
-        })
+        });
 
         idx++;
       })
@@ -2363,10 +2363,10 @@ exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
       })
     }
 
-  })
+  });
 
   return result;
-}
+};
 
 
 /*
@@ -2488,7 +2488,7 @@ exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
               if (allelicDepth) {
                 totalAllelicDepth += +allelicDepth;
               }
-            })
+            });
 
             gt.altCount      = altAlleleCounts;
             gt.refCount      = refAlleleCount;
@@ -2512,12 +2512,12 @@ exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
             if (allelicDepth) {
                 totalAllelicDepth += +allelicDepth;
             }
-          })
+          });
 
           var gtRefCountIndex = gtTokens["RO"];
           if (gtRefCountIndex) {
-            gt.refCount = tokens[gtRefCountIndex];;
-            totalAllelicDepth += +gt.refCount;
+              gt.refCount = tokens[gtRefCountIndex];
+              totalAllelicDepth += +gt.refCount;
           } else {
             gt.refCount = null;
           }
@@ -2693,7 +2693,7 @@ exports._parseClinInfoDeprecated = function(rec, clinvarMap) {
     }
 
     return result;
- }
+ };
 
 exports._getServerCacheKey = function(vcfName, service, refName, geneObject, sampleName, miscObject) {
   var me = this;
@@ -2714,7 +2714,7 @@ exports._getServerCacheKey = function(vcfName, service, refName, geneObject, sam
     }
   }
   return key;
-}
+};
 
 exports._appendTranscript = function(theObject, key, theTranscriptId) {
   var me = this;
@@ -2724,7 +2724,7 @@ exports._appendTranscript = function(theObject, key, theTranscriptId) {
   }
   transcripts[theTranscriptId] = theTranscriptId;
   theObject[key] = transcripts;
-}
+};
 
 
 exports._cullTranscripts = function(transcriptObject, theTranscriptId) {
@@ -2746,7 +2746,7 @@ exports._cullTranscripts = function(transcriptObject, theTranscriptId) {
 
   }
   return transcriptObject;
-}
+};
 
 exports._getHighestImpact = function(theObject, cullFunction, theTranscriptId) {
   var me = this;
@@ -2767,7 +2767,7 @@ exports._getHighestImpact = function(theObject, cullFunction, theTranscriptId) {
     return {LOW: cullFunction(theEffects, theTranscriptId)};
   }
   return {};
-}
+};
 
 exports._getLowestScore = function(theObject, cullFunction, theTranscriptId) {
   var me = this;
@@ -2793,7 +2793,7 @@ exports._getLowestScore = function(theObject, cullFunction, theTranscriptId) {
   }
   theObject[minScore] = cullFunction(categoryObject, theTranscriptId);
   return theObject[minScore];
-}
+};
 
 exports._getHighestScore = function(theObject, cullFunction, theTranscriptId) {
   var me = this;
@@ -2819,7 +2819,7 @@ exports._getHighestScore = function(theObject, cullFunction, theTranscriptId) {
   }
   theObject[maxScore] = cullFunction(categoryObject, theTranscriptId);
   return theObject[maxScore];
-}
+};
 
 /*
  *
@@ -2854,7 +2854,7 @@ exports._getHighestScore = function(theObject, cullFunction, theTranscriptId) {
         target.clinvarAlt = target.clinvarAlt.substr(1,target.clinvarAlt.length-1);
       }
       return target;
-  }
+  };
 
   exports._parseMultiAllelic = function(alleleIdx, genotypeValue, delim) {
     if (genotypeValue == null || genotypeValue == "" || genotypeValue.indexOf(delim) < 0) {
@@ -2902,7 +2902,7 @@ exports._getHighestScore = function(theObject, cullFunction, theTranscriptId) {
     var pileup = pileupLayout().sort(null).size(800); // 1860
     var maxlevel = pileup(variants);
     return maxLevel;
-  }
+  };
 
   exports.pileupVcfRecords = function(variants, regionStart, posToPixelFactor, widthFactor) {
       widthFactor = widthFactor ? widthFactor : 1;
@@ -2943,7 +2943,7 @@ exports._getHighestScore = function(theObject, cullFunction, theTranscriptId) {
         }
       });
       return maxLevel;
-  }
+  };
 
 
   exports.compareVcfRecords = function(variants1, variants2, comparisonAttr, onMatchFunction, onNoMatchFunction) {
@@ -2981,7 +2981,7 @@ exports._getHighestScore = function(theObject, cullFunction, theTranscriptId) {
              }
         }
       }
-    }
+    };
     ignoreDups(features1);
     ignoreDups(features2);
 

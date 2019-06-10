@@ -45,7 +45,7 @@ export default class Bam {
             regExp:  /samtools\sError:\s.*:\sstderr\s-\s\[E::hts_open_format\]\sfail\sto\sopen\sfile/,
             message: "Unable to access the file. "
          }
-      }
+      };
 
       this.headerStr = null;
 
@@ -171,7 +171,7 @@ export default class Bam {
     var bamFile = null;
     var baiFile = null;
     var rootBamFile = null;
-    var rootBaiFile = null
+    var rootBaiFile = null;
     if (bamTokens0 && bamTokens0.length > 1 && bamTokens0[bamTokens0.length-1] == 'bam' ) {
       bamFile     = fileSelection.files[0];
       rootBamFile = bamTokens0[1];
@@ -205,7 +205,7 @@ export default class Bam {
     me.makeBamBlob( function() {
       callback(true);
     });
-    return;
+
   }
 
 
@@ -233,10 +233,10 @@ export default class Bam {
   convert(format, name, start, end, callback, options) {
     // Converts between BAM and a number of other formats
     if (!format || !name || !start || !end)
-       return "Error: must supply format, sequenceid, start nucleotide and end nucleotide"
+       return "Error: must supply format, sequenceid, start nucleotide and end nucleotide";
 
     if (format.toLowerCase() != "sam")
-       return "Error: format + " + options.format + " is not supported"
+       return "Error: format + " + options.format + " is not supported";
     var me = this;
     this.fetch(name, start, end, function(data,e) {
        if(options && options.noHeader)
@@ -333,7 +333,7 @@ export default class Bam {
             fields.forEach(function(field) {
               var values = field.split(':');
               fHash[ values[0] ] = values[1]
-            })
+            });
             header.sq.push({name:fHash["SN"], end:1+parseInt(fHash["LN"])});
             header.species = fHash["SP"];
             header.assembly = fHash["AS"];
@@ -352,7 +352,7 @@ export default class Bam {
           found = true;
           callback(seq.name);
         }
-      })
+      });
       if (!found) callback(refName); // not found
     })
   }

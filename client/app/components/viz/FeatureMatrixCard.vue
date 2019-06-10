@@ -269,8 +269,8 @@ export default {
       var clazz = "";
       if (i > 98) {
         clazz += "long-label ";
-      };
-      if (variant.hasOwnProperty("fbCalled") && variant.fbCalled == "Y") {
+      }
+        if (variant.hasOwnProperty("fbCalled") && variant.fbCalled == "Y") {
         clazz +=  "called "
       }
       return clazz;

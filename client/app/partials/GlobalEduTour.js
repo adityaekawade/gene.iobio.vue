@@ -1,7 +1,7 @@
 global.onTour1Check = function(checkbox) {
   var answer   = { "jimmy": true, "bobby": false, "sarah": true};
   var name     = checkbox[0].id;
-  var checked  = checkbox[0].checked
+  var checked  = checkbox[0].checked;
   var answerLabel = $('#' + name + "-answer");
   // If the correct answer is "true"
   if (answer[name] == true) {
@@ -27,14 +27,14 @@ global.onTour1Check = function(checkbox) {
     //me.eduTour1Steps['#children-buttons'].correct = false;
     $('#pageguide-next-button').addClass("disabled");
   }
-}
+};
 global.onTour2Check = function(checkbox) {
   var answer   = { "john": 'lower', "diego": 'lowest', "anna": 'normal'};
   var checkboxId       = checkbox[0].id;
   var tokens  = checkboxId.split("-");
   var name    = tokens[0];
   var dosage  = tokens[1];
-  var checked          = checkbox[0].checked
+  var checked          = checkbox[0].checked;
   var answerLabel      = $('#' + checkboxId + "-answer");
   var allAnswerLabels  = $('.' + name + "-answer");
   var allCheckboxes    = $('.' + name + "-checkbox");
@@ -45,7 +45,7 @@ global.onTour2Check = function(checkbox) {
     } else {
       $(this)[0].checked = false;
     }
-  })
+  });
 
   // Show if the answer is correct or incorrect
   allAnswerLabels.addClass("hide");
@@ -72,4 +72,4 @@ global.onTour2Check = function(checkbox) {
     //me.eduTour2Steps[stepSelector].correct = false;
     $('#pageguide-next-button').addClass("disabled");
   }
-}
+};

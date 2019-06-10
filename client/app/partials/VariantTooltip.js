@@ -79,14 +79,14 @@ export default class VariantTooltip {
       top: null,
       left: null,
       arrowClasses: []
-    }
+    };
 
     me.findBestTooltipPosition(tooltipPos, coord, x, y, h, w, yScroll);
 
     if (tooltipPos.left && tooltipPos.top) {
       tooltipPos.arrowClasses.forEach(function(arrowClass) {
         tooltip.classed(arrowClass, true);
-      })
+      });
       tooltip.style("width", w + "px")
              .style("left", tooltipPos.left + "px")
              .style("text-align", 'left')
@@ -176,7 +176,7 @@ export default class VariantTooltip {
         tooltipPos.arrowClasses.push("chevron-" + key1);
         tooltipPos.arrowClasses.push("chevron-" + key2);
       }
-    }
+    };
 
     coord.preferredPositions.forEach(function(preferredPos) {
       for (var key1 in preferredPos) {
@@ -188,7 +188,7 @@ export default class VariantTooltip {
           })
         }
       }
-    })
+    });
 
     // If we can't find enough space, just choose first preferred position.
     if (!found) {
@@ -220,7 +220,7 @@ export default class VariantTooltip {
             }
         }
       })
-    }
+    };
 
 
     if (variant.clinvarSubmissions && variant.clinvarSubmissions.length > 0) {
@@ -229,7 +229,7 @@ export default class VariantTooltip {
         submission.clinsig.split(",").forEach(function(clinsig) {
           clinsigUniq[clinsig] = "";
         })
-      })
+      });
       for (let clinsig in clinsigUniq) {
         injectClinvarBadge(clinsig, clinsig, 'translate(0,0)');
       }
@@ -317,7 +317,7 @@ export default class VariantTooltip {
     var polyphenLabel = info.polyphen  != '' && info.polyphen != 'unknown'
                         ? 'PolyPhen ' + info.polyphen
                         : "";
-    var sep = siftLabel != '' && polyphenLabel != '' ? '&nbsp;&nbsp;&nbsp;&nbsp;' : ''
+    var sep = siftLabel != '' && polyphenLabel != '' ? '&nbsp;&nbsp;&nbsp;&nbsp;' : '';
     var siftPolyphenRow = '';
     if (siftLabel || polyphenLabel) {
       siftPolyphenRow = me._tooltipClassedRow(polyphenLabel + sep, 'polyphen', siftLabel, 'sift', 'padding-top:2px;');

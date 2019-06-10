@@ -53,7 +53,7 @@ class CohortModel {
     this.demoVcf = {
       'exome': "https://s3.amazonaws.com/iobio/samples/vcf/platinum-exome.vcf.gz",
       'genome': "https://s3.amazonaws.com/iobio/gene/wgs_platinum/platinum-trio.vcf.gz"
-    }
+    };
     this.demoBams = {
       'exome': {
         'proband': 'https://s3.amazonaws.com/iobio/samples/bam/NA12878.exome.bam',
@@ -66,7 +66,7 @@ class CohortModel {
         'mother':  'https://s3.amazonaws.com/iobio/gene/wgs_platinum/NA12892.bam',
         'father':  'https://s3.amazonaws.com/iobio/gene/wgs_platinum/NA12891.bam'
       }
-    }
+    };
     this.demoGenes = ['RAI1', 'MYLK2', 'PDHA1', 'PDGFB', 'AIRE'];
 
 
@@ -81,7 +81,7 @@ class CohortModel {
         {relationship: 'mother',  affectedStatus: 'unaffected', name: 'NA12892', 'sample': 'NA12892', 'vcf': this.demoVcf.genome, 'tbi': null, 'bam': this.demoBams.genome['mother'],  'bai': null  },
         {relationship: 'father',  affectedStatus: 'unaffected', name: 'NA12891', 'sample': 'NA12891', 'vcf': this.demoVcf.genome, 'tbi': null, 'bam': this.demoBams.genome['father'],  'bai': null  },
       ]
-    }
+    };
     this.eduTourModelInfos = {
       "1": [
         {relationship: 'proband', affectedStatus: 'affected', name: 'Father', 'sample': 'sample2', vcf: 'https://s3.amazonaws.com/iobio/NHMU/nhmu.vcf.gz', 'tbi': null, 'bam': null, 'bai': null},
@@ -259,7 +259,7 @@ class CohortModel {
       })
       .map(function(modelInfo) {
         return modelInfo.sample;
-      })
+      });
 
 
       let unaffectedSibs = modelInfos.filter(function(modelInfo) {
@@ -267,7 +267,7 @@ class CohortModel {
       })
       .map(function(modelInfo) {
         return modelInfo.sample;
-      })
+      });
 
       // sort models by proband, mother, father, sibling
       modelInfos = modelInfos.sort(function(a,b) {
@@ -283,7 +283,7 @@ class CohortModel {
             order = 3;
           }
           return order;
-        }
+        };
 
         return getOrder(a) - getOrder(b);
       })
@@ -409,7 +409,7 @@ class CohortModel {
         idx = i;
       }
       i++;
-    })
+    });
     if (idx >= 0) {
       self.sampleModels.splice(idx,1);
     }
@@ -507,7 +507,7 @@ class CohortModel {
         var vm = new SampleModel(self.globalApp);
         vm.init(self);
         vm.setRelationship('known-variants');
-        vm.setName('Clinvar')
+        vm.setName('Clinvar');
         //var clinvarUrl = self.genomeBuildHelper.getBuildResource(self.genomeBuildHelper.RESOURCE_CLINVAR_VCF_FTP);
         var clinvarUrl  = self.globalApp.getClinvarUrl(self.genomeBuildHelper.getCurrentBuildName());
 
@@ -703,7 +703,7 @@ class CohortModel {
 
           self.affectedInfo.push(info);
         }
-      })
+      });
 
       var sibIdx = 0;
       for (var status in self.sampleMapSibs) {
@@ -1058,7 +1058,7 @@ class CohortModel {
       filteredVariants.featureWidth = pileupObject.featureWidth;
 
       return filteredVariants;
-    }
+    };
 
 
     self.sampleModels.forEach(function(model) {
@@ -1141,7 +1141,7 @@ class CohortModel {
           if (!options.isBackground) {
             model.inProgress.loadingVariants = true;
           }
-        })
+        });
         options.analyzeCodingVariantsOnly = self.analyzeCodingVariantsOnly;
         p = self.sampleMap['proband'].model.promiseAnnotateVariants(theGene, theTranscript, self.getCanonicalModels(), options)
         .then(function(resultMap) {
@@ -1151,7 +1151,7 @@ class CohortModel {
             })
           }
           theResultMap = resultMap;
-        })
+        });
         annotatePromises.push(p);
       } else {
         for (var rel in self.sampleMap) {
@@ -1170,7 +1170,7 @@ class CohortModel {
                   }
                   theResultMap[theRelationship] = resultMap[theRelationship];
                 }
-              })
+              });
               annotatePromises.push(p);
             }
           }
@@ -1222,13 +1222,13 @@ class CohortModel {
     var formatClinvarKey = function(variant) {
       var delim = '^^';
       return variant.chrom + delim + variant.ref + delim + variant.alt + delim + variant.start + delim  + variant.end;
-    }
+    };
 
     var formatClinvarThinVariant = function(key) {
       var delim = '^^';
       var tokens = key.split(delim);
       return {'chrom': tokens[0], 'ref': tokens[1], 'alt': tokens[2], 'start': tokens[3], 'clinvarStart': tokens[4], 'end': tokens[4]};
-    }
+    };
 
     var formatClinvarCoord = function(variant) {
       return {'chrom':        variant.chrom,
@@ -1241,7 +1241,7 @@ class CohortModel {
               'clinvarStart': variant.clinvarStart
             };
 
-    }
+    };
 
 
 
@@ -1253,12 +1253,12 @@ class CohortModel {
             variant[key] = clinvarAnnot[key];
           }
         }
-      })
+      });
       if (theVcfData.loadState == null) {
         theVcfData.loadState = {};
       }
       theVcfData.loadState['clinvar'] = true;
-    }
+    };
 
 
 
@@ -1267,7 +1267,7 @@ class CohortModel {
       // Combine the trio variants into one set of variants so that we can access clinvar once
       // instead of on a per sample basis
       var uniqueVariants = {};
-      var unionVcfData = {features: []}
+      var unionVcfData = {features: []};
       for (var rel in resultMap) {
         var vcfData = resultMap[rel];
         if (vcfData) {
@@ -1307,7 +1307,7 @@ class CohortModel {
                   clinvarAnnot[key] = variant[key];
                   clinvarLookup[formatClinvarKey(variant)] = clinvarAnnot;
               }
-            })
+            });
 
             var refreshPromises = [];
 
@@ -1352,7 +1352,7 @@ class CohortModel {
         resolve({'resultMap': resultMap, 'gene': geneObject, 'transcript': theTranscript});
       })
 
-    }
+    };
 
     return new Promise(function(resolve,reject) {
 
@@ -1416,7 +1416,7 @@ class CohortModel {
             var p = model._promiseCacheData(resultMap[model.getRelationship()], dataKind, geneObject.gene_name, theTranscript);
             cachedPromises.push(p);
           }
-        })
+        });
         Promise.all(cachedPromises).then(function() {
           resolve();
         })
@@ -1555,11 +1555,11 @@ class CohortModel {
            })
            .catch(function(error) {
             reject(error);
-           })
+           });
           promises.push(promise);
         }
 
-      })
+      });
       Promise.all(promises).then(function() {
         resolve(geneCoverageAll);
       })
@@ -1583,11 +1583,11 @@ class CohortModel {
               theResultMap[theModel.relationship] = coverageData;
               innerResolve();
             });
-          })
+          });
           promises.push(p);
 
         }
-      })
+      });
 
       Promise.all(promises)
       .then(function() {
@@ -1630,10 +1630,10 @@ class CohortModel {
                 feature.danger[model.getRelationship()] = false;
               }
 
-           })
+           });
           exonPromises.push(promise);
         })
-      })
+      });
 
       Promise.all(exonPromises).then(function() {
         var sortedExons = self.geneModel._getSortedExonsForTranscript(transcript);
@@ -1642,7 +1642,7 @@ class CohortModel {
         // Keep track of exons in sample that don't meet coverage thresholds.
         self.getCanonicalModels().forEach(function(model) {
           model.determineCoverageDangerRegions(transcript);
-        })
+        });
 
         resolve({'gene': geneObject, 'transcript': transcript});
       });
@@ -1662,7 +1662,7 @@ class CohortModel {
         theVcfData.loadState = {};
       }
       trioVcfData[model.getRelationship()] = theVcfData;
-    })
+    });
     return trioVcfData;
   }
 
@@ -1679,7 +1679,7 @@ class CohortModel {
             model.inProgress.callingVariants = true;
           })
         }
-      }
+      };
 
       var showCalledVariants = function() {
         if (!options.isBackground) {
@@ -1689,7 +1689,7 @@ class CohortModel {
             model.inProgress.callingVariants = false;
           });
         }
-      }
+      };
 
       var endCallProgress = function() {
         if (!options.isBackground) {
@@ -1698,7 +1698,7 @@ class CohortModel {
           })
 
         }
-      }
+      };
       var refreshClinvarAnnots = function(trioFbData) {
         for (var rel in trioFbData) {
           if (trioFbData) {
@@ -1719,11 +1719,11 @@ class CohortModel {
             }
           }
         }
-      }
+      };
 
       var makeDummyVcfData = function() {
         return {'loadState': {}, 'features': []}
-      }
+      };
 
 
       var trioFbData  = {'proband': null, 'mother': null, 'father': null};
@@ -1788,10 +1788,10 @@ class CohortModel {
               var msg = "A problem occurred in jointCallVariantsImpl(): " + error;
               console.log(msg);
               reject(msg);
-            })
+            });
 
             promises.push(p);
-          })
+          });
           Promise.all(promises).then(function() {
             showCalledVariants();
               resolve({
@@ -1829,7 +1829,7 @@ class CohortModel {
               }
 
               // Parse the joint called variants back to variant models
-              var data = me._parseCalledVariants(geneObject, theTranscript, trRefName, jointVcfRecs, trioVcfData, options)
+              var data = me._parseCalledVariants(geneObject, theTranscript, trRefName, jointVcfRecs, trioVcfData, options);
 
               if (data == null) {
                 endCallProgress();
@@ -1848,7 +1848,7 @@ class CohortModel {
                   .then( function() {
                       me.getCanonicalModels().forEach(function(model) {
                         model.loadCalledTrioGenotypes(trioVcfData[model.getRelationship()], trioFbData[model.getRelationship()]);
-                      })
+                      });
                       // Summarize danger for gene
                      return me.promiseSummarizeDanger(geneObject, theTranscript, trioVcfData.proband, {'CALLED': true});
                   })
@@ -1916,7 +1916,7 @@ class CohortModel {
         variant.fbCalled = "Y";
         variant.extraAnnot = true;
         model._determineHighestAf(variant);
-      })
+      });
 
 
       // Filter the freebayes variants to only keep the ones
@@ -1952,7 +1952,7 @@ class CohortModel {
           if (hasCalledVariants) {
             count++;
           }
-        })
+        });
         promises.push(promise);
       });
 
@@ -1975,7 +1975,7 @@ class CohortModel {
             cachedCount ++;
           }
 
-         })
+         });
         promises.push(p);
       });
       Promise.all(promises).then(function() {
@@ -2042,7 +2042,7 @@ class CohortModel {
         self.removeFilterPassed(v, "userFlagged");
       }
       i++;
-    })
+    });
     if (index >= 0) {
       this.flaggedVariants.splice(index, 1);
     }
@@ -2060,7 +2060,7 @@ class CohortModel {
                       && v.ref == variant.ref
                       && v.alt == variant.alt);
         if (matches) {
-          v.isFlagged      = variant.isFlagged
+          v.isFlagged      = variant.isFlagged;
           v.isUserFlagged  = variant.isUserFlagged;
           v.filtersPassed  = variant.filtersPassed;
           v.interpretation = variant.interpretation;
@@ -2172,10 +2172,10 @@ class CohortModel {
           }
         });
         fileSelection.value = null;
-      }
+      };
       reader.onerror = function(event) {
         alert("Cannot read file. Error: " + event.target.error.name);
-        console.log(event.toString())
+        console.log(event.toString());
         if (callback) {
           callback();
         }
@@ -2228,7 +2228,7 @@ class CohortModel {
     // We need to make sure each imported record has a cached gene object and is assigned
     // a transcript.
     // So first, cache all of the gene objects for the imported variants
-    var promises = []
+    var promises = [];
 
     importRecords.forEach( function(ir) {
       let geneObject = me.geneModel.geneObjects[ir.gene];
@@ -2238,10 +2238,10 @@ class CohortModel {
           if (geneObject == null) {
             me.geneModel.promiseAddGeneName(ir.gene);
           }
-        })
+        });
         promises.push(promise);
       }
-    })
+    });
 
 
 
@@ -2335,7 +2335,7 @@ class CohortModel {
                 } else {
                   uniqueTranscripts[importedVariant.transcript.transcript_id] = importedVariant.transcript;
                 }
-              })
+              });
 
               for (var transcriptId in uniqueTranscripts) {
                 let dataPromise =  new Promise(function(resolve, reject) {
@@ -2360,7 +2360,7 @@ class CohortModel {
                            && v.start == importedVariant.start
                            && v.ref      == importedVariant.ref
                            && v.alt      == importedVariant.alt;
-                        })
+                        });
                         if (matchingVariants.length > 0) {
                           let matchingVariant = matchingVariants[0];
 
@@ -2389,7 +2389,7 @@ class CohortModel {
                           importedVariant.notFound = true;
                           console.log("Unable to match imported variant to vcf data for " + importedVariant.gene.gene_name + " " + importedVariant.transcript.transcript_id + " " + importedVariant.start)
                         }
-                      })
+                      });
 
                       // Make sure that the imported variants are re-assessed to determine the filters they
                       // pass.  We need this so that the imported variants show up in the left flagged variants
@@ -2419,7 +2419,7 @@ class CohortModel {
                     resolve();
                   })
 
-                })
+                });
                 dataPromises.push(dataPromise);
               }
             }
@@ -2474,7 +2474,7 @@ class CohortModel {
 
     let sortedFilters = filters.sort(function(filterObject1, filterObject2) {
       return filterObject1.filter.order > filterObject2.filter.order;
-    })
+    });
 
     sortedFilters.forEach(function(filterObject) {
       filterObject.variantCount = 0;
@@ -2483,7 +2483,7 @@ class CohortModel {
 
         // Sort the variants according to the Ranked Variants table features
         self.featureMatrixModel.setFeaturesForVariants(geneList.variants);
-        geneList.variants = self.featureMatrixModel.sortVariantsByFeatures(geneList.variants)
+        geneList.variants = self.featureMatrixModel.sortVariantsByFeatures(geneList.variants);
 
 
         geneList.variants.forEach(function(variant) {
@@ -2492,7 +2492,7 @@ class CohortModel {
         })
 
       })
-    })
+    });
     return sortedFilters;
 
   }
@@ -2506,7 +2506,7 @@ class CohortModel {
         && v.ref == theVariant.ref
         && v.alt == theVariant.alt);
       return matches;
-    })
+    });
     if (existingVariants && existingVariants.length > 0) {
       return existingVariants[0];
     } else {
@@ -2529,7 +2529,7 @@ class CohortModel {
         return self.geneModel.isCandidateGene(variant.geneName);
 
       }
-    })
+    });
     return theFlaggedVariants.length;
   }
 
@@ -2558,7 +2558,7 @@ class CohortModel {
           theVariants.push(v);
         })
       }
-    })
+    });
     let filters = [];
     for (var filterName in self.filterModel.flagCriteria) {
       var theFilter = self.filterModel.flagCriteria[filterName];
@@ -2567,7 +2567,7 @@ class CohortModel {
       if (theVariants) {
         // Sort the variants according to the Ranked Variants table features
         self.featureMatrixModel.setFeaturesForVariants(theVariants);
-        let sortedVariants = self.featureMatrixModel.sortVariantsByFeatures(theVariants)
+        let sortedVariants = self.featureMatrixModel.sortVariantsByFeatures(theVariants);
 
         filters.push({filter: theFilter, variants: sortedVariants});
       }
@@ -2632,21 +2632,21 @@ class CohortModel {
 
           }
         }
-      })
+      });
 
       var sortedGenes = flaggedGenes.sort(function(a,b) {
         return self.geneModel.compareDangerSummary(a.gene.gene_name, b.gene.gene_name);
-      })
+      });
       let i = 0;
       sortedGenes.forEach(function(flaggedGene) {
         // Sort the variants according to the Ranked Variants table features
         self.featureMatrixModel.setFeaturesForVariants(flaggedGene.variants);
-        let sortedVariants = self.featureMatrixModel.sortVariantsByFeatures(flaggedGene.variants)
+        let sortedVariants = self.featureMatrixModel.sortVariantsByFeatures(flaggedGene.variants);
 
         sortedVariants.forEach(function(variant) {
           variant.index = i;
           i++;
-        })
+        });
         flaggedGene.variants = sortedVariants;
       });
       return sortedGenes;

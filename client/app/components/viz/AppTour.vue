@@ -962,7 +962,7 @@ export default {
       var correct = true;
       if (self.isEduMode && self.tourNumber == 1) {
         if (self.phenotypeTerm.toLowerCase() != 'colon cancer') {
-          alert("Please select 'Colon cancer' to continue with this tour.")
+          alert("Please select 'Colon cancer' to continue with this tour.");
           correct = false;
         }
       }

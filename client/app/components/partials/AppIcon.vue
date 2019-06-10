@@ -667,7 +667,7 @@ export default {
   },
   methods: {
     getClassObject: function(clazzes) {
-      let theLevel = this.level
+      let theLevel = this.level;
       if (this.icon == 'clinvar' && this.significance) {
         theLevel = this.clinvarLevels[this.significance];
       }

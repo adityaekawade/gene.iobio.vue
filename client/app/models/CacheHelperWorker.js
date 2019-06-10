@@ -21,7 +21,7 @@ if( 'function' === typeof importScripts) {
         break;
       default:
         self.postMessage('unknown');
-    };
+    }
   }, false);
 
 }

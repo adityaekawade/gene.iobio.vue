@@ -226,11 +226,11 @@ export class GenomeBuildHelper {
             fields.forEach(function(field) {
               var values = field.split(':');
               fieldMap[ values[0] ] = values[1]
-            })
+            });
             var refName   = fieldMap["SN"];
             var refLength = 1+parseInt(fieldMap["LN"]);
             var species   = fieldMap["SP"];
-            var assembly  = fieldMap["AS"]
+            var assembly  = fieldMap["AS"];
             if (refName && refLength) {
             buildInfo.references[refName] = refLength;
             }
@@ -286,7 +286,7 @@ export class GenomeBuildHelper {
                 buildInfo.species = speciesString;
               }
             }
-          })
+          });
           if (refName && refLength) {
             buildInfo.references[refName] = refLength;
           }

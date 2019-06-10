@@ -49,7 +49,7 @@ CacheHelper.prototype.promiseGetGenesToAnalyze = function(analyzeCalledVariants=
         if (!data.isCached) {
           genesToAnalyze.push(data.geneObject.gene_name);
         }
-      })
+      });
       promises.push(p);
     });
 
@@ -62,7 +62,7 @@ CacheHelper.prototype.promiseGetGenesToAnalyze = function(analyzeCalledVariants=
     })
 
   })
-}
+};
 
 CacheHelper.prototype._promiseIsCached = function(geneName, analyzeCalledVariants=false, analyzeGeneCoverage=false) {
   let self = this;
@@ -88,7 +88,7 @@ CacheHelper.prototype._promiseIsCached = function(geneName, analyzeCalledVariant
       reject("Error occurred in CacheHelper._promiseIsCached: " + error);
     })
   })
-}
+};
 
 CacheHelper.prototype.analyzeAll = function(cohort, analyzeCalledVariants = false) {
   var me = this;
@@ -101,7 +101,7 @@ CacheHelper.prototype.analyzeAll = function(cohort, analyzeCalledVariants = fals
 
   var geneNames = me.cohort.geneModel.geneNames.filter(function(geneName) {
     return me.cohort.geneModel.isCandidateGene(geneName)
-  })
+  });
 
   if (analyzeCalledVariants && !me.cohort.freebayesSettings.visited) {
     me.cohort.freebayesSettings.showDialog(function() {
@@ -112,7 +112,7 @@ CacheHelper.prototype.analyzeAll = function(cohort, analyzeCalledVariants = fals
   }
 
 
-}
+};
 
 CacheHelper.prototype.promiseAnalyzeSubset = function(cohort, theGeneNames, geneToAltTranscript, analyzeCalledVariants=false, analyzeGeneCoverage=true) {
   var me = this;
@@ -135,7 +135,7 @@ CacheHelper.prototype.promiseAnalyzeSubset = function(cohort, theGeneNames, gene
         if (!data.isCached) {
           me.genesToCache.push(geneName);
         }
-      })
+      });
       cachePromises.push(p);
     });
 
@@ -151,7 +151,7 @@ CacheHelper.prototype.promiseAnalyzeSubset = function(cohort, theGeneNames, gene
 
   })
 
-}
+};
 
 CacheHelper.prototype.stopAnalysis = function() {
 
@@ -159,11 +159,11 @@ CacheHelper.prototype.stopAnalysis = function() {
   this.callAllInProgress = false;
   this.genesToCache = [];
   this.cacheQueue = [];
-}
+};
 
 CacheHelper.prototype.setLoaderDisplay = function(loaderDisplay) {
   this.geneBadgeLoaderDisplay = loaderDisplay;
-}
+};
 
 CacheHelper.prototype.promiseInit = function() {
   if (this.useLocalStorage()) {
@@ -171,7 +171,7 @@ CacheHelper.prototype.promiseInit = function() {
   } else {
     return this.cacheIndexStore.promiseInit();
   }
-}
+};
 
 CacheHelper.prototype.useLocalStorage = function() {
   if (this.forceLocalStorage || this.globalApp.defaultBrowserCache == this.globalApp.BROWSER_CACHE_LOCAL_STORAGE) {
@@ -179,7 +179,7 @@ CacheHelper.prototype.useLocalStorage = function() {
   } else {
     return false;
   }
-}
+};
 
 CacheHelper.prototype.useIndexedDB = function() {
   if (!this.forceLocalStorage &&  this.globalApp.defaultBrowserCache == this.globalApp.BROWSER_CACHE_INDEXED_DB) {
@@ -187,7 +187,7 @@ CacheHelper.prototype.useIndexedDB = function() {
   } else {
     return false;
   }
-}
+};
 
 CacheHelper.prototype.isolateSession = function(isEduMode) {
   if (isEduMode) {
@@ -195,7 +195,7 @@ CacheHelper.prototype.isolateSession = function(isEduMode) {
   } else {
     this.launchTimestamp = Date.now().valueOf();
   }
-}
+};
 
 
 CacheHelper.prototype.promiseClearOlderCache = function() {
@@ -213,7 +213,7 @@ CacheHelper.prototype.promiseClearOlderCache = function() {
         counts.oldSessions.forEach(function(timestamp) {
           var p = me._promiseClearCache(timestamp);
           promises.push(p);
-        })
+        });
         return Promise.all(promises);
       } else {
         return Promise.resolve();
@@ -227,7 +227,7 @@ CacheHelper.prototype.promiseClearOlderCache = function() {
     })
   })
 
-}
+};
 
 
 
@@ -239,7 +239,7 @@ CacheHelper.prototype.queueGene = function(geneName) {
     this.cacheQueue.push(geneName);
   }
   this.cohort.startGeneProgress(geneName);
-}
+};
 
 CacheHelper.prototype.dequeueGene = function(geneName) {
   var idx = this.cacheQueue.indexOf(geneName);
@@ -247,13 +247,13 @@ CacheHelper.prototype.dequeueGene = function(geneName) {
     this.cacheQueue.splice(idx,1);
   }
   this.cohort.endGeneProgress(geneName);
-}
+};
 
 
 CacheHelper.prototype._analyzeAllImpl = function(geneNames, analyzeCalledVariants=false, analyzeGeneCoverage=true) {
   var me = this;
 
-  this.analyzeAllInProgress = !analyzeCalledVariants
+  this.analyzeAllInProgress = !analyzeCalledVariants;
   this.callAllInProgress    = analyzeCalledVariants;
 
   this.start = new Date();
@@ -279,12 +279,12 @@ CacheHelper.prototype._analyzeAllImpl = function(geneNames, analyzeCalledVariant
     console.log("");
     console.log("******   ANALYZE ALL ELAPSED TIME *******");
     console.log((new Date() - me.start) / 1000 + " seconds ");
-    console.log("*******************************************")
+    console.log("*******************************************");
     console.log("");
 
   });
 
-}
+};
 
 
 
@@ -350,12 +350,12 @@ CacheHelper.prototype.cacheGenes = function(analyzeCalledVariants, analyzeGeneCo
         console.log(msg);
         me.cacheNextGene(error.geneName, analyzeCalledVariants, analyzeGeneCoverage, callback);
       })
-    })
+    });
     count++;
   }
 
 
-}
+};
 
 
 
@@ -479,12 +479,12 @@ CacheHelper.prototype.promiseCacheGene = function(geneName, analyzeCalledVariant
   })
 
 
-}
+};
 
 
 CacheHelper.prototype.isGeneInProgress = function(geneName) {
   return this.cacheQueue.indexOf(geneName) >= 0;
-}
+};
 
 CacheHelper.prototype.cacheNextGene = function(geneName, analyzeCalledVariants=false, analyzeGeneCoverage=true, callback) {
 
@@ -494,7 +494,7 @@ CacheHelper.prototype.cacheNextGene = function(geneName, analyzeCalledVariants=f
   // of genes to analyze once all of the genes in
   // the current batch have been analyzed.
   this.cacheGenes(analyzeCalledVariants, analyzeGeneCoverage, callback);
-}
+};
 
 
 CacheHelper.prototype.cacheNextGeneSuccess = function(theGene, transcript, analyzeCalledVariants=false, analyzeGeneCoverage=true, callback) {
@@ -506,7 +506,7 @@ CacheHelper.prototype.cacheNextGeneSuccess = function(theGene, transcript, analy
   // of genes to analyze once all of the genes in
   // the current batch have been analyzed.
   this.cacheGenes(analyzeCalledVariants, analyzeGeneCoverage, callback);
-}
+};
 
 
 CacheHelper.prototype.promiseIsCachedForProband = function(geneObject, transcript, checkForCalledVariants, checkForGeneCoverage) {
@@ -523,7 +523,7 @@ CacheHelper.prototype.promiseIsCachedForProband = function(geneObject, transcrip
       resolve({'geneObject': geneObject, 'transcript': transcript, 'isCached':   isCached});
     })
   })
-}
+};
 
 CacheHelper.prototype.promiseIsCached = function(geneName) {
   var me = this;
@@ -534,7 +534,7 @@ CacheHelper.prototype.promiseIsCached = function(geneName) {
       resolve({'gene': geneName, 'isCached': isCached});
     })
   })
-}
+};
 
 
 CacheHelper.prototype.promiseClearCache = function(launchTimestampToClear) {
@@ -555,7 +555,7 @@ CacheHelper.prototype.promiseClearCache = function(launchTimestampToClear) {
     }
   })
 
-}
+};
 
 CacheHelper.prototype.refreshGeneBadges = function(callback) {
   var me = this;
@@ -579,7 +579,7 @@ CacheHelper.prototype.refreshGeneBadges = function(callback) {
             keys.push({'key': key, 'keyObject': keyObject});
           }
        }
-    })
+    });
 
     me.refreshNextGeneBadge(keys, function() {
       me.cohort.geneModel.sortGenes("harmful variants");
@@ -599,7 +599,7 @@ CacheHelper.prototype.refreshGeneBadges = function(callback) {
     }
    })
 
-}
+};
 
 CacheHelper.prototype.refreshNextGeneBadge = function(keys, callback) {
   var me = this;
@@ -623,7 +623,7 @@ CacheHelper.prototype.refreshNextGeneBadge = function(keys, callback) {
       })
     });
   }
-}
+};
 
 CacheHelper.prototype.getCacheKey = function(cacheObject) {
   var me = this;
@@ -638,13 +638,13 @@ CacheHelper.prototype.getCacheKey = function(cacheObject) {
       key += CacheHelper.KEY_DELIM + cacheObject.annotationScheme;
   }
   return key;
-}
+};
 
 CacheHelper.prototype.convertClinCacheKey = function(cacheKey) {
   var me = this;
   let cacheObject = CacheHelper._parseClinCacheKey(cacheKey);
   return me.getCacheKey(cacheObject);
-}
+};
 
 
 CacheHelper.prototype.promiseGetCacheSize = function() {  // provide the size in bytes of the data currently stored
@@ -665,7 +665,7 @@ CacheHelper.prototype.promiseGetCacheSize = function() {  // provide the size in
     // 'recent'
     me.promiseGetAllKeys()
    .then(function(allKeys) {
-      var promises = []
+      var promises = [];
       allKeys.forEach(function(key) {
         var keyObject = CacheHelper._parseCacheKey(key);
         if (keyObject) {
@@ -683,7 +683,7 @@ CacheHelper.prototype.promiseGetCacheSize = function() {  // provide the size in
           });
           promises.push(p);
         }
-      })
+      });
 
       Promise.all(promises).then(function() {
         resolve({ currentSize:            CacheHelper._sizeMB(currentSize) + " MB",
@@ -705,7 +705,7 @@ CacheHelper.prototype.promiseGetCacheSize = function() {  // provide the size in
 
   })
 
-}
+};
 
 
 
@@ -725,14 +725,14 @@ CacheHelper.prototype._promiseClearCache = function(launchTimestampToClear) {
         if (keyObject && keyObject.launchTimestamp == launchTimestampToClear) {
           keysToRemove.push(key);
         }
-      })
+      });
 
       var promises = [];
       keysToRemove.forEach( function(key) {
         var keyObject = CacheHelper._parseCacheKey(key);
         var p = me.promiseRemoveCacheItem(keyObject.dataKind, key);
         promises.push(p);
-      })
+      });
 
       Promise.all(promises).then(function() {
         resolve();
@@ -745,7 +745,7 @@ CacheHelper.prototype._promiseClearCache = function(launchTimestampToClear) {
 
   });
 
-}
+};
 
 CacheHelper.prototype.clearAll = function() {
   var me = this;
@@ -762,8 +762,8 @@ CacheHelper.prototype.clearAll = function() {
   }, function() {
     // user clicked "cancel"
   })
-  .set('labels', {ok:'OK', cancel:'Cancel'});       ;
-}
+      .set('labels', {ok: 'OK', cancel: 'Cancel'});
+};
 
 
 
@@ -785,7 +785,7 @@ CacheHelper.prototype.clearCacheForGene = function(geneName) {
             keys.push(key);
           }
         }
-      })
+      });
 
       var promises = [];
       keys.forEach( function(key) {
@@ -816,7 +816,7 @@ CacheHelper.prototype.clearCacheForGene = function(geneName) {
   })
 
 
-}
+};
 
 
 
@@ -827,7 +827,7 @@ CacheHelper.prototype._isProbandVariantCache = function(key) {
     && ( cacheObject.dataKind == CacheHelper.VCF_DATA  || cacheObject.dataKind == CacheHelper.FB_DATA)
     && cacheObject.relationship == "proband");
 
-}
+};
 
 
 
@@ -836,7 +836,7 @@ CacheHelper._sizeMB = function(size, decimalPlaces=1) {
   var multiplier = Math.pow(10, decimalPlaces+1);
   var _sizeMB = size / (1024*1024);
   return  Math.round(_sizeMB * multiplier) / multiplier;
-}
+};
 
 
 
@@ -867,7 +867,7 @@ CacheHelper._parseCacheKey = function(cacheKey) {
     return null;
   }
 
-}
+};
 
 CacheHelper._parseClinCacheKey = function(cacheKey) {
   if (cacheKey.indexOf(CacheHelper.KEY_DELIM) > 0) {
@@ -893,7 +893,7 @@ CacheHelper._parseClinCacheKey = function(cacheKey) {
     return null;
   }
 
-}
+};
 
 
 CacheHelper._getClinCacheKey = function(cacheObject) {
@@ -907,7 +907,7 @@ CacheHelper._getClinCacheKey = function(cacheObject) {
       key += CacheHelper.KEY_DELIM + cacheObject.annotationScheme;
   }
   return key;
-}
+};
 
 
 CacheHelper.showError = function(key, cacheError) {
@@ -924,7 +924,7 @@ CacheHelper.showError = function(key, cacheError) {
     var errorType = cacheError.name && cacheError.name.length > 0 ? cacheError.name : "A problem";
     var errorKey = cacheObject.gene + CacheHelper.KEY_DELIM + errorType;
 
-    var consoleMessage = errorType + " occurred when caching analyzed " + cacheObject.dataKind + " data for gene " + cacheObject.gene + ". Click on 'Clear cache...' link to clear cache."
+    var consoleMessage = errorType + " occurred when caching analyzed " + cacheObject.dataKind + " data for gene " + cacheObject.gene + ". Click on 'Clear cache...' link to clear cache.";
       console.log(consoleMessage);
       console.log(cacheError.toString());
 
@@ -947,7 +947,7 @@ CacheHelper.showError = function(key, cacheError) {
       }
   }
 
-}
+};
 
 
 CacheHelper.promiseCompressData = function(data) {
@@ -978,7 +978,7 @@ CacheHelper.promiseCompressData = function(data) {
     }
   });
 
-}
+};
 
 CacheHelper.promiseDecompressData = function(dataCompressed, decompressIt) {
   return new Promise(function(resolve, reject) {
@@ -998,7 +998,7 @@ CacheHelper.promiseDecompressData = function(dataCompressed, decompressIt) {
       resolve(dataCompressed);
     }
   });
-}
+};
 
 CacheHelper.prototype.promiseCacheData = function(key, data, options) {
   var me = this;
@@ -1045,7 +1045,7 @@ CacheHelper.prototype.promiseCacheData = function(key, data, options) {
 
   })
 
-}
+};
 
 CacheHelper.prototype.promiseGetData = function(key, decompressIt=true, resolveWithKey=false) {
   var me = this;
@@ -1090,7 +1090,7 @@ CacheHelper.prototype.promiseGetData = function(key, decompressIt=true, resolveW
     }
   })
 
-}
+};
 
 
 CacheHelper.prototype.promiseGetDataThreaded = function(key, keyObject) {
@@ -1112,7 +1112,7 @@ CacheHelper.prototype.promiseGetDataThreaded = function(key, keyObject) {
         worker.onerror = function(e) {
           console.log("An error occurred when uncompressing data for key " + key);
           var msg = 'An error occurred while decompressing cached data:' + e;
-          console.log(msg)
+          console.log(msg);
           reject(msg);
         };
 
@@ -1130,7 +1130,7 @@ CacheHelper.prototype.promiseGetDataThreaded = function(key, keyObject) {
      });
   })
 
-}
+};
 
 CacheHelper.prototype.promiseRemoveCacheItem = function(dataKind, key) {
   var me = this;
@@ -1153,7 +1153,7 @@ CacheHelper.prototype.promiseRemoveCacheItem = function(dataKind, key) {
       reject("Unknown caching method")
     }
   });
-}
+};
 
 
 CacheHelper.prototype.promiseGetKeys = function() {
@@ -1166,7 +1166,7 @@ CacheHelper.prototype.promiseGetKeys = function() {
       var filteredKeys = allKeys.filter(function(key) {
         var keyObject = CacheHelper._parseCacheKey(key);
         return keyObject && (keyObject.launchTimestamp == me.launchTimestamp);
-      })
+      });
       resolve(filteredKeys);
      },
      function(error) {
@@ -1175,7 +1175,7 @@ CacheHelper.prototype.promiseGetKeys = function() {
 
   });
 
-}
+};
 
 CacheHelper.prototype.promiseGetKeysForGene = function(geneName) {
   var me = this;
@@ -1187,7 +1187,7 @@ CacheHelper.prototype.promiseGetKeysForGene = function(geneName) {
       var filteredKeys = allKeys.filter(function(key) {
         var keyObject = CacheHelper._parseCacheKey(key);
         return keyObject && (keyObject.launchTimestamp == me.launchTimestamp) && keyObject.gene == geneName;
-      })
+      });
       resolve(filteredKeys);
      },
      function(error) {
@@ -1196,7 +1196,7 @@ CacheHelper.prototype.promiseGetKeysForGene = function(geneName) {
 
   });
 
-}
+};
 
 
 CacheHelper.prototype.promiseGetAllKeys = function() {
@@ -1226,7 +1226,7 @@ CacheHelper.prototype.promiseGetAllKeys = function() {
     }
   });
 
-}
+};
 
 CacheHelper.prototype.promiseGetClinCacheItems = function(geneName, includeDataKinds=[]) {
   let me = this;
@@ -1265,7 +1265,7 @@ CacheHelper.prototype.promiseGetClinCacheItems = function(geneName, includeDataK
         }
 
 
-      })
+      });
       Promise.all(promises)
       .then(function() {
         resolve(cacheItems);
@@ -1278,7 +1278,7 @@ CacheHelper.prototype.promiseGetClinCacheItems = function(geneName, includeDataK
     })
   })
 
-}
+};
 
 CacheHelper.prototype.logCacheContents = function(filterObject, showData=false) {
   var me = this;
@@ -1286,7 +1286,7 @@ CacheHelper.prototype.logCacheContents = function(filterObject, showData=false) 
    .then(function(keys) {
     me._logCacheContents(keys, filterObject, showData);
    });
-}
+};
 
 CacheHelper.prototype.logAllCacheContents = function(filterObject, showData=false) {
   var me = this;
@@ -1294,7 +1294,7 @@ CacheHelper.prototype.logAllCacheContents = function(filterObject, showData=fals
    .then(function(allKeys) {
     me._logCacheContents(allKeys, filterObject, showData);
    });
-}
+};
 
 
 CacheHelper.prototype._logCacheContents = function(keys, filterObject, showData=false) {
@@ -1351,12 +1351,12 @@ CacheHelper.prototype._logCacheContents = function(keys, filterObject, showData=
         } else {
           recs.push({'key': key, 'size': '0 KB'});
         }
-       })
+       });
        promises.push(p);
 
     }
 
-  })
+  });
   Promise.all(promises).then(function() {
     recs.forEach(function(rec) {
       if (showData) {
@@ -1373,7 +1373,7 @@ CacheHelper.prototype._logCacheContents = function(keys, filterObject, showData=
       console.log("Total = " + totalKb.toFixed(2)+ " KB");
     }
   });
-}
+};
 
 CacheHelper.prototype.logData = function(key) {
   var me = this;
@@ -1381,7 +1381,7 @@ CacheHelper.prototype.logData = function(key) {
    .then(function(data) {
     console.log(data);
    })
-}
+};
 
 export default CacheHelper
 

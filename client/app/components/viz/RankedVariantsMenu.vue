@@ -125,8 +125,8 @@
               @cohort-variant-click="onRankedVariantClick"
               @cohort-variant-hover="onRankedVariantHover"
               @cohort-variant-hover-end="onRankedVariantHoverEnd"
-              @variant-rank-change="featureMatrixModel.promiseRankVariants(cohortModel.getModel('proband').loadedVariants);"
-              >
+              @variant-rank-change="featureMatrixModel.promiseRankVariants(cohortModel.getModel('proband').loadedVariants)"
+            >
              </feature-matrix-card>
 
             <div id="ranked-variant-info" v-if="currentVariant && currentVariantInfo">

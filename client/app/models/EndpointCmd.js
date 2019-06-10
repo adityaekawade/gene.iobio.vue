@@ -79,8 +79,8 @@ export default class EndpointCmd {
     var contigStr = "";
     me.getHumanRefNames(refName).split(" ").forEach(function(ref) {
         contigStr += "##contig=<ID=" + ref + ">\n";
-    })
-    var contigNameFile = new Blob([contigStr])
+    });
+    var contigNameFile = new Blob([contigStr]);
 
 
     // Create an iobio command get get the variants and add any header recs.
@@ -105,7 +105,7 @@ export default class EndpointCmd {
     }
 
     if (vcfSampleNames && vcfSampleNames.length > 0) {
-      var sampleNameFile = new Blob([vcfSampleNames.split(",").join("\n")])
+      var sampleNameFile = new Blob([vcfSampleNames.split(",").join("\n")]);
       cmd = cmd.pipe(me.IOBIO.vt, ["subset", "-s", sampleNameFile, '-'], {ssl: me.globalApp.useSSL})
     }
 
@@ -181,8 +181,8 @@ export default class EndpointCmd {
       var regionString = "";
       regions.forEach(function(region) {
         regionString += refName + "\t" + region.start + "\t" + region.end + "\n";
-      })
-      var regionFile = new Blob([regionString])
+      });
+      var regionFile = new Blob([regionString]);
 
       var gnomADRemoveArgs = ['annotate', '-a', gnomADUrl, '-h', gnomADHeaderFile, '-x', 'INFO/AF,INFO/AN,INFO/AC', '-R', regionFile];
       var gnomADAnnotArgs = ['annotate', '-a', gnomADUrl, '-h', gnomADHeaderFile, '-c', gnomADAnnots, '-R', regionFile];
@@ -211,7 +211,7 @@ export default class EndpointCmd {
         regionParm += " ";
       }
       regionParm += region.refName + ":" + region.start + "-" + region.end;
-    })
+    });
 
     var args = ['-h', vcfUrl, regionParm];
     if (tbiUrl) {
@@ -221,14 +221,14 @@ export default class EndpointCmd {
     var contigStr = "";
     me.getHumanRefNames(refName).split(" ").forEach(function(ref) {
         contigStr += "##contig=<ID=" + ref + ">\n";
-    })
-    var contigNameFile = new Blob([contigStr])
+    });
+    var contigNameFile = new Blob([contigStr]);
 
     var cmd = new iobio.cmd(me.IOBIO.tabix, args, {ssl: me.globalApp.useSSL})
-                       .pipe(me.IOBIO.bcftools, ['annotate', '-h', contigNameFile, '-'], {ssl: me.globalApp.useSSL})
+                       .pipe(me.IOBIO.bcftools, ['annotate', '-h', contigNameFile, '-'], {ssl: me.globalApp.useSSL});
 
     // normalize variants
-    cmd = cmd.pipe(me.IOBIO.vt, ["normalize", "-n", "-r", refFastaFile, '-'], {ssl: me.globalApp.useSSL})
+    cmd = cmd.pipe(me.IOBIO.vt, ["normalize", "-n", "-r", refFastaFile, '-'], {ssl: me.globalApp.useSSL});
 
     return cmd;
   }
@@ -252,7 +252,7 @@ export default class EndpointCmd {
           regionParts += ",";
         }
         regionParts += region.start + "-" + region.end;
-      })
+      });
       if (regionParts.length > 0) {
         knownVariantsArgs.push("-p");
         knownVariantsArgs.push(regionParts);
@@ -426,12 +426,12 @@ export default class EndpointCmd {
     var contigStr = "";
     me.getHumanRefNames(refName).split(" ").forEach(function(ref) {
         contigStr += "##contig=<ID=" + ref + ">\n";
-    })
-    var contigNameFile = new Blob([contigStr])
-    cmd = cmd.pipe(me.IOBIO.bcftools, ['annotate', '-h', contigNameFile], {ssl: me.globalApp.useSSL})
+    });
+    var contigNameFile = new Blob([contigStr]);
+    cmd = cmd.pipe(me.IOBIO.bcftools, ['annotate', '-h', contigNameFile], {ssl: me.globalApp.useSSL});
 
     // Get Allele Frequencies from 1000G and ExAC
-    cmd = cmd.pipe(me.IOBIO.af, [], {ssl: me.globalApp.useSSL})
+    cmd = cmd.pipe(me.IOBIO.af, [], {ssl: me.globalApp.useSSL});
 
     // VEP to annotate
     var vepArgs = [];
@@ -480,8 +480,8 @@ export default class EndpointCmd {
     var regionStr = "#" + geneName + "\n";
     regions.forEach(function(region) {
       regionStr += refName + ":" + region.start + "-" + region.end + "\n";
-    })
-    var regionFile = new Blob([regionStr])
+    });
+    var regionFile = new Blob([regionStr]);
 
     args.push("-r");
     args.push(regionFile);
@@ -517,7 +517,7 @@ export default class EndpointCmd {
         bamCmds.push(bamCmd);
       }
 
-    })
+    });
     return bamCmds;
   }
 

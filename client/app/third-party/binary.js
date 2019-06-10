@@ -176,7 +176,7 @@ Unpacker.prototype.unpack = function(){
       size = this.unpack_uint32();
       return this.unpack_map(size);
   }
-}
+};
 
 Unpacker.prototype.unpack_uint8 = function(){
   var byte = this.dataView[this.index] & 0xff;
@@ -190,7 +190,7 @@ Unpacker.prototype.unpack_uint16 = function(){
     ((bytes[0] & 0xff) * 256) + (bytes[1] & 0xff);
   this.index += 2;
   return uint16;
-}
+};
 
 Unpacker.prototype.unpack_uint32 = function(){
   var bytes = this.read(4);
@@ -201,7 +201,7 @@ Unpacker.prototype.unpack_uint32 = function(){
        bytes[3];
   this.index += 4;
   return uint32;
-}
+};
 
 Unpacker.prototype.unpack_uint64 = function(){
   var bytes = this.read(8);
@@ -216,7 +216,7 @@ Unpacker.prototype.unpack_uint64 = function(){
        bytes[7];
   this.index += 8;
   return uint64;
-}
+};
 
 
 Unpacker.prototype.unpack_int8 = function(){
@@ -227,19 +227,19 @@ Unpacker.prototype.unpack_int8 = function(){
 Unpacker.prototype.unpack_int16 = function(){
   var uint16 = this.unpack_uint16();
   return (uint16 < 0x8000 ) ? uint16 : uint16 - (1 << 16);
-}
+};
 
 Unpacker.prototype.unpack_int32 = function(){
   var uint32 = this.unpack_uint32();
   return (uint32 < Math.pow(2, 31) ) ? uint32 :
     uint32 - Math.pow(2, 32);
-}
+};
 
 Unpacker.prototype.unpack_int64 = function(){
   var uint64 = this.unpack_uint64();
   return (uint64 < Math.pow(2, 63) ) ? uint64 :
     uint64 - Math.pow(2, 64);
-}
+};
 
 Unpacker.prototype.unpack_raw = function(size){
   if ( this.length < this.index + size){
@@ -252,7 +252,7 @@ Unpacker.prototype.unpack_raw = function(size){
     //buf = util.bufferToString(buf);
 
   return buf;
-}
+};
 
 Unpacker.prototype.unpack_string = function(size){
   var bytes = this.read(size);
@@ -275,7 +275,7 @@ Unpacker.prototype.unpack_string = function(size){
   }
   this.index += size;
   return str;
-}
+};
 
 Unpacker.prototype.unpack_array = function(size){
   var objects = new Array(size);
@@ -283,7 +283,7 @@ Unpacker.prototype.unpack_array = function(size){
     objects[i] = this.unpack();
   }
   return objects;
-}
+};
 
 Unpacker.prototype.unpack_map = function(size){
   var map = {};
@@ -293,7 +293,7 @@ Unpacker.prototype.unpack_map = function(size){
     map[key] = value;
   }
   return map;
-}
+};
 
 Unpacker.prototype.unpack_float = function(){
   var uint32 = this.unpack_uint32();
@@ -302,7 +302,7 @@ Unpacker.prototype.unpack_float = function(){
   var fraction = ( uint32 & 0x7fffff ) | 0x800000;
   return (sign == 0 ? 1 : -1) *
     fraction * Math.pow(2, exp - 23);
-}
+};
 
 Unpacker.prototype.unpack_double = function(){
   var h32 = this.unpack_uint32();
@@ -313,7 +313,7 @@ Unpacker.prototype.unpack_double = function(){
   var frac = hfrac * Math.pow(2, exp - 20) +
     l32   * Math.pow(2, exp - 52);
   return (sign == 0 ? 1 : -1) * frac;
-}
+};
 
 Unpacker.prototype.read = function(length){
   var j = this.index;
@@ -322,7 +322,7 @@ Unpacker.prototype.read = function(length){
   } else {
     throw new Error('BinaryPackFailure: read index out of range');
   }
-}
+};
 
 function Packer(){
   this.bufferBuilder = new BufferBuilder();
@@ -330,7 +330,7 @@ function Packer(){
 
 Packer.prototype.getBuffer = function(){
   return this.bufferBuilder.getBuffer();
-}
+};
 
 Packer.prototype.pack = function(value){
   var type = typeof(value);
@@ -385,7 +385,7 @@ Packer.prototype.pack = function(value){
     throw new Error('Type "' + type + '" not yet supported');
   }
   this.bufferBuilder.flush();
-}
+};
 
 
 Packer.prototype.pack_bin = function(blob){
@@ -403,7 +403,7 @@ Packer.prototype.pack_bin = function(blob){
     return;
   }
   this.bufferBuilder.append(blob);
-}
+};
 
 Packer.prototype.pack_string = function(str){
   var length = utf8Length(str);
@@ -421,14 +421,14 @@ Packer.prototype.pack_string = function(str){
     return;
   }
   this.bufferBuilder.append(str);
-}
+};
 
 Packer.prototype.pack_array = function(ary){
   var length = ary.length;
   if (length <= 0x0f){
     this.pack_uint8(0x90 + length);
   } else if (length <= 0xffff){
-    this.bufferBuilder.append(0xdc)
+    this.bufferBuilder.append(0xdc);
     this.pack_uint16(length);
   } else if (length <= 0xffffffff){
     this.bufferBuilder.append(0xdd);
@@ -439,7 +439,7 @@ Packer.prototype.pack_array = function(ary){
   for(var i = 0; i < length ; i++){
     this.pack(ary[i]);
   }
-}
+};
 
 Packer.prototype.pack_integer = function(num){
   if ( -0x20 <= num && num <= 0x7f){
@@ -471,7 +471,7 @@ Packer.prototype.pack_integer = function(num){
   } else{
     throw new Error('Invalid integer');
   }
-}
+};
 
 Packer.prototype.pack_double = function(num){
   var sign = 0;
@@ -489,7 +489,7 @@ Packer.prototype.pack_double = function(num){
   this.bufferBuilder.append(0xcb);
   this.pack_int32(h32);
   this.pack_int32(l32);
-}
+};
 
 Packer.prototype.pack_object = function(obj){
   var keys = Object.keys(obj);
@@ -511,16 +511,16 @@ Packer.prototype.pack_object = function(obj){
       this.pack(obj[prop]);
     }
   }
-}
+};
 
 Packer.prototype.pack_uint8 = function(num){
   this.bufferBuilder.append(num);
-}
+};
 
 Packer.prototype.pack_uint16 = function(num){
   this.bufferBuilder.append(num >> 8);
   this.bufferBuilder.append(num & 0xff);
-}
+};
 
 Packer.prototype.pack_uint32 = function(num){
   var n = num & 0xffffffff;
@@ -528,7 +528,7 @@ Packer.prototype.pack_uint32 = function(num){
   this.bufferBuilder.append((n & 0x00ff0000) >>> 16);
   this.bufferBuilder.append((n & 0x0000ff00) >>>  8);
   this.bufferBuilder.append((n & 0x000000ff));
-}
+};
 
 Packer.prototype.pack_uint64 = function(num){
   var high = num / Math.pow(2, 32);
@@ -541,23 +541,23 @@ Packer.prototype.pack_uint64 = function(num){
   this.bufferBuilder.append((low  & 0x00ff0000) >>> 16);
   this.bufferBuilder.append((low  & 0x0000ff00) >>>  8);
   this.bufferBuilder.append((low  & 0x000000ff));
-}
+};
 
 Packer.prototype.pack_int8 = function(num){
   this.bufferBuilder.append(num & 0xff);
-}
+};
 
 Packer.prototype.pack_int16 = function(num){
   this.bufferBuilder.append((num & 0xff00) >> 8);
   this.bufferBuilder.append(num & 0xff);
-}
+};
 
 Packer.prototype.pack_int32 = function(num){
   this.bufferBuilder.append((num >>> 24) & 0xff);
   this.bufferBuilder.append((num & 0x00ff0000) >>> 16);
   this.bufferBuilder.append((num & 0x0000ff00) >>> 8);
   this.bufferBuilder.append((num & 0x000000ff));
-}
+};
 
 Packer.prototype.pack_int64 = function(num){
   var high = Math.floor(num / Math.pow(2, 32));
@@ -570,7 +570,7 @@ Packer.prototype.pack_int64 = function(num){
   this.bufferBuilder.append((low  & 0x00ff0000) >>> 16);
   this.bufferBuilder.append((low  & 0x0000ff00) >>>  8);
   this.bufferBuilder.append((low  & 0x000000ff));
-}
+};
 
 function _utf8Replace(m){
   var code = m.charCodeAt(0);
@@ -611,12 +611,12 @@ EventEmitter.prototype.addListener = function(type, listener, scope, once) {
   if ('function' !== typeof listener) {
     throw new Error('addListener only takes instances of Function');
   }
-  
+
   // To avoid recursion in the case that type == "newListeners"! Before
   // adding it to the listeners, first emit "newListeners".
   this.emit('newListener', type, typeof listener.listener === 'function' ?
             listener.listener : listener);
-            
+
   if (!this._events[type]) {
     // Optimize the case of one listener. Don't need the extra array object.
     this._events[type] = listener;
@@ -643,9 +643,8 @@ EventEmitter.prototype.once = function(type, listener, scope) {
   function g() {
     self.removeListener(type, g);
     listener.apply(this, arguments);
-  };
-
-  g.listener = listener;
+  }
+    g.listener = listener;
   self.on(type, g);
 
   return this;
@@ -784,7 +783,7 @@ var util = {
     function setZeroTimeoutPostMessage(fn) {
       timeouts.push(fn);
       global.postMessage(messageName, '*');
-    }		
+    }
 
     function handleMessage(event) {
       if (event.source == global && event.data == messageName) {
@@ -902,20 +901,20 @@ Stream.prototype.pipe = function(dest, options) {
 exports.Stream = Stream;
 function BlobReadStream(source, options){
   Stream.call(this);
-  
+
   options = util.extend({
       readDelay: 0,
       paused: false
   }, options);
-  
+
   this._source = source;
   this._start = 0;
   this._readChunkSize = options.chunkSize || source.size;
   this._readDelay = options.readDelay;
-  
+
   this.readable = true;
   this.paused = options.paused;
-  
+
   this._read();
 }
 
@@ -937,42 +936,42 @@ BlobReadStream.prototype.destroy = function(){
 };
 
 BlobReadStream.prototype._read = function(){
-    
+
   var self = this;
-  
+
   function emitReadChunk(){
     self._emitReadChunk();
   }
-  
+
   var readDelay = this._readDelay;
   if (readDelay !== 0){
     this._timeoutId = setTimeout(emitReadChunk, readDelay);
   } else {
     util.setZeroTimeout(emitReadChunk);
   }
-    
+
 };
 
 BlobReadStream.prototype._emitReadChunk = function(){
-    
+
   if(this.paused || !this.readable) return;
-  
+
   var chunkSize = Math.min(this._source.size - this._start, this._readChunkSize);
-  
+
   if(chunkSize === 0){
       this.readable = false;
       this.emit("end");
       return;
   }
-  
+
   var sourceEnd = this._start + chunkSize;
   var chunk = (this._source.slice || this._source.webkitSlice || this._source.mozSlice).call(this._source, this._start, sourceEnd);
-  
+
   this._start = sourceEnd;
   this._read();
-  
+
   this.emit("data", chunk);
-  
+
 };
 
 /*
@@ -981,32 +980,32 @@ BlobReadStream.prototype._emitReadChunk = function(){
 
 
 function BlobWriteStream(options){
-    
+
     stream.Stream.call(this);
-    
+
     options = _.extend({
         onFull: onFull,
         onEnd: function(){},
         minBlockAllocSize: 0,
         drainDelay:0
     }, options);
-    
+
     this._onFull = options.onFull;
     this._onEnd = options.onEnd;
     this._onWrite = options.onWrite;
-    
+
     this._minBlockAllocSize = options.minBlockAllocSize;
     this._maxBlockAllocSize = options.maxBlockAllocSize;
     this._drainDelay = options.drainDelay;
-    
+
     this._buffer = new Buffer(options.minBlockAllocSize);
     this._destination = this._buffer;
     this._destinationPos = 0;
-    
+
     this._writeQueue = [];
     this._pendingOnFull = false;
     this._pendingQueueDrain = false;
-    
+
     this.writable = true;
     this.bytesWritten = 0;
 }
@@ -1018,47 +1017,47 @@ BlobWriteStream.prototype.getBuffer = function(){
 };
 
 BlobWriteStream.prototype.write = function(data, encoding){
-    
+
     if(!this.writable){
         throw new Error("stream is not writable");
     }
-    
+
     if(!Buffer.isBuffer(data)){
         data = new Buffer(data, encoding);
     }
-    
+
     if(data.length){
         this._writeQueue.push(data);
     }
-    
+
     this._commit();
-    
+
     return this._writeQueue.length === 0;
 };
 
 BlobWriteStream.prototype._commit = function(){
-    
+
     var self = this;
-    
+
     var destination = this._destination;
     var writeQueue = this._writeQueue;
-    
+
     var startDestinationPos = this._destinationPos;
-    
+
     while(writeQueue.length && destination.length){
-        
+
         var head = writeQueue[0];
-        
+
         var copySize = Math.min(destination.length, head.length);
-        
+
         head.copy(destination, 0, 0, copySize);
-        
+
         head = head.slice(copySize);
         destination = destination.slice(copySize);
-        
+
         this.bytesWritten += copySize;
         this._destinationPos += copySize;
-        
+
         if(head.length === 0){
             writeQueue.shift();
         }
@@ -1066,24 +1065,24 @@ BlobWriteStream.prototype._commit = function(){
             writeQueue[0] = head;
         }
     }
-    
+
     this._destination = destination;
-    
+
     bytesCommitted = this._destinationPos - startDestinationPos;
     if(bytesCommitted){
         if(this._onWrite){
-            
+
             if(writeQueue.length){
                 this._pendingQueueDrain = true;
             }
-            
+
             // By locking destination the buffer is frozen and the onWrite
             // callback cannot miss any write commits
             this._destination = emptyBuffer;
-            
+
             var consumer = this._onWrite;
             this._onWrite = null;
-            
+
             consumer.call(this, function(nextCallback){
                 util.setZeroTimeout(function(){
                     self._destination = destination;
@@ -1091,20 +1090,20 @@ BlobWriteStream.prototype._commit = function(){
                     self._commit();
                 });
             }, consumer);
-            
+
             return;
         }
     }
-    
+
     if(writeQueue.length){
-        
+
         this._pendingQueueDrain = true;
         this._growBuffer();
     }
     else if(this._pendingQueueDrain){
-        
+
         this._pendingQueueDrain = false;
-        
+
         if(this._drainDelay !== 0){
             setTimeout(function(){
                 self.emit("drain");
@@ -1119,30 +1118,30 @@ BlobWriteStream.prototype._commit = function(){
 };
 
 BlobWriteStream.prototype._growBuffer = function(){
-    
+
     var self = this;
     var writeQueue = this._writeQueue;
-    
+
     var requestSize = this._minBlockAllocSize;
-    
+
     var maxBlockAllocSize = this._maxBlockAllocSize;
     var add = (maxBlockAllocSize === undefined ? function(a, b){return a + b;} : function(a, b){return Math.min(a + b, maxBlockAllocSize);});
-    
+
     for(var i = 0, queueLength = writeQueue.length; i < queueLength; i++){
         requestSize = add(requestSize, writeQueue[i].length);
     }
-    
+
     // Prevent concurrent onFull callbacks
     if(this._pendingOnFull){
         return;
     }
     this._pendingOnFull = true;
-    
+
     this._onFull(this._buffer, requestSize, function(buffer, destination){
         util.setZeroTimeout(function(){
-            
+
             self._pendingOnFull = false;
-            
+
             if(!destination){
                 if(self.writable){
                     self.emit("error", new Error("buffer is full"));
@@ -1150,24 +1149,24 @@ BlobWriteStream.prototype._growBuffer = function(){
                 self.destroy();
                 return;
             }
-            
+
             self._buffer = buffer;
             self._destination = destination;
-            
+
             self._commit();
         });
     });
 };
 
 BlobWriteStream.prototype.end = function(data, encoding){
-    
+
     var self = this;
-    
+
     function _end(){
         self.writable = false;
         self._onEnd();
     }
-    
+
     if(data){
         if(this.write(data, encoding)){
             _end();
@@ -1188,7 +1187,7 @@ BlobWriteStream.prototype.destroy = function(){
 };
 
 BlobWriteStream.prototype.consume = function(consume){
-    
+
     this._buffer = this._buffer.slice(consume);
     this._destinationPos -= consume;
 };
@@ -1207,22 +1206,22 @@ exports.BlobReadStream = BlobReadStream;
 
 function BinaryStream(socket, id, create, meta) {
   if (!(this instanceof BinaryStream)) return new BinaryStream(options);
-  
+
   var self = this;
-  
+
   Stream.call(this);
 
-  
+
   this.id = id;
   this._socket = socket;
-    
+
   this.writable = true;
   this.readable = true;
   this.paused = false;
-  
+
   this._closed = false;
   this._ended = false;
-  
+
   if(create) {
     // This is a stream we are creating
     this._write(1, meta, this.id);
@@ -1318,7 +1317,7 @@ BinaryStream.prototype.destroy = BinaryStream.prototype.destroySoon = function()
 // Read stream
 
 BinaryStream.prototype._onEnd = function() {
-  if(this._ended) { 
+  if(this._ended) {
     return;
   }
   this._ended = true;
@@ -1327,7 +1326,7 @@ BinaryStream.prototype._onEnd = function() {
 };
 
 BinaryStream.prototype._onData = function(data) {
-  // Dispatch 
+  // Dispatch
   this.emit('data', data);
 };
 
@@ -1344,17 +1343,17 @@ BinaryStream.prototype.resume = function() {
 
 function BinaryClient(socket, options) {
   if (!(this instanceof BinaryClient)) return new BinaryClient(socket, options);
-  
+
   EventEmitter.call(this);
-  
+
   var self = this;
-  
+
   this._options = util.extend({
     chunkSize: 40960
   }, options);
-  
+
   this.streams = {};
-  
+
   if(typeof socket === 'string') {
     this._nextId = 0;
     this._socket = new WebSocket(socket);
@@ -1363,9 +1362,9 @@ function BinaryClient(socket, options) {
     this._nextId = 1;
     this._socket = socket;
   }
-  
+
   this._socket.binaryType = 'arraybuffer';
-  
+
   this._socket.addEventListener('open', function(){
     self.emit('open');
   });
@@ -1385,40 +1384,40 @@ function BinaryClient(socket, options) {
   });
   this._socket.addEventListener('message', function(data, flags){
     util.setZeroTimeout(function(){
-  
+
       // Message format
       // [type, payload, bonus ]
       //
       // Reserved
       // [ 0  , X , X ]
-      // 
+      //
       //
       // New stream
       // [ 1  , Meta , new streamId ]
-      // 
+      //
       //
       // Data
       // [ 2  , Data , streamId ]
-      // 
+      //
       //
       // Pause
       // [ 3  , null , streamId ]
-      // 
+      //
       //
       // Resume
       // [ 4  , null , streamId ]
-      // 
+      //
       //
       // End
       // [ 5  , null , streamId ]
-      // 
+      //
       //
       // Close
       // [ 6  , null , streamId ]
-      // 
-      
+      //
+
       data = data.data;
-      
+
       try {
           data = util.unpack(data);
       } catch (ex) {
@@ -1430,7 +1429,7 @@ function BinaryClient(socket, options) {
           return self.emit('error', new Error('Received message with wrong part count: ' + data.length));
       if ('number' != typeof data[0])
           return self.emit('error', new Error('Received message with non-number type: ' + data[0]));
-      
+
       switch(data[0]) {
         case 0:
           // Reserved
@@ -1499,14 +1498,14 @@ function BinaryClient(socket, options) {
           break;
         case 8:
           var connection = data[1];
-          var streamId = data[2];          
-          var binaryStream = self.streams[streamId];          
+          var streamId = data[2];
+          var binaryStream = self.streams[streamId];
           if(binaryStream) {
             binaryStream._onCreateClientConnection(connection);
           } else {
             self.emit('error', new Error('Received `error` message for unknown stream: ' + streamId));
           }
-          break;          
+          break;
         default:
           self.emit('error', new Error('Unrecognized message type received: ' + data[0]));
       }
@@ -1525,7 +1524,7 @@ BinaryClient.prototype.send = function(data, meta){
       (new BufferReadStream(data, {chunkSize: this._options.chunkSize})).pipe(stream);
     } else {
       stream.write(data);
-    } 
+    }
   } else if (util.isNode !== true) {
     if(data.constructor == Blob || data.constructor == File) {
       (new BlobReadStream(data, {chunkSize: this._options.chunkSize})).pipe(stream);

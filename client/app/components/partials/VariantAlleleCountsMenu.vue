@@ -176,7 +176,7 @@ export default {
           var rel     = info.relationship;
           var display = (info.relationship == 'sibling' ? 'Sib' : self.globalApp.utility.capitalizeFirstLetter(info.relationship))
                         + " "
-                        + (info.relationship == 'sibling' ? sampleName : '')
+                        + (info.relationship == 'sibling' ? sampleName : '');
           var zyg = genotype ? (!genotype.hasOwnProperty('zygosity') || genotype.zygosity == null || genotype.zygosity == "gt_unknown" ? "unknown" : genotype.zygosity.toLowerCase()) : "none";
 
           var altAndRef = +genotype.refCount + +genotype.altCount;
@@ -203,7 +203,7 @@ export default {
             }
           )
         }
-      })
+      });
       return sampleAlleleCounts;
     }
 

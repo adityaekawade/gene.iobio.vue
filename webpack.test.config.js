@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
   module: {
@@ -46,5 +46,5 @@ module.exports = {
     hints: false
   },
   devtool: 'cheap-module-inline-source-map'
-}
+};
 

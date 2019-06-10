@@ -104,11 +104,7 @@ function simpleHash (items, key) {
         i = i + 1;
     }
     return itemhash;
-};
-
-
-
-
+}
 // Take two array buffers BUFFER1 and BUFFER2 and, treating them as
 // simple byte arrays, return a new byte array of their catenation.
 function appendBuffer( buff1, buff2, asUint8) {
@@ -126,8 +122,7 @@ function appendBuffers(bufferVec, asUint8) {
     var totalSize = 0;
     for (var i = 0; i < bufferVec.length; i++) {
         totalSize = totalSize + bufferVec[i].byteLength;
-    };
-
+    }
     var tmp;
     if (bufferVec.length == 1) {
         var b = bufferVec[0];
@@ -140,8 +135,8 @@ function appendBuffers(bufferVec, asUint8) {
             var buff = (b instanceof Uint8Array) ? b :new Uint8Array(b);
             tmp.set(buff, offset);
             offset = offset + b.byteLength;
-        };
-    };
+        }
+    }
     return (asUint8) ? tmp : tmp.buffer;
 }
 
@@ -178,8 +173,8 @@ function cstg (index, buf) {
   while (i < buf.length && buf[i] != 0) {
     s += String.fromCharCode(buf[i]);
     i++;
-  };
-  return [(i<buf.length) ? i+1 : i, s];
+  }
+    return [(i<buf.length) ? i+1 : i, s];
 }
 
 
@@ -248,7 +243,7 @@ function getChunk (f, beg, end, cbfn) {
         } else {
             return alert('Bad read for ' + f + ' at ' + beg + ', ' + end +
                          'status: ' + evt.target.readyState);
-        };
+        }
     };
     reader.readAsArrayBuffer(f.slice(beg, end));
 }
@@ -304,7 +299,7 @@ function countBlocks (f, cbfn) {
             nextBlockOffset(f, x, cb);
         } else {
             cbfn.call(this, blkCnt);
-        };
+        }
     };
     nextBlockOffset(f, 0, cb);
 }
@@ -359,7 +354,7 @@ function inflateRegion (f, begOffset, endOffset, cbfn) {
                 } else {
                     var resBuf = appendBuffers(res);
                     return cbfn.call(this, resBuf, res.slice(-1)[0].byteLength);
-                };
+                }
             });
     };
     inflateBlock(f, blockOffset, cb);
@@ -505,10 +500,8 @@ function wrappedRegionJParser (file, beg, end, fmt, cb) {
                         _wrapperCB(this, file, b, ebsz,  fmt, end, x2, cb)
                     });
             });
-    };
-};
-
-
+    }
+}
 // Mid level function.  Takes a jParser instance P and a parser
 // production / rule PARSE_RULE, a string naming a parse production in
 // P, and attempts to advance the current parse with parse_rule.  On
@@ -569,8 +562,8 @@ function nextParseRes (p, parse_rule, cb) {
               nextParseRes(p, parse_rule, cb);
             })
         });
-    };
-  };
+    }
+  }
 }
 
 

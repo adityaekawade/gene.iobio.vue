@@ -301,7 +301,7 @@ export default class VariantTrioModel {
                  }
             }
           }
-        }
+        };
 
         var flagHomRefs = function(features) {
           features.forEach(function(variant) {
@@ -311,7 +311,7 @@ export default class VariantTrioModel {
                 variant.ignore == false;
               }
           });
-        }
+        };
         flagDups(features1);
         flagDups(features2);
         //flagHomRefs(features1);
@@ -460,7 +460,7 @@ VariantTrioModel.determineInheritance = function(variant, fieldCompareMother, fi
   } else {
     variant.inheritance = 'none';
   }
-}
+};
 
 
 

@@ -198,7 +198,7 @@ export default {
       adjustTooltipCoordinates: {
         type: Function,
         default: function(variant) {
-          return;
+
         }
       },
 

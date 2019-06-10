@@ -20,7 +20,7 @@ function Vob(b, o) {
 
 Vob.prototype.toString = function() {
     return '' + this.block + ':' + this.offset;
-}
+};
 
 function Chunk(minv, maxv) {
     this.minv = minv; this.maxv = maxv;
@@ -206,7 +206,7 @@ BamFile.prototype.blocksForRange = function(refId, min, max) {
 //    dlog('mergedChunks = ' + miniJSONify(mergedChunks));
 
     return mergedChunks;
-}
+};
 
 BamFile.prototype.fetch = function(chr, min, max, callback, options) {
     var thisB = this;
@@ -232,7 +232,7 @@ BamFile.prototype.fetch = function(chr, min, max, callback, options) {
             if (options && options.raw) {
                return callback(binData);
             } else if (options && options.format) {
-               var converted = ""
+               var converted = "";
                records.forEach(function(r) { converted += r.convertTo(options.format); });
                return callback(converted);
             } else {
@@ -263,7 +263,7 @@ BamFile.prototype.fetch = function(chr, min, max, callback, options) {
         }
     }
     tramp();
-}
+};
 
 var SEQRET_DECODER = ['=', 'A', 'C', 'x', 'G', 'x', 'x', 'x', 'T', 'x', 'x', 'x', 'x', 'x', 'x', 'N'];
 var CIGAR_DECODER = ['M', 'I', 'D', 'N', 'S', 'H', 'P', '=', 'X', '?', '?', '?', '?', '?', '?', '?'];
@@ -274,7 +274,7 @@ function BamRecord() {
 
 BamRecord.prototype.convertTo = function(format) {
  var record = "";
- var keys = [ "readName", "flag", "segment", "pos", "mq", "cigar", "rnext", "pnext", "tlen", "seq", "quals", "tags"   ]
+ var keys = [ "readName", "flag", "segment", "pos", "mq", "cigar", "rnext", "pnext", "tlen", "seq", "quals", "tags"   ];
 
  if (format == "sam") {
     for (var i=0; i < keys.length; i++) {
@@ -293,9 +293,9 @@ BamRecord.prototype.convertTo = function(format) {
  }
 
  return record;
-}
+};
 
-BamFile.prototype.readBamRecords = function(ba, offset, sink, min, max, chrId) {;
+BamFile.prototype.readBamRecords = function (ba, offset, sink, min, max, chrId) {
     while (true) {
         var blockSize = readInt(ba, offset);
         var blockEnd = offset + blockSize + 4;
@@ -424,7 +424,7 @@ BamFile.prototype.readBamRecords = function(ba, offset, sink, min, max, chrId) {
     // else
 
     // Exits via top of loop.
-}
+};
 
 function readInt(ba, offset) {
     return (ba[offset + 3] << 24) | (ba[offset + 2] << 16) | (ba[offset + 1] << 8) | (ba[offset]);

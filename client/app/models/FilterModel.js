@@ -7,7 +7,7 @@ class FilterModel {
     this.isBasicMode = isBasicMode;
     this.isFullAnalysis = isFullAnalysis;
 
-    this.annotsToInclude = new Object();
+    this.annotsToInclude = {};
 
     this.regionStart = null;
     this.regionEnd = null;
@@ -392,7 +392,7 @@ class FilterModel {
           exclusiveOf: null
         }
       }
-    }
+    };
 
     this.flagCriteria = this.isFullAnalysis ? this.flagCriterion.genefull : this.flagCriterion.gene;
 
@@ -418,7 +418,7 @@ class FilterModel {
 
     let sortedFilters = filters.sort(function(filterObject1, filterObject2) {
       return filterObject1.order > filterObject2.order;
-    })
+    });
 
     return sortedFilters;
   }
@@ -431,7 +431,7 @@ class FilterModel {
       var annots =  {
         clinvar_path:     {key: 'clinvar',       state: true, value: 'clinvar_path'},
         clinvar_lpath:    {key: 'clinvar',       state: true, value: 'clinvar_lpath'}
-      }
+      };
 
       return { afMin: 0, afMax: .01, annotsToInclude: annots };
     }
@@ -504,11 +504,11 @@ class FilterModel {
       } else {
         return "";
       }
-    }
+    };
 
     var filterBox = function(filterString) {
       return "<span class=\"filter-flag filter-element label label-primary\">" + filterString + "</span>";
-    }
+    };
 
 
 
@@ -530,7 +530,7 @@ class FilterModel {
             buf += ", ";
           }
           buf += info.label;
-        })
+        });
         filterString +=  AND(filterString) + filterBox("Present in affected: " + buf);
       }
     }
@@ -547,7 +547,7 @@ class FilterModel {
             buf += ", ";
           }
           buf += info.label;
-        })
+        });
         filterString +=  AND(filterString) +  filterBox("Absent in unaffected: " + buf);
       }
     }
@@ -744,7 +744,7 @@ class FilterModel {
 
     importedVariants.forEach(function(variant) {
       self._flagVariant(variant, badges);
-    })
+    });
 
     return badges;
   }
@@ -791,7 +791,7 @@ class FilterModel {
             if (badgePassState[exclusiveBadge]) {
               matchesOther = true;
             }
-          })
+          });
           if (matchesOther) {
             badgePassState[badge] = false;
           }

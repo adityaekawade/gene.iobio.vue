@@ -29,7 +29,7 @@ class GlobalApp {
     this.serverInstance        = "@hostname@/";  // this will be replace with the name of the server used for this deployement
     this.serverCacheDir        = "local_cache/"; // this is the directory from the server instance where resource files (like clinvar vcf) will be served
     this.serverDataDir         = "local_cache/"; // this is the directory from the server instance where data files will be served
-    this.offlineUrlTag         = "site:"         // this is the first part if the vcf/bam URL that indicates that a special URL should be constructed to get to files served from the local isntance
+    this.offlineUrlTag         = "site:";         // this is the first part if the vcf/bam URL that indicates that a special URL should be constructed to get to files served from the local isntance
 
     this.useSSL                = true;
     this.useServerCache        = false;
@@ -73,7 +73,7 @@ class GlobalApp {
     this.feedbackAttachScreenCapture = false;          // should the feedback include a screen capture?
     this.feedbackShowURL             = false;         // show the feedback email show the URL that launched gene.iobio?
 
-    this.autocall                    = null       // If only alignments provided, should variants be automatically called when gene is selected?
+    this.autocall                    = null;       // If only alignments provided, should variants be automatically called when gene is selected?
 
 
     this.DEFAULT_BATCH_SIZE          = 10;         // how many genes can be analyzed simultaneously for 'Analyze all'
@@ -118,7 +118,7 @@ class GlobalApp {
     var gnomADSource = {
       'GRCh37': 'http://storage.googleapis.com/gnomad-public/release/2.1.1/vcf/exomes/gnomad.exomes.r2.1.1.sites.CHROM-ALIAS.vcf.bgz',
       'GRCh38': 'ftp://ftp.ensembl.org/pub/data_files/homo_sapiens/GRCh38/variation_genotype/gnomad/r2.1/exomes/gnomad.exomes.r2.1.sites.grch38.chrCHROM-ALIAS_noVEP.vcf.gz'
-    }
+    };
     var theUrl = gnomADSource[build];
     theUrl = theUrl.replace(/CHROM-ALIAS/g, chrom);
     return theUrl;
@@ -160,7 +160,7 @@ class GlobalApp {
     var buf = "";
     hdrRecs.forEach(function(hdrRec) {
         buf += hdrRec;
-    })
+    });
     return buf;
   }
 

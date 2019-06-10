@@ -376,7 +376,7 @@ export default {
           })
         }
 
-        self.phenotypes  = self.geneModel.genePhenotypes[self.selectedGene.gene_name]
+        self.phenotypes  = self.geneModel.genePhenotypes[self.selectedGene.gene_name];
         if (self.phenotypes) {
           self.phenotypeTerms =  self.phenotypes.map(function(d) {
             return d.hpo_term_name;

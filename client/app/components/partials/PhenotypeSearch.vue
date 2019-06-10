@@ -131,7 +131,7 @@ export default {
             if (data.status == 'done') {
               self.loadingStatus = false;
               if (data.genes.length == 0) {
-                self.phenolyzerStatus = "no genes found."
+                self.phenolyzerStatus = "no genes found.";
                 self.genesToApply = "";
                 if (self.isNav) {
                   self.$emit('show-snackbar',
@@ -148,7 +148,7 @@ export default {
                   return gene.geneName;
                 })
                 .join(", ");
-                self.phenolyzerStatus = geneCount + " genes shown."
+                self.phenolyzerStatus = geneCount + " genes shown.";
                 self.$emit("on-search-genes", data.phenotypeTerm);
                 self.$emit('hide-snackbar');
               }
@@ -174,7 +174,7 @@ export default {
           bypass = true;
         }
         if (!bypass) {
-          let msg = "Search on non-standard term '" + self.phenotypeTermEntered + "?'"
+          let msg = "Search on non-standard term '" + self.phenotypeTermEntered + "?'";
           alertify.confirm("",
             msg,
             function (e) {

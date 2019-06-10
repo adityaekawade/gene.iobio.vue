@@ -5,7 +5,7 @@ class Util {
       MODERATE:  'Probably harmful',
       MODIFIER:  'Probably benign',
       LOW:       'Benign'
-    }
+    };
     this.globalApp = null;
 
 
@@ -17,7 +17,7 @@ class Util {
 
   decodeUrl(url) {
     if (url && (url.slice(0,14) == 'https%3A%2F%2F' || url.slice(0,13) == 'http%3A%2F%2F'))
-      return decodeURIComponent(url)
+      return decodeURIComponent(url);
     else
       return url;
   }
@@ -26,21 +26,21 @@ class Util {
   formatDate(d) {
     var padMinutes = function(n) {
         return String("00" + n).slice(-2);
-    }
+    };
     var formatHours = function(h) {
       if (+h > 12) {
         return +h - 12;
       } else {
         return h;
       }
-    }
+    };
     var getAmPm = function(h) {
       if (+h > 12) {
         return 'pm';
       } else {
         return 'am';
       }
-    }
+    };
     return d.getMonth() + "-" + d.getDay() + "-" + d.getFullYear() + " " + formatHours(d.getHours()) + ":" + padMinutes(d.getMinutes()) + " " + getAmPm(d.getHours());
   }
 
@@ -148,7 +148,7 @@ class Util {
 
   stripTranscriptPrefix(transcriptId) {
     if (transcriptId == null) {
-      console.log("null transcript id")
+      console.log("null transcript id");
       return "";
     }
     var nameTokens = transcriptId.split('.');
@@ -310,7 +310,7 @@ class Util {
     var matchExact = function(r, str) {
       var match = str.match(r);
       return match != null && str.indexOf(match[0]) == 0;
-    }
+    };
 
     var getMatch = function(string, regex, index) {
       index || (index = 1); // default to the first capturing group
@@ -321,7 +321,7 @@ class Util {
       } else {
         return null;
       }
-    }
+    };
 
 
     for (var i = 0; i < sURLVariables.length; i++) {
@@ -332,7 +332,7 @@ class Util {
               return sParameterName[1];
           }
       } else {
-        var match = getMatch(sParameterName[0], sParam)
+        var match = getMatch(sParameterName[0], sParam);
         if ( match) {
           hits[sParameterName[0]] = sParameterName[1];
         }
@@ -373,7 +373,7 @@ class Util {
     var search = [];
     Object.keys(params).forEach(function(key) {
       search.push(key + '=' + params[key]);
-    })
+    });
       window.history.replaceState(null,null,'?'+search.join('&'));
   }
 
@@ -392,7 +392,7 @@ class Util {
     var search = [];
     Object.keys(params).forEach(function(key) {
       search.push(key + '=' + params[key]);
-    })
+    });
     window.history.replaceState(null,null,'?'+search.join('&'));
 
   }
@@ -469,7 +469,7 @@ class Util {
       "OTransition"     : "oTransitionEnd",
       "MozTransition"   : "transitionend",
       "WebkitTransition": "webkitTransitionEnd"
-    }
+    };
 
     for (t in transitions){
       if (el.style[t] !== undefined){
@@ -822,7 +822,7 @@ class Util {
             baseMotifName = tokens[1];
           }
 
-          var regUrl = "http://jaspar.genereg.net/cgi-bin/jaspar_db.pl?ID=" + baseMotifName + "&rm=present&collection=CORE"
+          var regUrl = "http://jaspar.genereg.net/cgi-bin/jaspar_db.pl?ID=" + baseMotifName + "&rm=present&collection=CORE";
           info.regulatoryMotifLinks += '<a href="' + regUrl + '" target="_motif">' + vr.motifName + '</a>';
         }
       }
@@ -878,7 +878,7 @@ class Util {
           impactRec.effects.push(effectRec);
         }
         info.vepHighestImpact += ")</span> ";
-      })
+      });
       info.vepHighestImpactSimple += " in non-canonical transcripts";
 
       info.vepHighestImpactRecs.push(impactRec);
@@ -904,7 +904,7 @@ class Util {
         var submission = variant.clinvarSubmissions[idx];
         submission.clinsig.split(",").forEach(function(clinsig) {
           clinsigUniq[clinsig] = "";
-        })
+        });
         var accessions = submission.accession.split(",");
         var clinsigs   = submission.clinsig.split(",");
         var phenotypes = submission.phenotype.split(",");
@@ -916,9 +916,9 @@ class Util {
 
           info.clinvarUrl   = 'http://www.ncbi.nlm.nih.gov/clinvar/' + accessionSingle;
           var clinvarLabel =  me.globalApp.utility.capitalizeFirstLetter(clinsigSingle.split("_").join(" "))
-                              + ( phenotype  ? ': ' + me.globalApp.utility.capitalizeFirstLetter(phenotype) : '')
+                              + ( phenotype  ? ': ' + me.globalApp.utility.capitalizeFirstLetter(phenotype) : '');
 
-          let clinvarLink =  '<a class="tooltip-clinvar-link"' + '" href="' + info.clinvarUrl + '" style="float:left;padding-right:4px" target="_new"' + '>'
+          let clinvarLink =  '<a class="tooltip-clinvar-link"' + '" href="' + info.clinvarUrl + '" style="float:left;padding-right:4px" target="_new"' + '>';
             clinvarLabel + '</a>';
 
           info.clinvarLinks.push({'key': accessionSingle, 'link': clinvarLink, 'url': info.clinvarUrl,
@@ -931,10 +931,10 @@ class Util {
           info.clinvarUniqueTraits[phenotype] = null;
         }
 
-      };
-      info.clinvarSigSummary = "";
+      }
+        info.clinvarSigSummary = "";
       for (var clinsig in clinsigUniq) {
-        var style = 'display:inline-block;'
+        var style = 'display:inline-block;';
         if (info.clinvarSigSummary.length > 0) {
           style += 'padding-left:5px';
         }
@@ -973,8 +973,8 @@ class Util {
       if (variant.clinvarUid != null && variant.clinvarUid != '') {
         info.clinvarUid = variant.clinvarUid;
         info.clinvarUrl = 'http://www.ncbi.nlm.nih.gov/clinvar/variation/' + variant.clinvarUid;
-        let clinvarLabel = me.globalApp.utility.capitalizeFirstLetter(info.clinvarClinSig) + ( info.clinvarTrait ? ' ' + me.globalApp.utility.capitalizeFirstLetter(info.clinvarTrait) : '')
-        let clinvarLink =  '<a class="tooltip-clinvar-link"' + '" href="' + info.clinvarUrl + '" style="float:left;padding-right:4px" target="_new"' + '>'
+        let clinvarLabel = me.globalApp.utility.capitalizeFirstLetter(info.clinvarClinSig) + ( info.clinvarTrait ? ' ' + me.globalApp.utility.capitalizeFirstLetter(info.clinvarTrait) : '');
+        let clinvarLink =  '<a class="tooltip-clinvar-link"' + '" href="' + info.clinvarUrl + '" style="float:left;padding-right:4px" target="_new"' + '>';
             clinvarLabel + '</a>';
         info.clinvarLinks.push({'key': info.clinvarUid, 'link': clinvarLink, 'url': info.clinvarUrl,
          'clinsig': me.globalApp.utility.capitalizeFirstLetter(info.clinvarClinSig),

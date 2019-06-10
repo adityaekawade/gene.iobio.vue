@@ -120,6 +120,9 @@
                     <app-icon :icon="selectedVariant.inheritance" style="margin-right:4px" width="16" height="16"></app-icon>
                     <span>{{ selectedVariant.inheritance == 'denovo' ? 'de novo' : selectedVariant.inheritance }}</span>
                 </div>
+                <div class="variant-row">
+                    <Pedigree ref="pedigreeRef" :pedTxtProp="pedTxt"></Pedigree>
+                </div>
             </div>
             <div class="variant-inspect-column" v-if="showGenePhenotypes" >
                 <div class="variant-column-header">
@@ -168,6 +171,8 @@
     import VariantAlleleCountsMenu  from "../partials/VariantAlleleCountsMenu.vue"
     import InfoPopup                from "../partials/InfoPopup.vue"
     import TranscriptsMenu          from '../partials/TranscriptsMenu.vue'
+    import Pedigree from "pedigree-component"
+
     export default {
         name: 'variant-inspect-card',
         components: {
@@ -175,7 +180,8 @@
             InfoPopup,
             VariantLinksMenu,
             VariantInspectRow,
-            VariantAlleleCountsMenu
+            VariantAlleleCountsMenu,
+            Pedigree
         },
         props: {
             selectedGene: null,
@@ -184,6 +190,7 @@
             selectedVariantRelationship: null,
             genomeBuildHelper: null,
             cohortModel: null,
+            // cohortModelReady: false,
             showGenePhenotypes: null,
             info: null,
             rawPedigree: null
@@ -191,19 +198,28 @@
         },
         data() {
             return {
-                genePhenotypeHits: null
+                pedTxt :  {
+                    Type: String,
+                    default: ''
+                }
             }
         },
         methods: {
 
-            populatePedData: function(){
+            populateDemoData: function () {
                 let self = this;
-                console.log("rawPed inside viz", self.rawPedigree);
-                let cohort = self.cohortModel.demoModelInfos.genome;
-                console.log("cohort", cohort);
-                let pModel = new PedModel(cohort);
+                let model = self.cohortModel.demoModelInfos.genome;
+                console.log("Demo model", model);
+                let pModel = new PedModel(model, "D");
                 self.pedTxt = pModel.pedTxt;
-                console.log("ped text inside of variant inspection card", self.pedTxt);
+            },
+
+            populateHubData: function() {
+                let self = this;
+                let model = self.rawPedigree;
+                console.log("Hub model", model);
+                let pModel = new PedModel(model, "H");
+                self.pedTxt = pModel.pedTxt;
             },
 
             refresh: function() {
@@ -264,7 +280,7 @@
                     if (info.revel >= revelRange.min && info.revel < revelRange.max) {
                         clazz = revelRange.clazz;
                     }
-                })
+                });
                 if (clazz) {
                     if (clazz == 'revel_high') {
                         return 'level-high';
@@ -319,7 +335,8 @@
                 }
             }
         },
-        computed: {
+        computed :
+        {
             refAlt: function() {
                 let self = this;
                 var refAlt = "";
@@ -395,13 +412,19 @@
                 ]
             }
         },
-        watch: {
-            cohortModelReady: function() {
-                let self = this;
-                self.populatePedData();
+         watch: {
+            rawPedigree : function(){
+              let self = this;
+              self.populateHubData();
             },
+            // cohortModelReady: function() {
+            //     console.log("watching cohortModelReady change")
+            //     let self = this;
+            //     self.populatePedData();
+            // },
             selectedVariant: function() {
-                this.initGenePhenotypeHits();
+                let self = this;
+                self.initGenePhenotypeHits();
             }
         },
         filters: {
@@ -419,6 +442,8 @@
         updated: function() {
         },
         mounted: function() {
+            let self = this;
+            self.populateDemoData();
         },
         created: function() {
         }

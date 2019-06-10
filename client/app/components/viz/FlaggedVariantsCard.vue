@@ -441,7 +441,7 @@
       </span>
       <v-btn  v-if="!isBasicMode && !launchedFromClin" flat
         class="toolbar-button"
-        @click="importInProgress = false;clearFileInputs();showOpenDialog = true">
+              @click="importInProgress = falseclearFileInputs();showOpenDialog = true">
         <v-icon>open_in_browser</v-icon>
         Open
       </v-btn>
@@ -782,7 +782,8 @@
             <i class="material-icons" style="padding-right:0px;font-size:20px">file_download</i>
             <span style="padding-right:8px">Download file</span>
           </a>
-          <v-btn class="variant-file-button" raised @click="showSaveDialog = false;readyToDownload = false;">Close</v-btn>
+          <v-btn class="variant-file-button" raised @click="showSaveDialog = falsereadyToDownload = false;">Close
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -841,7 +842,7 @@ export default {
   },
   methods: {
     onApplyInterpretationFilter: function(interpretation) {
-      this.interpretationFilters = interpretation
+      this.interpretationFilters = interpretation;
       this.populateGeneLists();
     },
     onVariantSelected: function(variant) {
@@ -900,7 +901,7 @@ export default {
           variantCount: filterObject.variantCount,
           expand: self.isFullAnalysis ? (filterObject.key == 'pathogenic' || idx == 0 ?  true : false) : true
         }
-      })
+      });
       self.$emit("count-changed", self.variantCount);
     },
     onApplyVariantNotes: function(variant) {

@@ -481,7 +481,7 @@ export default {
           if (dangerSummary && dangerSummary.CALLED) {
             self.calledCount++;
           }
-        })
+        });
 
         self.loadedPercentage = self.loadedCount >  0 ? (self.loadedCount / self.totalCount) * 100 : 0;
         self.calledPercentage = self.calledCount >  0 ? (self.calledCount / self.totalCount) * 100 : 0;
@@ -587,7 +587,7 @@ export default {
                 variant.geneName = dangerSummary.geneName;
                 self.flaggedVariants.push(variant);
               }
-            })
+            });
             return true;
           }
         });

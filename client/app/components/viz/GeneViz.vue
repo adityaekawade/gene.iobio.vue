@@ -255,7 +255,7 @@ export default {
               })
               .on("d3featuretooltip", function(featureObject, feature, lock) {
                 self.$emit("feature-selected", featureObject, feature, lock );
-              })
+              });
 
         this.setGeneChart();
       },

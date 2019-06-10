@@ -17,7 +17,7 @@ class FeatureMatrixModel {
       this.inProgress = {
         loadingVariants: false,
         rankingVariants: false
-      }
+      };
 
 
       this.matrixRows = [
@@ -240,10 +240,10 @@ class FeatureMatrixModel {
           var affectedInfo = self.getAffectedInfo();
           var affected = affectedInfo.filter(function(info) {
             return info.status == 'affected' && info.relationship == 'sibling';
-          })
+          });
           var unaffected = affectedInfo.filter(function(info) {
             return info.status == 'unaffected' && info.relationship == 'sibling';
-          })
+          });
           if (affected.length == 0) {
             self.removeRow('Present in Affected Sibs', self.filteredMatrixRows);
           }
@@ -258,7 +258,7 @@ class FeatureMatrixModel {
             matrixRow.index = self.filteredMatrixRows.length;
             matrixRow.order = self.filteredMatrixRows.length;
             self.filteredMatrixRows.push(matrixRow);
-          })
+          });
 
           self.matrixRowsEvaluated = true;
         }

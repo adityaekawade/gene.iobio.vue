@@ -53,7 +53,9 @@ function estimateCoverageDepth (indexReader, cb) {
     var rdrThis = indexReader;
 
     if (rdrThis.estimates) {
-        if (cb) {cb.call(rdrThis, rdrThis.estimates)};
+        if (cb) {
+            cb.call(rdrThis, rdrThis.estimates)
+        }
         return rdrThis.estimates;
     } else {
         var indexWreads =
@@ -84,12 +86,12 @@ function estimateCoverageDepth (indexReader, cb) {
                                         function(bc, chunk) {
                                             var b = chunk.cnk_beg.valueOf();
                                             var e = chunk.cnk_end.valueOf();
-                                            
+
                                             var bShift = rshift16(b);
                                             var eShift = rshift16(e);
                                             // If the difference between the right shifted begin and
                                             // end positions is zero, yet the end position (not right shifted)
-                                            // is greater than zero, something is wrong with the 
+                                            // is greater than zero, something is wrong with the
                                             // values.  In this case, bypass right shifting.
                                             if ((eShift - bShift) == 0 && e > 0) {
                                                 return bc + 1;
@@ -107,7 +109,7 @@ function estimateCoverageDepth (indexReader, cb) {
                     return RD;
                 }, {});
         return estimateCoverageDepth(indexReader, cb);
-    };
+    }
 }
 
 
@@ -127,13 +129,13 @@ function mapSegCoverage (indexReader, refid, fn, keepNils) {
 
     var res = [];
     for (var i = 0; i < (end16kbBinid - start16kbBinid); i++) {
-        var user_res = fn.call(indexReader, info(i))
+        var user_res = fn.call(indexReader, info(i));
         if (keepNils) {
             res.push(user_res);
         } else if (user_res) {
             res.push(user_res);
         }
-    };
+    }
     return res;
 }
 
@@ -175,8 +177,8 @@ function samplingRegions (refs, options) {
                             {name: ref.name,
                              start: nstart,
                              end: nstart + bsize});
-                    };
-                };
+                    }
+                }
                 return regs;
             }, []);
 

@@ -9,7 +9,7 @@ import GlobalApp  from '../../../app/globals/GlobalApp.js';
 
 
 // create an extended `Vue` constructor
-const localVue = createLocalVue()
+const localVue = createLocalVue();
 
 const globalMixin = {
     data: function() {
@@ -21,10 +21,10 @@ const globalMixin = {
     created: function(){
       this.globalApp.utility = this.utility;
     }
-}
+};
 
 // install plugins as normal
-localVue.mixin(globalMixin)
+localVue.mixin(globalMixin);
 
 
 describe('Home', () => {
@@ -35,7 +35,7 @@ describe('Home', () => {
   });
 
   it('load demo data', () => {
-    const clickHandler = sinon.stub()
+    const clickHandler = sinon.stub();
     localVue.propsData = { clickHandler };
     let wrapper = mount(Home, {localVue});
     wrapper.vm.$nextTick(() => {

@@ -242,7 +242,7 @@ readTabixFile.prototype.getIndex =
                 tbxThis.idxContent = parser.parse('tabix');
                 // Names to array of names
                 var names = tbxThis.idxContent.head.names.split('\0');
-                tbxThis.idxContent.head.names = names
+                tbxThis.idxContent.head.names = names;
                 // Ref name to index map (hash map)
                 tbxThis.idxContent.namehash =
                     simpleHash(
@@ -253,7 +253,7 @@ readTabixFile.prototype.getIndex =
                 for (i = 0; i < n_ref; i++) {
                     tbxThis.bhash[i] =
                         bins2hash(tbxThis.idxContent.indexseq[i].binseq);
-                };
+                }
                 cbfn.call(tbxThis, tbxThis);
             });};
 
@@ -288,7 +288,7 @@ readTabixFile.prototype.bin2Ranges =
             var cnkEnd = cnk.cnk_end.valueOf();
             res.push([[rshift16(cnkBeg), low16(cnkBeg)],
                       [rshift16(cnkEnd), low16(cnkEnd)]]);
-        };
+        }
         return res;
     };
 
@@ -364,7 +364,7 @@ readBinaryVCF.prototype.getHeader =
         var buffer = "";
         var cb = function (nxtStg) {
             buffer += nxtStg;
-            var recsFromChunk = nxtStg.split("\n");       
+            var recsFromChunk = nxtStg.split("\n");
             if (recsFromChunk[recsFromChunk.length-1][0] == "#") {
                 // If last record is a header record, continue reading,
                 // the file, concatenating the header into string buffer
@@ -380,7 +380,7 @@ readBinaryVCF.prototype.getHeader =
                 var stgs = buffer.split("\n");
                 var gdstgs = stgs.filter(
                     function (s) {return (s[0] == "#");});
-                hdstgs = hdstgs.concat(gdstgs);                
+                hdstgs = hdstgs.concat(gdstgs);
                 vcfRthis.head = hdstgs.join("\n");
                 cbfn.call(vcfRthis, vcfRthis.head);
             }
@@ -390,7 +390,7 @@ readBinaryVCF.prototype.getHeader =
             cbfn.call(vcfRthis, vcfRthis.head);
         } else {
             inflateBlock2stg(f, offset, cb);
-        };
+        }
     };
 
 
@@ -432,7 +432,7 @@ readBinaryVCF.prototype.getRecords =
                                 return ((beg <= n) && (n <= end));
                             });
                         cbfn.call(vcfRthis,stgRecs);
-                    };
+                    }
                 });
         };
 

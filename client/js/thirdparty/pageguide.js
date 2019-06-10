@@ -79,7 +79,7 @@ tl.pg.interval = {};
     tl.pg.default_prefs = {
         'auto_show_first': true,
         'loading_selector' : '#loading',
-        'track_events_cb': function() { return; },
+        'track_events_cb': function() {  },
         'handle_doc_switch': null,
         'custom_open_button': null,
         'pg_caption' : 'page guide',
@@ -334,7 +334,7 @@ tl.pg.interval = {};
                 tl.pg.pageGuideList[i].close();
             }
         }
-    }
+    };
 
     /**
      * check for a welcome message. if it exists, determine whether or not to show it,
@@ -459,7 +459,7 @@ tl.pg.interval = {};
                         left -= 10;
                     } else {
                         width = $el.outerWidth() + 12;
-                        height = $el.outerHeight() + 12
+                        height = $el.outerHeight() + 12;
                         top -= 6;
                         left -= 6;
                     }
@@ -641,7 +641,7 @@ tl.pg.interval = {};
      **/
     tl.pg.PageGuide.prototype.open = function() {
         if (this.is_open) {
-            return;
+
         } else {
             tl.pg.closeOpenGuides(this.uuid);
             this._open();
@@ -686,7 +686,7 @@ tl.pg.interval = {};
      **/
     tl.pg.PageGuide.prototype.close = function() {
         if (!this.is_open) {
-            return;
+
         } else {
             this._close();
         }

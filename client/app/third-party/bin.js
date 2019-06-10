@@ -1,6 +1,6 @@
 /* -*- mode: javascript; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 
-// 
+//
 // Dalliance Genome Explorer
 // (c) Thomas Down 2006-2011
 //
@@ -28,7 +28,7 @@ BlobFetchable.prototype.slice = function(start, length) {
         }
     }
     return new BlobFetchable(b);
-}
+};
 
 BlobFetchable.prototype.fetch = function(callback, options) {
     var reader = new FileReader();
@@ -39,7 +39,7 @@ BlobFetchable.prototype.fetch = function(callback, options) {
             callback(reader.result);
     };
     reader.readAsArrayBuffer(this.blob);
-}
+};
 
 function URLFetchable(url, start, end, opts) {
     if (!opts) {
@@ -72,7 +72,7 @@ URLFetchable.prototype.slice = function(s, l) {
         ne = ne || l - 1;
     }
     return new URLFetchable(this.url, ns, ne, this.opts);
-}
+};
 
 var seed=0;
 var isIOS = navigator.userAgent.indexOf('Safari') >= 0 && navigator.userAgent.indexOf('Chrome') < 0 ;
@@ -130,7 +130,7 @@ URLFetchable.prototype.fetch = function(callback, attempt, truncatedLength) {
         req.withCredentials = true;
     }
     req.send('');
-}
+};
 
 function bstringToBuffer(result) {
     if (!result) {

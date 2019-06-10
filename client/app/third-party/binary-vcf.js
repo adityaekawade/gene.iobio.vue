@@ -70,13 +70,13 @@ function appendBuffers(bufferVec) {
     var totalSize = 0;
     for (var i = 0; i < bufferVec.length; i++) {
         totalSize = totalSize + bufferVec[i].byteLength;
-    };
+    }
     var tmp = new Uint8Array(totalSize);
     var offset = 0;
     for (var i = 0; i < bufferVec.length; i++) {
         tmp.set(new Uint8Array(bufferVec[i]), offset);
         offset = offset + bufferVec[i].byteLength;
-    };
+    }
     return tmp.buffer;
 }
 
@@ -220,7 +220,7 @@ function getChunk (f, beg, end, cbfn) {
         } else {
             return alert('Bad read for ' + f + ' at ' + beg + ', ' + end +
                          'status: ' + evt.target.readyState);
-        };
+        }
     };
     reader.readAsArrayBuffer(f.slice(beg, end));
 }
@@ -276,7 +276,7 @@ function countBlocks (f, cbfn) {
             nextBlockOffset(f, x, cb);
         } else {
             cbfn.call(this, blkCnt);
-        };
+        }
     };
     nextBlockOffset(f, 0, cb);
 }
@@ -328,7 +328,7 @@ function inflateRegion (f, begOffset, endOffset, cbfn) {
         } else {
             var resBuf = appendBuffers(res);
             return cbfn.call(this, resBuf);
-        };
+        }
     };
     inflateBlock(f, blockOffset, cb);
 }
@@ -470,7 +470,7 @@ readTabixFile.prototype.getIndex =
                 for (i = 0; i < n_ref; i++) {
                     tbxThis.bhash[i] =
                         bins2hash(tbxThis.tabixContent['indexseq'][i]['binseq']);
-                };
+                }
                 cbfn.call(tbxThis, tbxThis);
             });};
 
@@ -490,7 +490,7 @@ readTabixFile.prototype.bin2Ranges =
             var cnkEnd = cnk.cnk_end.valueOf();
             res.push([Math.floor(cnkBeg / Math.pow(2, 16)),
                       Math.floor(cnkEnd / Math.pow(2, 16))]);
-        };
+        }
         return res;
     };
 
@@ -577,7 +577,7 @@ readBinaryVCF.prototype.getRecords =
                         return ((beg <= n) && (n <= end));
                     });
                 cbfn.call(this,stgRecs);
-            };
+            }
         };
 
         if (cnks.length == 0) {
@@ -609,14 +609,14 @@ readBinaryVCF.prototype.getHeader =
             } else {
                 vcfRthis.head = hdstgs.join("\n");
                 cbfn.call(vcfRthis, vcfRthis.head);
-            };
+            }
         };
 
         if (vcfRthis.head) {
             cbfn.call(vcfRthis, vcfRthis.head);
         } else {
             inflateBlock2stg(f, offset, cb);
-        };
+        }
     };
 
 readBinaryVCF.prototype.getHeaderRecords =

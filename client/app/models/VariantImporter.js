@@ -15,7 +15,7 @@ VariantImporter.fields = {
   'gene':       {required: true},
   'transcript': {required: false}
 
-}
+};
 
 VariantImporter.fieldMap = {
   'chromosome':      'chrom',
@@ -23,7 +23,7 @@ VariantImporter.fieldMap = {
   'ref_allele':      'ref',
   'alt_allele':      'alt',
   'gene_name':       'gene'
-}
+};
 
 VariantImporter.parseRecords = function(importSource, data) {
   if (importSource == 'gene') {
@@ -33,7 +33,7 @@ VariantImporter.parseRecords = function(importSource, data) {
   } else if (importSource == 'tsv') {
     return VariantImporter.parseRecordsTSV(data);
   }
-}
+};
 
 VariantImporter.parseRecordsCSV = function(data) {
   var recCount = 0;
@@ -62,7 +62,7 @@ VariantImporter.parseRecordsCSV = function(data) {
       )*                                  # Zero or more additional values
       $                                   # Anchor to end of string.
     */
-    var regexp = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g
+    var regexp = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
     var match = regexp.exec(rec);
 
     var importRec = {};
@@ -80,14 +80,14 @@ VariantImporter.parseRecordsCSV = function(data) {
       idx++;
     }
     if (recCount > 0 && Object.keys(importRec).length > 0) {
-      importRec.importSource = "gene"
+      importRec.importSource = "gene";
       importRec.importFormat = "csv";
       importRecords.push(importRec);
     }
     recCount++;
   });
   return importRecords;
-}
+};
 
 VariantImporter.parseRecordsGemini = function(data) {
   var fieldNames = VariantImporter.geminiFields;
@@ -125,13 +125,13 @@ VariantImporter.parseRecordsGemini = function(data) {
       // We need to revise the coordinate for gemini as it is 1 based (bed)
       importRec.start++;
 
-      importRec.importSource = "gemini"
+      importRec.importSource = "gemini";
       importRec.importFormat = "tsv";
       importRecords.push(importRec);
     }
   });
   return importRecords;
-}
+};
 
 VariantImporter.parseRecordsTSV = function(data) {
   var idxMap = {};
@@ -198,10 +198,9 @@ VariantImporter.parseRecordsTSV = function(data) {
         importRecords.push(importRec);
       }
 
-    };
-
+    }
   }
   return importRecords;
-}
+};
 
 

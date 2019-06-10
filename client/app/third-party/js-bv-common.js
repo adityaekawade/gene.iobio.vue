@@ -52,25 +52,19 @@ function bin2Ranges (indexReader, ref, binid) {
         var cnkEnd = cnk.cnk_end.valueOf();
         res.push([[rshift16(cnkBeg), low16(cnkBeg)],
                   [rshift16(cnkEnd), low16(cnkEnd)]]);
-    };
+    }
     return res;
-};
-
-
+}
 // First chunk region of binid.
 function bin2Beg (indexReader, ref, binid) {
     var range = bin2Ranges(indexReader, ref, binid);
     return range[0];
-};
-
-
+}
 // Last chunk region of binid.
 function bin2End (indexReader, ref, binid) {
     var range = bin2Ranges(indexReader, ref, binid);
     return range[range.length-1];
-};
-
-
+}
 // For a reference REF region defined by BEG and END return the set of
 // chunks of all bins involved as a _flat_ vector of two element
 // vectors, each defining a region of a bin.
@@ -91,10 +85,7 @@ function getChunks (indexReader, ref, beg, end) {
         }, []);
 
     return cnks;
-};
-
-
-
+}
 // Standard log base 2.  Used in bai format bin level calculation
 function log2 (x) {
     return Math.log(x) / Math.LN2;
@@ -113,9 +104,7 @@ function simpleHash (items, key) {
         i = i + 1;
     }
     return itemhash;
-};
-
-
+}
 // Some of the binary encoded strings are straight C null terminated
 // type strings - no length attribute available in the encoding, so we
 // need to have a C string reader over a buffer (vector, Uint8Array)
@@ -136,8 +125,8 @@ function cstg (index, buf) {
   while (i < buf.length && buf[i] != 0) {
     s += String.fromCharCode(buf[i]);
     i++;
-  };
-  return [(i<buf.length) ? i+1 : i, s];
+  }
+    return [(i<buf.length) ? i+1 : i, s];
 }
 
 
@@ -220,10 +209,8 @@ function wrappedRegionJParser (file, beg, end, fmt, cb) {
                         _wrapperCB(this, file, b, ebsz,  fmt, end, x2, cb)
                     });
             });
-    };
-};
-
-
+    }
+}
 // Mid level function.  Takes a jParser instance P and a parser
 // production / rule PARSE_RULE, a string naming a parse production in
 // P, and attempts to advance the current parse with parse_rule.  On
@@ -284,8 +271,8 @@ function nextParseRes (p, parse_rule, cb) {
               nextParseRes(p, parse_rule, cb);
             })
         });
-    };
-  };
+    }
+  }
 }
 
 

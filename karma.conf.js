@@ -1,8 +1,8 @@
-const webpackConfig = require('./webpack.config')
+const webpackConfig = require('./webpack.config');
 
-process.env.BABEL_ENV = 'test' // so we load the correct babel plugins
-const specHelper = 'test/test-setup.js'
-const testGlob = 'test/**/*.spec.js'
+process.env.BABEL_ENV = 'test'; // so we load the correct babel plugins
+const specHelper = 'test/test-setup.js';
+const testGlob = 'test/**/*.spec.js';
 
 module.exports = function setKarmaConfig(config) {
   config.set({
@@ -24,7 +24,7 @@ module.exports = function setKarmaConfig(config) {
     webpack: webpackConfig,
     webpackMiddleware: { noInfo: true }
   })
-}
+};
 
 function dontWatch(pattern) {
   return {

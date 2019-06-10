@@ -127,7 +127,7 @@ export default class VariantExporter {
                 if (vcfRecord.indexOf("#") == 0) {
                   theHeaderRecords.push(vcfRecord);
                 }
-              })
+              });
               annotatedVcfRecs.forEach(function(vcfRecord) {
                 if (vcfRecord.indexOf("#") != 0) {
                   var newRec = me._appendVcfRecordAnnotations(vcfRecord, record);
@@ -276,7 +276,7 @@ export default class VariantExporter {
         }
         buf += exportField.field + "#" + (record[exportField.field] && record[exportField.field] != "" ? record[exportField.field] : ".");
       }
-    })
+    });
 
     info += ";IOBIO=" + buf;
 
@@ -362,7 +362,7 @@ export default class VariantExporter {
                 }
 
                 var sampleNamesToGenotype = me.cohort.getProbandModel().getSampleNamesToGenotype();
-                var data = me.cohort.getProbandModel().vcf.parseVcfRecordsForASample(jointVcfRecs, translatedRefName, theGeneObject1, theTranscript1, me.cohort.translator.clinvarMap, true, (sampleNamesToGenotype ? sampleNamesToGenotype.join(",") : null), 0, me.globalApp.vepAF)
+                var data = me.cohort.getProbandModel().vcf.parseVcfRecordsForASample(jointVcfRecs, translatedRefName, theGeneObject1, theTranscript1, me.cohort.translator.clinvarMap, true, (sampleNamesToGenotype ? sampleNamesToGenotype.join(",") : null), 0, me.globalApp.vepAF);
                 var theFbData = data.results;
 
                 theFbData.features.forEach(function(v) {
@@ -373,7 +373,7 @@ export default class VariantExporter {
                     && v.alt    == sourceVariant.alt) {
                     theVariant = v;
                   }
-                })
+                });
                 me._promiseFormatRecord(theVariant, sourceVariant, theVcfRecs, theGeneObject, theTranscript, format, exportRec)
                 .then(function(data) {
                   resolve(data);

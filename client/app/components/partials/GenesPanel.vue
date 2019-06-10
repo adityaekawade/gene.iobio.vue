@@ -139,11 +139,11 @@ export default {
       if (theGeneNames) {
         geneNamesToDisplay = theGeneNames.filter(function(geneName) {
           if (self.isFullAnalysis) {
-            return !self.geneModel.isCandidateGene(geneName);;
+              return !self.geneModel.isCandidateGene(geneName);
           } else {
             return self.geneModel.isCandidateGene(geneName);
           }
-        })
+        });
         self.geneSummaries = geneNamesToDisplay.map(function(geneName) {
           let inProgress = self.genesInProgress ? self.genesInProgress.indexOf(geneName) >= 0 : false;
 
@@ -172,7 +172,7 @@ export default {
           if (dangerSummary && dangerSummary.CALLED) {
             self.calledCount++;
           }
-        })
+        });
 
         self.loadedPercentage = self.loadedCount >  0 ? (self.loadedCount / self.totalCount) * 100 : 0;
         self.calledPercentage = self.calledCount >  0 ? (self.calledCount / self.totalCount) * 100 : 0;

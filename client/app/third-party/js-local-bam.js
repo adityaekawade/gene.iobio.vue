@@ -268,7 +268,7 @@ var bam_fmt = {
         var aln_ubas = [];
         while (this.tell() < this.len) {
             aln_ubas.push(this.parse('uba_aln'));
-        };
+        }
         return aln_ubas;
     },
 
@@ -407,12 +407,12 @@ var aln_fmt = {
         var aux_data = [];
         while (this.tell() < this.aln_end) {
             aux_data.push(this.parse('aux'));
-        };
+        }
         return aux_data;
     },
 
     aln: {head: 'header', aux_data: 'auxs'}
-}
+};
 
 
 
@@ -503,7 +503,7 @@ readBaiFile.prototype.getIndex =
                 for (i = 0; i < n_ref; i++) {
                     baiThis.bhash[i] =
                         bins2hash(baiThis.idxContent.indexseq[i].binseq);
-                };
+                }
                 cbfn.call(baiThis, baiThis);
             };
 
@@ -515,7 +515,7 @@ readBaiFile.prototype.getIndex =
                 } else {
                     return alert('Bad read for ' + f +
                                  ' status: ' + evt.target.readyState);
-                };
+                }
             };
         reader.readAsArrayBuffer(f.slice(0, f.size));
     };
@@ -612,7 +612,7 @@ readBinaryBAM.prototype.bamFront =
                         bamRthis.bamFront(cb);
                     });
                 });
-        };
+        }
     };
 
 
@@ -641,7 +641,9 @@ readBinaryBAM.prototype.refsWithReads =
     function (cb, runfront) {
         bamRthis = this;
         if (bamRthis.refsWreads) {
-            if (cb) {cb.call(bamRthis, bamRthis.refsWreads)};
+            if (cb) {
+                cb.call(bamRthis, bamRthis.refsWreads)
+            }
             return bamRthis.refsWreads;
         } else if (bamRthis.refs) {
             var rswr =
@@ -652,14 +654,18 @@ readBinaryBAM.prototype.refsWithReads =
                         return V;
                     }, []);
             bamRthis.refsWreads = rswr;
-            if (cb) {cb.call(bamRthis, rswr)};
+            if (cb) {
+                cb.call(bamRthis, rswr)
+            }
             return rswr;
         } else if (runfront) {
             bamRthis.bamFront(function(hd, refs){bamRthis.refsWithReads(cb)});
         } else {
-            if (cb) {cb.call(bamRthis, undefined)};
+            if (cb) {
+                cb.call(bamRthis, undefined)
+            }
             return undefined;
-        };
+        }
     };
 
 
@@ -678,7 +684,7 @@ readBinaryBAM.prototype.getAlnUbas =
 
         var ref = (typeof(ref) == "number") ? ref : this.refName2Index(ref);
         var bamRthis = this;
-        var baiR = this.baiR
+        var baiR = this.baiR;
         var cnks = baiR.getChunks(ref, beg, end);
 
         var aln_ubas = [];
@@ -701,7 +707,7 @@ readBinaryBAM.prototype.getAlnUbas =
                         fn1(rng[0], rng[1]);
                     } else {
                         cbfn.call(bamRthis, aln_ubas);
-                    };
+                    }
                 });
         };
 
@@ -710,7 +716,7 @@ readBinaryBAM.prototype.getAlnUbas =
             fn1(rng[0], rng[1]);
         } else {
             cbfn.call(bamRthis, []);
-        };
+        }
     };
 
 
@@ -745,8 +751,8 @@ readBinaryBAM.prototype.getAlns =
                             p.aln_end = offset + aln_blksizes[i];
                             alns.push(p.parse('aln'));
                             offset = p.tell() + 4;
-                        };
-                    };
+                        }
+                    }
                 });
                 cbfn.call(bamRthis, alns);
             });
@@ -826,14 +832,14 @@ readBinaryBAM.prototype.regions2BAM =
                         reduce(refregmaps.pop());
                     } else {
                         cbfn.call(bamRthis, undefined);
-                    };
+                    }
                 });
         };
         if (refregmaps.length > 0) {
             reduce(refregmaps.pop());
         } else {
             cbfn.call(bamRthis, undefined);
-        };
+        }
     };
 
 // Similar to regions2BAM but where CBFN controls when and how much of
@@ -899,14 +905,14 @@ readBinaryBAM.prototype.throttledRegions2BAM =
                                   contfn, refregmaps.pop());
                     } else {
                         cbfn.call(bamRthis, undefined);
-                    };
+                    }
                 });
         };
         if (refregmaps.length > 0) {
             contfn(refregmaps.pop());
         } else {
             cbfn.call(bamRthis, undefined);
-        };
+        }
     };
 
 
@@ -939,7 +945,7 @@ function getBamRefs (p, cb) {
       nextParseRes(p, "reference", getRef);
     } else {
       cb.call(this, refs);
-    };
+    }
   };
 
   nextParseRes(p, "reference", getRef);
@@ -960,7 +966,7 @@ function _getAlnUbas (p, cb) {
       nextParseRes(p, "uba_aln", getAlnUba);
     } else {
       cb.call(this, aln_ubas);
-    };
+    }
   };
 
   nextParseRes(p, "uba_aln", getAlnUba);
@@ -983,8 +989,7 @@ function _getRegAlnUba (p) {
         bsize = p.parse('int32');
         aln_blksizes.push(bsize);
         end = end + bsize + 4;
-    };
-
+    }
     return {beg: beg, aln_blksizes: aln_blksizes, end: end};
 }
 
@@ -1097,7 +1102,7 @@ function coalesce65KBCnks (alnubas) {
             } else {
                 Cnks.push(cur);
                 Cnks.push([uba]);
-            };
+            }
             return Cnks;
         }, []);
     var coalescedUbas = grp65kbUbas.reduce(
@@ -1134,7 +1139,7 @@ function get65KBCnkBlkSizes (blksizes) {
             } else {
                 Cnks.push(cur);
                 Cnks.push([bsz]);
-            };
+            }
             return Cnks;
         }, []);
 }

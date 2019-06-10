@@ -254,27 +254,27 @@ ZStream.prototype.inflateInit = function(w, nowrap) {
     }
     this.istate = new Inflate();
     return this.istate.inflateInit(this, nowrap?-w:w);
-}
+};
 
 ZStream.prototype.inflate = function(f) {
     if(this.istate==null) return Z_STREAM_ERROR;
     return this.istate.inflate(this, f);
-}
+};
 
 ZStream.prototype.inflateEnd = function(){
     if(this.istate==null) return Z_STREAM_ERROR;
     var ret=istate.inflateEnd(this);
     this.istate = null;
     return ret;
-}
+};
 ZStream.prototype.inflateSync = function(){
     // if(istate == null) return Z_STREAM_ERROR;
     return istate.inflateSync(this);
-}
+};
 ZStream.prototype.inflateSetDictionary = function(dictionary, dictLength){
     // if(istate == null) return Z_STREAM_ERROR;
     return istate.inflateSetDictionary(this, dictionary, dictLength);
-}
+};
 
 /*
 
@@ -396,14 +396,14 @@ Inflate.prototype.inflateReset = function(z) {
     z.istate.mode = z.istate.nowrap!=0 ? BLOCKS : METHOD;
     z.istate.blocks.reset(z, null);
     return Z_OK;
-}
+};
 
 Inflate.prototype.inflateEnd = function(z){
     if(this.blocks != null)
       this.blocks.free(z);
     this.blocks=null;
     return Z_OK;
-}
+};
 
 Inflate.prototype.inflateInit = function(z, w){
     z.msg = null;
@@ -430,7 +430,7 @@ Inflate.prototype.inflateInit = function(z, w){
     // reset state
     this.inflateReset(z);
     return Z_OK;
-  }
+  };
 
 Inflate.prototype.inflate = function(z, f){
     var r, b;
@@ -578,7 +578,7 @@ Inflate.prototype.inflate = function(z, f){
         return Z_STREAM_ERROR;
       }
     }
-  }
+  };
 
 
 Inflate.prototype.inflateSetDictionary = function(z,  dictionary, dictLength) {
@@ -600,10 +600,10 @@ Inflate.prototype.inflateSetDictionary = function(z,  dictionary, dictLength) {
     z.istate.blocks.set_dictionary(dictionary, index, length);
     z.istate.mode = BLOCKS;
     return Z_OK;
-  }
+  };
 
 //  static private byte[] mark = {(byte)0, (byte)0, (byte)0xff, (byte)0xff};
-var mark = [0, 0, 255, 255]
+var mark = [0, 0, 255, 255];
 
 Inflate.prototype.inflateSync = function(z){
     var n;       // number of bytes to look at
@@ -652,7 +652,7 @@ Inflate.prototype.inflateSync = function(z){
     z.total_in=r;  z.total_out = w;
     z.istate.mode = BLOCKS;
     return Z_OK;
-}
+};
 
   // Returns true if inflate is currently at the end of a block generated
   // by Z_SYNC_FLUSH or Z_FULL_FLUSH. This function is used by one PPP
@@ -664,7 +664,7 @@ Inflate.prototype.inflateSyncPoint = function(z){
     if(z == null || z.istate == null || z.istate.blocks == null)
       return Z_STREAM_ERROR;
     return z.istate.blocks.sync_point();
-}
+};
 
 
 //
@@ -718,7 +718,7 @@ InfBlocks.prototype.reset = function(z, c){
 
     if(this.checkfn)
       z.adler=this.check=z._adler.adler32(0, null, 0, 0);
-  }
+  };
 
  InfBlocks.prototype.proc = function(z, r){
     var t;              // temporary storage
@@ -749,8 +749,8 @@ InfBlocks.prototype.reset = function(z, c){
             z.total_in+=p-z.next_in_index;z.next_in_index=p;
             this.write=q;
             return this.inflate_flush(z,r);
-          };
-          n--;
+          }
+            n--;
           b|=(z.next_in[p++]&0xff)<<k;
           k+=8;
         }
@@ -810,8 +810,8 @@ InfBlocks.prototype.reset = function(z, c){
             z.total_in+=p-z.next_in_index;z.next_in_index=p;
             this.write=q;
             return this.inflate_flush(z,r);
-          };
-          n--;
+          }
+            n--;
           b|=(z.next_in[p++]&0xff)<<k;
           k+=8;
         }
@@ -881,8 +881,8 @@ InfBlocks.prototype.reset = function(z, c){
             z.total_in+=p-z.next_in_index;z.next_in_index=p;
             this.write=q;
             return this.inflate_flush(z,r);
-          };
-          n--;
+          }
+            n--;
           b|=(z.next_in[p++]&0xff)<<k;
           k+=8;
         }
@@ -925,8 +925,8 @@ InfBlocks.prototype.reset = function(z, c){
               z.total_in+=p-z.next_in_index;z.next_in_index=p;
               this.write=q;
               return this.inflate_flush(z,r);
-            };
-            n--;
+            }
+              n--;
             b|=(z.next_in[p++]&0xff)<<k;
             k+=8;
           }
@@ -979,8 +979,8 @@ InfBlocks.prototype.reset = function(z, c){
               z.total_in+=p-z.next_in_index;z.next_in_index=p;
               this.write=q;
               return this.inflate_flush(z,r);
-            };
-            n--;
+            }
+              n--;
             b|=(z.next_in[p++]&0xff)<<k;
             k+=8;
           }
@@ -1010,8 +1010,8 @@ InfBlocks.prototype.reset = function(z, c){
                 z.total_in+=p-z.next_in_index;z.next_in_index=p;
                 this.write=q;
                 return this.inflate_flush(z,r);
-              };
-              n--;
+              }
+                n--;
               b|=(z.next_in[p++]&0xff)<<k;
               k+=8;
             }
@@ -1129,24 +1129,24 @@ InfBlocks.prototype.reset = function(z, c){
         return this.inflate_flush(z, r);
       }
     }
-  }
+  };
 
 InfBlocks.prototype.free = function(z){
     this.reset(z, null);
     this.window=null;
     this.hufts=null;
-}
+};
 
 InfBlocks.prototype.set_dictionary = function(d, start, n){
     arrayCopy(d, start, this.window, 0, n);
     this.read = this.write = n;
-}
+};
 
   // Returns true if inflate is currently at the end of a block generated
   // by Z_SYNC_FLUSH or Z_FULL_FLUSH.
 InfBlocks.prototype.sync_point = function(){
     return this.mode == IB_LENS;
-}
+};
 
   // copy as much as possible from the sliding window to the output area
 InfBlocks.prototype.inflate_flush = function(z, r){
@@ -1208,7 +1208,7 @@ InfBlocks.prototype.inflate_flush = function(z, r){
 
     // done
     return r;
-  }
+  };
 
 //
 // InfCodes.java
@@ -1237,7 +1237,7 @@ InfCodes.prototype.init = function(bl, bd, tl, tl_index, td, td_index, z) {
     this.dtree = td;
     this.dtree_index=td_index;
     this.tree=null;
-}
+};
 
 InfCodes.prototype.proc = function(s, z, r){
     var j;              // temporary storage
@@ -1522,11 +1522,11 @@ InfCodes.prototype.proc = function(s, z, r){
         return s.inflate_flush(z,r);
       }
     }
-  }
+  };
 
 InfCodes.prototype.free = function(z){
     //  ZFREE(z, c);
-}
+};
 
   // Called with number of bytes left to write in window at least 258
   // (the maximum string length) and number of input bytes available
@@ -1728,7 +1728,7 @@ InfCodes.prototype.inflate_fast = function(bl, bd, tl, tl_index, td, td_index, s
     s.write=q;
 
     return Z_OK;
-}
+};
 
 //
 // InfTree.java
@@ -1915,7 +1915,7 @@ InfTree.prototype.huft_build = function(b, bindex, n, s, d, e, t, m, hp, hn, v) 
     }
     // Return Z_BUF_ERROR if we were given an incomplete table
     return y != 0 && g != 1 ? Z_BUF_ERROR : Z_OK;
-}
+};
 
 InfTree.prototype.inflate_trees_bits = function(c, bb, tb, hp, z) {
     var result;
@@ -1931,7 +1931,7 @@ InfTree.prototype.inflate_trees_bits = function(c, bb, tb, hp, z) {
       result = Z_DATA_ERROR;
     }
     return result;
-}
+};
 
 InfTree.prototype.inflate_trees_dynamic = function(nl, nd, c, bl, bd, tl, td, hp, z) {
     var result;
@@ -1971,7 +1971,7 @@ InfTree.prototype.inflate_trees_dynamic = function(nl, nd, c, bl, bd, tl, td, hp
     }
 
     return Z_OK;
-}
+};
 /*
   static int inflate_trees_fixed(int[] bl,  //literal desired/actual bit depth
                                  int[] bd,  //distance desired/actual bit depth
@@ -2009,7 +2009,7 @@ InfTree.prototype.initWorkArea = function(vsize){
     arrayCopy(this.c, 0, this.u, 0, BMAX);
 //  for(int i=0; i<BMAX+1; i++){x[i]=0;}
     arrayCopy(this.c, 0, this.x, 0, BMAX+1);
-}
+};
 
 var testArray = new Uint8Array(1);
 var hasSubarray = (typeof testArray.subarray === 'function');
