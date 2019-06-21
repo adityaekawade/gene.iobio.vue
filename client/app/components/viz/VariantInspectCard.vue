@@ -193,7 +193,12 @@
             // cohortModelReady: false,
             showGenePhenotypes: null,
             info: null,
-            rawPedigree: null
+            rawPedigree: null,
+            paramProjectId: null,
+            paramSampleId: null,
+            paramIsPedigree: null,
+            paramSource: null,
+
 
         },
         data() {
@@ -218,7 +223,7 @@
                 let self = this;
                 let model = self.rawPedigree;
                 console.log("Hub model", model);
-                let pModel = new PedModel(model, "H");
+                let pModel = new PedModel(model, "H", self.paramSampleId);
                 self.pedTxt = pModel.pedTxt;
             },
 

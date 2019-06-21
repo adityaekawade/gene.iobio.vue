@@ -269,6 +269,11 @@
                 :cohortModel="cohortModel"
                 :info="selectedVariantInfo"
                 :rawPedigree="rawPedigree"
+                :paramProjectId="paramProjectId"
+                :paramSampleId="paramSampleId"
+                :paramIsPedigree="paramIsPedigree"
+                :paramSource:="paramSource"
+
                 @show-pileup-for-variant="onShowPileupForVariant"
         >
         </variant-inspect-card>

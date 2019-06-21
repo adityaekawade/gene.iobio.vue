@@ -7,7 +7,7 @@ export default class PedLine {
         this.individualID = -1;
         this.paternalID = -1;
         this.maternalID = -1;
-        this.sexID = -1;
+        this.sexID = -1;iobio
         this.sex = 'unknown';
         this.phenotype = null;
         this.genotype = null;
