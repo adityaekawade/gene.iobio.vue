@@ -121,7 +121,7 @@
                     <span>{{ selectedVariant.inheritance == 'denovo' ? 'de novo' : selectedVariant.inheritance }}</span>
                 </div>
                 <div class="variant-row">
-                    <Pedigree ref="pedigreeRef" :pedTxtProp="pedTxt"></Pedigree>
+                    <Pedigree :pedTxtProp="pedTxt"></Pedigree>
                 </div>
             </div>
             <div class="variant-inspect-column" v-if="showGenePhenotypes" >
@@ -206,7 +206,7 @@
                 pedTxt :  {
                     Type: String,
                     default: ''
-                }
+                },
             }
         },
         methods: {
@@ -217,14 +217,19 @@
                 console.log("Demo model", model);
                 let pModel = new PedModel(model, "D");
                 self.pedTxt = pModel.pedTxt;
+                console.log("ped txt from demo model", self.pedTxt);
             },
 
             populateHubData: function() {
                 let self = this;
                 let model = self.rawPedigree;
                 console.log("Hub model", model);
-                let pModel = new PedModel(model, "H", self.paramSampleId);
+
+                console.log("paramSource", self.paramSource);
+                let pModel = new PedModel(model, "H", self.paramSampleId, self.paramProjectId, self.paramSource, self.paramIsPedigree);
                 self.pedTxt = pModel.pedTxt;
+                console.log("self.pedTxt inside hub model", self.pedTxt);
+
             },
 
             refresh: function() {

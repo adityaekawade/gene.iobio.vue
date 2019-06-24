@@ -233,6 +233,9 @@ export default class HubSession {
 
   getPedigreeForSample(project_id, sample_id) {
     let self = this;
+
+    console.log("auth token", localStorage.getItem('hub-iobio-tkn'));
+
     return $.ajax({
       url: self.api + '/projects/' + project_id +  '/samples/' + sample_id + '/pedigree',
       type: 'GET',

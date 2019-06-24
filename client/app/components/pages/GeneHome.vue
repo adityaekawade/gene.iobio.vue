@@ -272,7 +272,7 @@
                 :paramProjectId="paramProjectId"
                 :paramSampleId="paramSampleId"
                 :paramIsPedigree="paramIsPedigree"
-                :paramSource:="paramSource"
+                :paramSource="paramSource"
 
                 @show-pileup-for-variant="onShowPileupForVariant"
         >

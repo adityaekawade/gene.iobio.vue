@@ -3,18 +3,21 @@ import HubSession from './HubSession'
 
 export default class PedModel {
 
-    constructor(model, modelType, sampleId) {
+    constructor(model, modelType, sampleId, projectId, source, isPed) {
         this.modelType = modelType;
         this.model = model;
         this.sampleId = sampleId;
+        this.projectId = projectId;
+        this.source = source;
+        this.isPed = isPed;
         this.pedLines = null;
         this.pedTxt = null;
+
 
         this.hubSession = null;
         this.hubRawPedigree = null;
 
         this.parseModel();
-        this.populatePedTxt();
 
 
     }
@@ -22,9 +25,12 @@ export default class PedModel {
     parseModel() {
         let self = this;
 
-       if (this.modelType === "H") {
+       if (self.modelType === "H") {
             self.populateHubModel();
         }
+       else if(self.modelType === "D"){
+           this.populateDemoModel();
+       }
     }
 
     buildPedFromHub(){
@@ -34,14 +40,11 @@ export default class PedModel {
 
         console.log("inside of buildPedFromHub");
 
-        self.promiseHubSession().then(data => {
-            self.hubRawPedigree = data.rawPedigree;
+
+            console.log("rawPedigree inside hubToTxt", self.model);
 
 
-            console.log("rawPedigree inside hubToTxt", self.hubRawPedigree);
-
-
-            for (const [key, value] of Object.entries(self.hubRawPedigree)) {
+            for (const [key, value] of Object.entries(self.model)) {
 
                 let pedLine = "";
 
@@ -84,35 +87,24 @@ export default class PedModel {
                 self.pedTxt = self.pedTxt + pedLine;
                 console.log("pedTxt inside hubToTxt", self.pedTxt);
 
-
             }
-
-
-        })
 
 
     }
 
-    populatePedTxt() {
+    populateDemoModel() {
         let self = this;
-        self.pedTxt = "";
-        if(self.modelType === "D") {
             self.pedTxt = "1 NA12878 NA12891 NA12892 2 1\n" +
                 "1 NA12891 0 0 1 0\n" +
                 "1 NA12892 0 0 2 0\n";
 
-        }
     }
 
     populateHubModel() {
 
         let self = this;
         console.log("model inside populateHubModel", self.model);
-
-
         self.buildPedFromHub();
-
-
 
     }
 
@@ -120,9 +112,10 @@ export default class PedModel {
         let self = this;
         self.hubSession = new HubSession();
 
-        console.log("self.sampleId inside pedmodel", self.sampleId);
+        console.log("self.source before hard coding", self.source);
+        self.source = "https://staging.frameshift.io";
+        console.log("sampleId", self.sampleId, "source", self.source, "isPed", self.isPed, "project", self.projectId);
 
-
-        return self.hubSession.promiseInit(self.sampleId, self.source, true, self.project_id);
+        return self.hubSession.promiseInit(self.sampleId, self.source, self.isPed, self.projectId);
     }
 }
